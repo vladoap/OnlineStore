@@ -2,6 +2,7 @@ package com.example.MyStore.model.entity;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Entity
@@ -15,7 +16,7 @@ public class Product extends BaseEntity {
     private Category category;
     private Set<Picture> pictures;
     private Integer quantity;
-    private Integer price;
+    private BigDecimal price;
 
     @Column(nullable = false)
     public String getName() {
@@ -48,11 +49,11 @@ public class Product extends BaseEntity {
     }
 
     @Column(nullable = false)
-    public Integer getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public Product setPrice(Integer price) {
+    public Product setPrice(BigDecimal price) {
         this.price = price;
         return this;
     }

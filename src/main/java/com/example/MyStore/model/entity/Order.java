@@ -13,8 +13,8 @@ public class Order extends BaseEntity{
 
     private User seller;
     private User buyer;
-    private Address deliveryAddress;
     private Set<Product> products;
+
 
     @ManyToOne(optional = false)
     public User getSeller() {
@@ -36,15 +36,6 @@ public class Order extends BaseEntity{
         return this;
     }
 
-    @ManyToOne(optional = false)
-    public Address getDeliveryAddress() {
-        return deliveryAddress;
-    }
-
-    public Order setDeliveryAddress(Address deliveryAddress) {
-        this.deliveryAddress = deliveryAddress;
-        return this;
-    }
 
     @ManyToMany
     public Set<Product> getProducts() {
