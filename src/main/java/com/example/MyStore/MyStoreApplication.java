@@ -1,13 +1,13 @@
-package com.example.demotemplate;
+package com.example.MyStore;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class DemoTemplateApplication {
+public class MyStoreApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(DemoTemplateApplication.class, args);
+        SpringApplication.run(MyStoreApplication.class, args);
     }
 
 }
