@@ -1,20 +1,25 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
+<head th:fragment="header">
   <title>Online Store</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link rel="apple-touch-icon" href="img/apple-icon.png">
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/templatemo.css">
+  <link rel="apple-touch-icon" href="/images/apple-icon.png">
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/templatemo.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
-  <link rel="stylesheet" href="css/fontawesome.min.css">
+  <link rel="stylesheet" href="/css/fontawesome.min.css">
+  <link rel="stylesheet" href="/css/custom.css">
 
   <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
           integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
           crossorigin=""></script>
+
+  <script src="/js/jquery-1.11.0.min.js"></script>
+  <script src="/js/bootstrap.bundle.min.js"></script>
+
 
 </head>
 
@@ -24,7 +29,7 @@
   <nav class="navbar navbar-expand-lg navbar-light shadow">
     <div class="container d-flex justify-content-between align-items-center">
 
-      <a class="navbar-brand text-success logo h1 align-self-center" href="index.html">
+      <a class="navbar-brand text-success logo h1 align-self-center" th:href="@{/}">
         MyStore
       </a>
 
@@ -36,26 +41,26 @@
         <div class="flex-fill">
           <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
             <li class="nav-item">
-              <a class="nav-link" href="index.html">Home</a>
+              <a class="nav-link" th:href="@{/home}">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="about.html">About</a>
+              <a class="nav-link" th:href="@{/about}" >About</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="shop.html">Shop</a>
+              <a class="nav-link" >Shop</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="contact.html">Contact</a>
+              <a class="nav-link" href="">Contact</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="contact.html">Login</a>
+              <a class="nav-link" href="contact.html">Admin</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="contact.html">Register</a>
+              <a class="nav-link" href="contact.html">Admin</a>
             </li>
           </ul>
         </div>
-        <div class="navbar align-self-center d-flex">
+        <div sec:authorize="isAuthenticated()" class="navbar align-self-center d-flex">
 
           <a class="nav-icon position-relative text-decoration-none" href="#">
             <i class="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
@@ -63,8 +68,14 @@
           </a>
           <a class="nav-icon position-relative text-decoration-none" href="#">
             <i class="fa fa-fw fa-user text-dark mr-3"></i>
-
           </a>
+          <form
+          th:action="@{/users/logout}"
+          th:method="post"
+          >
+            <button class="nav-link" type="submit">Logout </button>
+          </form>
+
         </div>
       </div>
 
@@ -72,7 +83,7 @@
   </nav>
 </div>
 <div class="carousel-item active">
-  <img src="img/background.jpg" class="img-fluid" alt="First slide">
+  <img src="/images/background.jpg" class="img-fluid" alt="First slide">
   <div class="carousel-caption d-flex justify-content-center align-items-center" style="height: 100vh;">
     <div class="container text-center">
       <h1 class="text-white display-2 mb-3 animated fadeInRight" style="margin-top: -500px;">An Innovative IT Solutions Agency</h1>

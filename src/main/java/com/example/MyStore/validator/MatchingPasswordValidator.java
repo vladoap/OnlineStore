@@ -7,6 +7,14 @@ import java.lang.reflect.Field;
 
 public class MatchingPasswordValidator implements ConstraintValidator<MatchingPassword, Object> {
 
+    private String passwordFieldName;
+    private String confirmPasswordFieldName;
+
+    @Override
+    public void initialize(MatchingPassword constraintAnnotation) {
+        passwordFieldName = constraintAnnotation.passwordField();
+        confirmPasswordFieldName = constraintAnnotation.confirmPasswordField();
+    }
 
 
     @Override
@@ -15,8 +23,8 @@ public class MatchingPasswordValidator implements ConstraintValidator<MatchingPa
             return false;
         }
         try {
-            Field passwordField = value.getClass().getDeclaredField("password");
-            Field confirmPasswordField = value.getClass().getDeclaredField("confirmPassword");
+            Field passwordField = value.getClass().getDeclaredField(passwordFieldName);
+            Field confirmPasswordField = value.getClass().getDeclaredField(confirmPasswordFieldName);
 
             passwordField.setAccessible(true);
             confirmPasswordField.setAccessible(true);

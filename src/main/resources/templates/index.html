@@ -6,18 +6,18 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="apple-touch-icon" href="img/apple-icon.png">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/templatemo.css">
+    <link rel="apple-touch-icon" href="/images/apple-icon.png">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/templatemo.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
-    <link rel="stylesheet" href="css/fontawesome.min.css">
+    <link rel="stylesheet" href="/css/fontawesome.min.css">
 
     <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
             integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
             crossorigin=""></script>
 
-    <script src="js/jquery-1.11.0.min.js"></script>
-    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="/js/jquery-1.11.0.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
 
 </head>
 
@@ -27,56 +27,21 @@
 
     </div>
     <div class="carousel-item active">
-        <img src="img/background.jpg" class="img-fluid" alt="First slide">
+        <img src="/images/background.jpg" class="img-fluid" alt="First slide">
         <div class="carousel-caption d-flex justify-content-center align-items-center" style="height: 100vh;">
             <div class="container text-center">
                 <h1 class="text-white display-2 mb-3 animated fadeInRight" style="margin-top: -500px;">Welcome to MyStore</h1>
                 <div class="d-flex justify-content-center"> <!-- Center-align buttons in a single row -->
-                    <a href="" class="me-2">
+                    <a th:href="@{/users/login}" class="me-2">
                         <button type="button" class="px-4 py-sm-3 px-sm-5 btn btn-primary rounded-pill carousel-content-btn1 animated fadeInLeft">Login</button>
                     </a>
-                    <a href="" class="ms-2">
+                    <a th:href="@{/users/register}" class="ms-2">
                         <button type="button" class="px-4 py-sm-3 px-sm-5 btn btn-primary rounded-pill carousel-content-btn2 animated fadeInRight">Register</button>
                     </a>
                 </div>
             </div>
         </div>
     </div>
-
-
-
-
-
-
-    <!-- Start Categories of The Month -->
-    <section class="container py-5">
-        <div class="row text-center pt-3">
-            <div class="col-lg-6 m-auto">
-                <h1 class="h1">Categories of The Month</h1>
-                <p>
-                    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-                    deserunt mollit anim id est laborum.
-                </p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12 col-md-4 p-5 mt-3">
-                <a href="#"><img src="./img/category_img_01.jpg" class="rounded-circle img-fluid border"></a>
-                <h5 class="text-center mt-3 mb-3">Watches</h5>
-                <p class="text-center"><a class="btn btn-success">Go Shop</a></p>
-            </div>
-            <div class="col-12 col-md-4 p-5 mt-3">
-                <a href="#"><img src="./img/category_img_02.jpg" class="rounded-circle img-fluid border"></a>
-                <h2 class="h5 text-center mt-3 mb-3">Shoes</h2>
-                <p class="text-center"><a class="btn btn-success">Go Shop</a></p>
-            </div>
-            <div class="col-12 col-md-4 p-5 mt-3">
-                <a href="#"><img src="./img/category_img_03.jpg" class="rounded-circle img-fluid border"></a>
-                <h2 class="h5 text-center mt-3 mb-3">Accessories</h2>
-                <p class="text-center"><a class="btn btn-success">Go Shop</a></p>
-            </div>
-        </div>
-    </section>
 
 
 

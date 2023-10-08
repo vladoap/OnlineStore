@@ -8,18 +8,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.TYPE)
+@Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = MatchingPasswordValidator.class)
-public @interface MatchingPassword {
+@Constraint(validatedBy = UniqueUsernameValidator.class)
+public @interface UniqueUsername {
 
-    String message() default "Passwords do not match.";
+    String message() default "Username is already in use.";
 
     Class<?>[] groups() default { };
 
     Class<? extends Payload>[] payload() default { };
-
-    String passwordField();
-
-    String confirmPasswordField();
 }

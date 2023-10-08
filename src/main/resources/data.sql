@@ -85,12 +85,14 @@ Discover the magic of storytelling and the joy of learning within the pages of o
 
 
 -- users
-INSERT INTO users (created, email, first_name, last_name, password, username, address_city, address_street_name, address_street_number, profile_picture_id)
-VALUES (now(), 'gosho@gosho.bg', 'Georgi', 'Ivanov', '111', 'gosho', 'Plovdiv', 'Macedonia', 32, 2);
-INSERT INTO users (created, email, first_name, last_name, password, username, address_city, address_street_name, address_street_number, profile_picture_id)
-VALUES (now(), 'peter@todorv.bg', 'Peter', 'Petrov', '111', 'pesho', 'Sofia', 'Vitosha', 5, 3);
-INSERT INTO users (created, email, first_name, last_name, password, username, address_city, address_street_name, address_street_number, profile_picture_id)
-VALUES (now(), 'ivan@ivan.bg', 'Ivan', 'Dimitrov', '111', 'ivan', 'Sofia', 'Vitosha', 10, 1);
+INSERT INTO users (title, created, email, first_name, last_name, password, username, address_city, address_street_name, address_street_number, profile_picture_id)
+VALUES ('Mr', now(), 'gosho@gosho.bg', 'Georgi', 'Ivanov', '$2a$12$Uiq0Ls15Q49e3UYaSxMCfOCfxrRWjVPDwWeiVNu5wWIHRph48Jmy6', 'gosho', 'Plovdiv', 'Macedonia', 32, 2);
+INSERT INTO users (title, created, email, first_name, last_name, password, username, address_city, address_street_name, address_street_number, profile_picture_id)
+VALUES ('Mr', now(), 'peter@todorv.bg', 'Peter', 'Petrov', '$2a$12$Uiq0Ls15Q49e3UYaSxMCfOCfxrRWjVPDwWeiVNu5wWIHRph48Jmy6', 'pesho', 'Sofia', 'Vitosha', 5, 3);
+INSERT INTO users (title, created, email, first_name, last_name, password, username, address_city, address_street_name, address_street_number, profile_picture_id)
+VALUES ('Mr', now(), 'ivan@ivan.bg', 'Ivan', 'Dimitrov', '$2a$12$Uiq0Ls15Q49e3UYaSxMCfOCfxrRWjVPDwWeiVNu5wWIHRph48Jmy6', 'ivan', 'Sofia', 'Vitosha', 10, 1);
+
+
 
 -- users_roles
 INSERT INTO users_roles VALUES (1, 1);

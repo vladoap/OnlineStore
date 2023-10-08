@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/commons :: header">
+
+</head>
+
+<body>
+
+<div th:replace="fragments/commons :: navbar">
+
+</div>
+
+
+<section class="vh-100" style="background-image: url('/images/background.jpg'); background-size: cover; background-color: #9A616D;">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col col-xl-10">
+                <div class="card" style="border-radius: 1rem;">
+                    <div class="row g-0">
+                        <div class="col-md-6 col-lg-5 d-none d-md-block">
+                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img1.webp"
+                                 alt="login form" class="img-fluid" style="border-radius: 1rem 0 0 1rem;" />
+                        </div>
+                        <div class="col-md-6 col-lg-7 d-flex align-items-center">
+                            <div class="card-body p-4 p-lg-5 text-black">
+
+                                <form th:action="@{/users/login}"
+                                th:method="post">
+
+                                    <h4 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Sign into your account</h4>
+
+                                    <div class="form-outline mb-4">
+                                        <input name="username" th:value="${username}"
+                                                type="username" id="username" class="form-control form-control-lg" style="margin-bottom: 15px;" placeholder="Username"/>
+                                    </div>
+
+                                    <div class="form-outline mb-4">
+                                        <input name="password"
+                                                type="password" id="password" class="form-control form-control-lg" style="margin-bottom: 15px;" placeholder="Password" />
+                                    </div>
+                                    <p th:if="${bad_credentials}"
+                                       class="errors alert alert-danger">
+                                        Invalid username or password.
+                                    </p>
+
+                                    <div class="pt-2 mb-4">
+                                        <button class="btn btn-dark btn-lg btn-block" type="submit">Login</button>
+                                    </div>
+
+
+                                </form>
+
+                                <p class="mb-5 pb-lg-2" style="color: #393f81;">Don't have an account? <a th:href="@{/users/register}"
+                                                                                                          style="color: #393f81;">Register here</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</body>
+
+</html>

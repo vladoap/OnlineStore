@@ -14,6 +14,7 @@ public class UserRole {
     public UserRole() {
     }
 
+    @Column
     @Enumerated(EnumType.STRING)
     public UserRoleEnum getName() {
         return name;

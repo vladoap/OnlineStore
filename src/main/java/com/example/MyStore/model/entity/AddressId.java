@@ -11,6 +11,15 @@ public class AddressId implements Serializable {
     private String city;
     private Integer streetNumber;
 
+    public AddressId() {
+    }
+
+    public AddressId(String streetName, String city, Integer streetNumber) {
+        this.streetName = streetName;
+        this.city = city;
+        this.streetNumber = streetNumber;
+    }
+
     public String getStreetName() {
         return streetName;
     }

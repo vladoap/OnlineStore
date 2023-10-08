@@ -1,6 +1,6 @@
 package com.example.MyStore.model.entity;
 
-import com.example.MyStore.model.enums.UserRoleEnum;
+import com.example.MyStore.model.enums.TitleEnum;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -14,8 +14,9 @@ public class User extends BaseEntity{
     private String firstName;
     private String lastName;
     private String email;
+    private TitleEnum title;
     private Picture profilePicture;
-    private Set<UserRole> userRoleEnums;
+    private Set<UserRole> role;
     private Set<Product> products;
     private Address address;
 
@@ -83,11 +84,11 @@ public class User extends BaseEntity{
 
     @ManyToMany(fetch = FetchType.EAGER)
     public Set<UserRole> getRoles() {
-        return userRoleEnums;
+        return role;
     }
 
     public User setRoles(Set<UserRole> userRoleEnums) {
-        this.userRoleEnums = userRoleEnums;
+        this.role = userRoleEnums;
         return this;
     }
 
@@ -108,6 +109,17 @@ public class User extends BaseEntity{
 
     public User setAddress(Address address) {
         this.address = address;
+        return this;
+    }
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    public TitleEnum getTitle() {
+        return title;
+    }
+
+    public User setTitle(TitleEnum title) {
+        this.title = title;
         return this;
     }
 }

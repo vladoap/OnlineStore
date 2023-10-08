@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/commons :: header">
+
+</head>
+
+<body>
+
+<div th:replace="fragments/commons :: navbar">
+
+</div>
+
+<section class="h-100 bg-dark" style="background-image: url('/images/background.jpg'); background-size: cover;">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col">
+                <div class="card card-registration my-4">
+                    <div class="row g-0">
+                        <div class="col-xl-6 d-none d-xl-block">
+                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/img4.webp"
+                                 alt="Sample photo" class="img-fluid"
+                                 style="border-top-left-radius: .25rem; border-bottom-left-radius: .25rem;"/>
+                        </div>
+                        <div class="col-xl-6">
+                            <form
+                                    th:action="@{/users/register}"
+                                    th:method="post"
+                                    th:object="${userRegisterBindingModel}"
+
+                            >
+                                <div class="card-body p-md-5 text-black">
+                                    <h3 class="mb-5 text-uppercase">Registration form</h3>
+
+                                    <div class="row">
+                                        <div  class="col-md-6">
+                                            <div
+                                                    th:if="${#fields.hasGlobalErrors()}" class="text-danger rounded">
+                                                <p th:each="error : ${#fields.globalErrors()}" th:text="${error}">
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <select class="select"
+                                                    th:field="*{title}"
+                                                    th:errorclass="is-invalid"
+                                            >
+
+                                                <option value="">Title</option>
+                                                <option
+                                                        th:each="title : ${T(com.example.MyStore.model.enums.TitleEnum).values()}"
+                                                        th:value="${title}"
+                                                        th:text="${title}"
+                                                >Title
+                                                </option>
+                                            </select>
+                                            <p class="invalid-feedback errors alert alert-danger" th:errors="*{title}">
+
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-4 pb-2">
+                                            <div class="form-outline">
+                                                <input
+                                                        th:field="*{firstName}"
+                                                        th:errorclass="is-invalid"
+                                                        type="text" id="first-name"
+                                                        class="form-control form-control-lg" placeholder="First name"/>
+
+                                                <p class="invalid-feedback errors alert alert-danger"
+                                                   th:errors="*{firstName}">
+
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-4">
+                                            <div class="form-outline">
+                                                <input
+                                                        th:field="*{lastName}"
+                                                        th:errorclass="is-invalid"
+                                                        type="text" id="last-name"
+                                                        class="form-control form-control-lg" placeholder="Last name"/>
+                                                <p class="invalid-feedback errors alert alert-danger"
+                                                   th:errors="*{lastName}">
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+
+                                        <div class="col-md-6 mb-4 pb-2">
+                                            <div class="form-outline">
+                                                <input
+                                                        th:field="*{username}"
+                                                        th:errorclass="is-invalid"
+                                                        type="text" id="username"
+                                                        class="form-control form-control-lg" placeholder="Username"/>
+                                                <p class="invalid-feedback errors alert alert-danger"
+                                                   th:errors="*{username}">
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 mb-4">
+                                            <div class="form-outline">
+                                                <input
+                                                        th:field="*{email}"
+                                                        th:errorclass="is-invalid"
+                                                        type="text" id="email"
+                                                        class="form-control form-control-lg" placeholder="E-mail"/>
+                                                <p class="invalid-feedback errors alert alert-danger"
+                                                   th:errors="*{email}">
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-4 pb-2">
+                                            <div class="form-outline">
+                                                <input
+                                                        th:field="*{password}"
+                                                        th:errorclass="is-invalid"
+                                                        type="password" id="password"
+                                                        class="form-control form-control-lg" placeholder="Password"/>
+                                                <p class="invalid-feedback errors alert alert-danger"
+                                                   th:errors="*{password}">
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-4">
+                                            <div class="form-outline">
+                                                <input
+                                                        th:field="*{confirmPassword}"
+                                                        th:errorclass="is-invalid"
+                                                        type="password" id="confirmPassword"
+                                                        class="form-control form-control-lg"
+                                                        placeholder="Confirm password"/>
+                                                <p class="invalid-feedback errors alert alert-danger"
+                                                   th:errors="*{confirmPassword}">
+                                                </p>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-4 pb-2">
+                                            <div class="form-outline">
+                                                <input
+                                                        th:field="*{country}"
+                                                        th:errorclass="is-invalid"
+                                                        type="text" id="Country"
+                                                        class="form-control form-control-lg" placeholder="Country"/>
+                                                <p class="invalid-feedback errors alert alert-danger"
+                                                   th:errors="*{country}">
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-4">
+                                            <div class="form-outline">
+                                                <input
+                                                        th:field="*{city}"
+                                                        th:errorclass="is-invalid"
+                                                        type="text" id="City"
+                                                        class="form-control form-control-lg" placeholder="City"/>
+                                                <p class="invalid-feedback errors alert alert-danger"
+                                                   th:errors="*{city}">
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-4 pb-2">
+                                            <div class="form-outline">
+                                                <input
+                                                        th:field="*{streetName}"
+                                                        th:errorclass="is-invalid"
+                                                        type="text" id="Street name"
+                                                        class="form-control form-control-lg" placeholder="Street name"/>
+                                                <p class="invalid-feedback errors alert alert-danger"
+                                                   th:errors="*{streetName}">
+                                                </p>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-4">
+                                            <div class="form-outline">
+                                                <input
+                                                        th:field="*{streetNumber}"
+                                                        th:errorclass="is-invalid"
+                                                        type="text" id="Street number"
+                                                        class="form-control form-control-lg"
+                                                        placeholder="Street number"/>
+                                                <p class="invalid-feedback errors alert alert-danger"
+                                                   th:errors="*{streetNumber}">
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-check d-flex justify-content-start mb-4 pb-3">
+                                        <input
+                                                th:field="*{termsAccepted}"
+                                                th:errorclass="is-invalid"
+                                                class="form-check-input me-3" type="checkbox"
+                                                id="form2Example3c"/>
+                                        <label class="form-check-label text-dark" for="form2Example3c">
+                                            I do accept the Terms and Conditions of your site.
+                                        </label>
+
+
+                                    </div>
+                                    <div th:if="${#fields.hasErrors('termsAccepted')}">
+                                        <p class="errors alert alert-danger"
+                                           th:errors="*{termsAccepted}">
+                                        </p>
+                                    </div>
+
+                                    <div class="d-flex justify-content-end pt-3">
+                                        <button type="submit" class="btn btn-warning btn-lg ms-2">Submit form</button>
+                                    </div>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+</body>
+
+</html>
