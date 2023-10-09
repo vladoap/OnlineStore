@@ -19,6 +19,8 @@
 
   <script src="/js/jquery-1.11.0.min.js"></script>
   <script src="/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/templatemo.js"></script>
+  <script src="/js/custom.js"></script>
 
 
 </head>
@@ -47,10 +49,10 @@
               <a class="nav-link" th:href="@{/about}" >About</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" >Shop</a>
+              <a class="nav-link" th:href="@{/products/all}">Shop</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="">Contact</a>
+              <a class="nav-link" th:href="@{/products/single}">Contact</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="contact.html">Admin</a>

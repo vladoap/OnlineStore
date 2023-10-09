@@ -78,7 +78,7 @@ public class Product extends BaseEntity {
         return this;
     }
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     public Set<Picture> getPictures() {
         return pictures;
     }
