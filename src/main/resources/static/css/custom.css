@@ -1,0 +1,19 @@
+.card {
+    display: flex; /* Use flexbox to align product cards horizontally */
+    flex-direction: column; /* Stack card content vertically within the card */
+    height: 100%; /* Set a fixed height for the product cards */
+    border: 5px solid #ffffff; /* Add a border for better separation (optional) */
+}
+
+.card .card-img {
+    max-height: 250px; /* Set a maximum height for the product images */
+    width: auto;
+    height: auto;
+}
+
+
+.page-link.clicked {
+    background-color: green;
+    user-select: none;
+    pointer-events: none;
+}

@@ -7,6 +7,7 @@ import com.example.MyStore.repository.ProductRepository;
 import com.example.MyStore.service.PictureService;
 import com.example.MyStore.service.ProductService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,6 +34,29 @@ public class ProductServiceImpl implements ProductService {
                 .map(this::map)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<ProductSummaryServiceModel> getAllProductsExceptOwn(String username) {
+        return productRepository
+                .findAllBySellerUsernameIsNot(username)
+                .stream()
+                .map(this::map)
+                .collect(Collectors.toList());
+    }
+
+
+
+    @Override
+    public List<ProductSummaryServiceModel> getAllProductsExceptOwnPageable(int page, int pageSize, String username) {
+
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
+
+        return productRepository.findAllBySellerUsernameIsNotByPagination(pageRequest, username)
+                .stream()
+                .map(this::map)
+                .collect(Collectors.toList());
+    }
+
 
     private ProductSummaryServiceModel map(Product product) {
         ProductSummaryServiceModel productServiceModel = modelMapper.map(product, ProductSummaryServiceModel.class);
