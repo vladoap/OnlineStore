@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/products")
@@ -29,34 +28,43 @@ public class ProductController {
     }
 
 
-
     @GetMapping("/all")
     public String getAllProducts(Model model, Principal principal,
                                  @RequestParam(name = "clickedPage", required = false, defaultValue = "0") Integer clickedPage,
                                  @RequestParam(defaultValue = "1") int page,
                                  @RequestParam(defaultValue = "6") int pageSize) {
 
-        List<ProductSummaryServiceModel> allProductsExceptOwnPageable = productService.getAllProductsExceptOwnPageable(page, pageSize, principal.getName());
-
-        List<ProductsSummaryViewModel> products = allProductsExceptOwnPageable.stream().map(p -> modelMapper.map(p, ProductsSummaryViewModel.class)).toList();;
+        List<ProductSummaryServiceModel> productsPageable = productService.getAllProductsExceptOwnPageable(page, pageSize, principal.getName());
 
         int totalProducts = productService.getAllProductsExceptOwn(principal.getName()).size();
 
-        int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
-
-        List<Integer> pages = new ArrayList<>();
-        for (int i = 1; i <= totalPages; i++) {
-            pages.add(i);
-        }
-
-        model.addAttribute("products", products);
-        model.addAttribute("pages", pages);
-
+        model.addAttribute("products", mapServiceToViewModel(productsPageable));
+        model.addAttribute("pages", getPageCount(pageSize, totalProducts));
         model.addAttribute("clickedPage", clickedPage);
+        model.addAttribute("selectedCategoryName", null);
 
+        System.out.println("WORKINGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
         return "shop";
     }
 
+    @GetMapping("/category/{name}")
+    public String getAllProductsByCategory(Model model, Principal principal,
+                                           @PathVariable(name = "name") String categoryName,
+                                           @RequestParam(name = "clickedPage", required = false, defaultValue = "0") Integer clickedPage,
+                                           @RequestParam(defaultValue = "1") int page,
+                                           @RequestParam(defaultValue = "6") int pageSize) {
+
+        List<ProductSummaryServiceModel> productsPageable = productService.getAllProductsByCategoryExceptOwnPageable(page, pageSize, principal.getName(), categoryName);
+
+        int totalProducts = productService.getAllProductsByCategoryExceptOwn(principal.getName(), categoryName).size();
+
+        model.addAttribute("products", mapServiceToViewModel(productsPageable));
+        model.addAttribute("pages", getPageCount(pageSize, totalProducts));
+        model.addAttribute("clickedPage", clickedPage);
+        model.addAttribute("selectedCategoryName", categoryName);
+
+        return "shop";
+    }
 
     @GetMapping("/details/{id}")
     public String productDetails(@PathVariable Long id) {
@@ -64,15 +72,27 @@ public class ProductController {
         return "shop-single";
     }
 
+    private static List<Integer> getPageCount(int pageSize, int totalProducts) {
+        int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
+
+        List<Integer> pages = new ArrayList<>();
+        for (int i = 1; i <= totalPages; i++) {
+            pages.add(i);
+        }
+        return pages;
+    }
+
+    private List<ProductsSummaryViewModel> mapServiceToViewModel(List<ProductSummaryServiceModel> productsPageable) {
+        return productsPageable
+                .stream()
+                .map(p -> modelMapper.map(p, ProductsSummaryViewModel.class))
+                .toList();
+    }
 
 
 
-    //    @GetMapping("/all")
-//    public String getAllProducts(Model model, Principal principal) {
-//
-//        model.addAttribute("products", productService.getAllProductsExceptOwn(principal.getName()));
-//
-//        return "shop";
-//    }
+
+
+
 
 }

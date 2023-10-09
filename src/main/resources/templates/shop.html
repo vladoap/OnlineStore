@@ -20,7 +20,7 @@
             <ul class="list-unstyled templatemo-accordion">
                 <li class="pb-3">
                     <a class="collapsed d-flex justify-content-between h3 text-decoration-none" href="">
-                        Category
+                        <span th:text="${selectedCategoryName != null ? selectedCategoryName : 'Category'}">Category</span>
                         <i class="pull-right fa fa-fw fa-chevron-circle-down mt-1"></i>
                     </a>
                     <ul class="collapse list-unstyled pl-3">
@@ -28,13 +28,18 @@
                              th:object="${cat}">
                             <li>
                                 <a class="text-decoration-none" th:text="${cat}"
-                                   th:href="@{/products/category/{name}(name=${cat.name()})}">Category Name</a>
+                                   th:href="@{/products/category/{name}(name=${cat.name()})}" >Category Name</a>
                             </li>
                         </div>
                     </ul>
+
                 </li>
             </ul>
+            <a th:href="@{/products/all}" class="btn btn-secondary btn-sm mt-3">Clear Filters</a>
         </div>
+
+
+
 
 
         <div class="col-lg-9">
