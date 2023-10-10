@@ -1,8 +1,8 @@
-package com.example.MyStore.model.service;
+package com.example.MyStore.model.view;
 
 import java.math.BigDecimal;
 
-public class ProductSummaryServiceModel {
+public class ProductLatestViewModel {
 
     private Long id;
     private String name;
@@ -14,7 +14,7 @@ public class ProductSummaryServiceModel {
         return id;
     }
 
-    public ProductSummaryServiceModel setId(Long id) {
+    public ProductLatestViewModel setId(Long id) {
         this.id = id;
         return this;
     }
@@ -23,8 +23,17 @@ public class ProductSummaryServiceModel {
         return name;
     }
 
-    public ProductSummaryServiceModel setName(String name) {
+    public ProductLatestViewModel setName(String name) {
         this.name = name;
+        return this;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public ProductLatestViewModel setDescription(String description) {
+        this.description = description;
         return this;
     }
 
@@ -32,7 +41,7 @@ public class ProductSummaryServiceModel {
         return imageUrl;
     }
 
-    public ProductSummaryServiceModel setImageUrl(String imageUrl) {
+    public ProductLatestViewModel setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
         return this;
     }
@@ -41,17 +50,8 @@ public class ProductSummaryServiceModel {
         return price;
     }
 
-    public ProductSummaryServiceModel setPrice(BigDecimal price) {
+    public ProductLatestViewModel setPrice(BigDecimal price) {
         this.price = price;
-        return this;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public ProductSummaryServiceModel setDescription(String description) {
-        this.description = description;
         return this;
     }
 }

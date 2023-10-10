@@ -4,7 +4,6 @@ import com.example.MyStore.model.entity.Product;
 import com.example.MyStore.model.service.ProductDetailsServiceModel;
 import com.example.MyStore.model.service.ProductSummaryServiceModel;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface ProductService {
@@ -24,4 +23,6 @@ public interface ProductService {
     Integer getAvailableQuantityById(Long id);
 
     Product findById(Long id);
+
+    List<ProductSummaryServiceModel> getTheLatestThreeProducts();
 }

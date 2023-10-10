@@ -3,16 +3,16 @@ package com.example.MyStore.service.impl;
 import com.example.MyStore.exception.ProductNotFoundException;
 import com.example.MyStore.model.entity.Picture;
 import com.example.MyStore.model.entity.Product;
-import com.example.MyStore.model.entity.User;
 import com.example.MyStore.model.enums.CategoryNameEnum;
 import com.example.MyStore.model.service.ProductDetailsServiceModel;
 import com.example.MyStore.model.service.ProductSummaryServiceModel;
 import com.example.MyStore.repository.ProductRepository;
-import com.example.MyStore.service.PictureService;
 import com.example.MyStore.service.ProductService;
 import com.example.MyStore.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -105,6 +105,16 @@ public class ProductServiceImpl implements ProductService {
         return productRepository
                 .findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Product with ID: " + id + " not found."));
+    }
+
+    @Override
+    public List<ProductSummaryServiceModel> getTheLatestThreeProducts() {
+        Pageable pageable = PageRequest.of(0, 3, Sort.by("created"));
+
+        return productRepository
+                .findAll(pageable)
+                .map(this::map)
+                .toList();
     }
 
 
