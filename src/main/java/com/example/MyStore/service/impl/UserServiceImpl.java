@@ -1,14 +1,9 @@
 package com.example.MyStore.service.impl;
 
-import com.example.MyStore.model.entity.Address;
-import com.example.MyStore.model.entity.AddressId;
-import com.example.MyStore.model.entity.User;
-import com.example.MyStore.model.entity.UserRole;
+import com.example.MyStore.model.entity.*;
 import com.example.MyStore.model.service.UserRegisterServiceModel;
 import com.example.MyStore.repository.UserRepository;
-import com.example.MyStore.service.AddressService;
-import com.example.MyStore.service.UserRoleService;
-import com.example.MyStore.service.UserService;
+import com.example.MyStore.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.modelmapper.ModelMapper;
@@ -19,11 +14,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -33,6 +31,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final UserRoleService userRoleService;
+    private final CartItemService cartItemService;
     private final AddressService addressService;
     private final UserDetailsService userDetailsService;
     private final SecurityContextRepository securityContextRepository;
@@ -41,11 +40,14 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, UserRoleService userRoleService,
-                           AddressService addressService, UserDetailsService userDetailsService, SecurityContextRepository securityContextRepository,
+                           CartItemService cartItemService, AddressService addressService, UserDetailsService userDetailsService, SecurityContextRepository securityContextRepository,
                            HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+
+
         this.modelMapper = modelMapper;
         this.userRoleService = userRoleService;
+        this.cartItemService = cartItemService;
         this.addressService = addressService;
         this.userDetailsService = userDetailsService;
         this.securityContextRepository = securityContextRepository;
@@ -87,8 +89,56 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         authenticateUser(user.getUsername());
-
     }
+
+    //TODO: should it be private method that returns UserEntity
+    @Override
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User with username " + username + " not found!"));
+    }
+
+    @Override
+    @Transactional
+    public void addCartItemInUserCart(Integer quantity, String buyerUsername, Product product) {
+        User buyer = findByUsername(buyerUsername);
+
+        if (buyer.getProductsInCart() == null) {
+            buyer.setProductsInCart(new HashSet<>());
+        }
+
+        Set<CartItem> cartItems = buyer.getProductsInCart();
+
+        Optional<CartItem> existingCartItemOpt = getCartItemByProductAndUsername(product, buyer.getUsername());
+
+        if (existingCartItemOpt.isEmpty()) {
+            CartItem cartItemToAdd = createCartItem(quantity, product);
+            cartItemService.save(cartItemToAdd);
+            cartItems.add(cartItemToAdd);
+
+        } else {
+            CartItem existingCartItem = existingCartItemOpt.get();
+            existingCartItem.setQuantity(existingCartItem.getQuantity() + quantity);
+        }
+
+        userRepository.save(buyer);
+    }
+
+
+    @Override
+    public Optional<CartItem> getCartItemByProductAndUsername(Product product, String username) {
+        return findByUsername(username).getProductsInCart()
+                .stream()
+                .filter(cartItem -> cartItem.getProductId().equals(product.getId())).findFirst();
+    }
+
+    @Override
+    public Integer getCartItemQuantity(Product product, String username) {
+        return getCartItemByProductAndUsername(product, username)
+                .map(CartItem::getQuantity)
+                .orElse(0);
+    }
+
 
     private void authenticateUser(String username) {
         UserDetails principal = userDetailsService.loadUserByUsername(username);
@@ -109,4 +159,17 @@ public class UserServiceImpl implements UserService {
 
         securityContextRepository.saveContext(context, httpServletRequest, httpServletResponse);
     }
+
+    private static CartItem createCartItem(Integer quantity, Product product) {
+        CartItem cartItemToAdd = new CartItem()
+                .setName(product.getName())
+                .setProductId(product.getId())
+                .setPrice(product.getPrice())
+                .setQuantity(quantity)
+                .setImageUrl(product.getPictures()
+                        .stream().findFirst().map(Picture::getUrl).orElse(null));
+        cartItemToAdd.setCreated(LocalDateTime.now());
+        return cartItemToAdd;
+    }
+
 }

@@ -1,5 +1,7 @@
 package com.example.MyStore.service;
 
+import com.example.MyStore.model.entity.Product;
+import com.example.MyStore.model.service.ProductDetailsServiceModel;
 import com.example.MyStore.model.service.ProductSummaryServiceModel;
 
 import java.util.Collection;
@@ -17,4 +19,9 @@ public interface ProductService {
     List<ProductSummaryServiceModel> getAllProductsByCategoryExceptOwnPageable(int page, int pageSize, String username, String categoryName);
 
 
+    ProductDetailsServiceModel getProductById(Long id);
+
+    Integer getAvailableQuantityById(Long id);
+
+    Product findById(Long id);
 }

@@ -3,6 +3,7 @@ package com.example.MyStore.model.entity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -14,7 +15,7 @@ public class Product extends BaseEntity {
     private String description;
     private User seller;
     private Category category;
-    private Set<Picture> pictures;
+    private List<Picture> pictures;
     private Integer quantity;
     private BigDecimal price;
 
@@ -79,11 +80,11 @@ public class Product extends BaseEntity {
     }
 
     @OneToMany(fetch = FetchType.EAGER)
-    public Set<Picture> getPictures() {
+    public List<Picture> getPictures() {
         return pictures;
     }
 
-    public Product setPictures(Set<Picture> pictures) {
+    public Product setPictures(List<Picture> pictures) {
         this.pictures = pictures;
         return this;
     }

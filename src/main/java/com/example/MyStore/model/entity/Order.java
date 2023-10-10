@@ -1,9 +1,6 @@
 package com.example.MyStore.model.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.Set;
 
@@ -11,21 +8,12 @@ import java.util.Set;
 @Table(name = "orders")
 public class Order extends BaseEntity{
 
-    private User seller;
     private User buyer;
-    private Set<Product> products;
-    private Address shippingAddress;
+    private String internalOrderNumber;
 
 
-    @ManyToOne(optional = false)
-    public User getSeller() {
-        return seller;
-    }
 
-    public Order setSeller(User seller) {
-        this.seller = seller;
-        return this;
-    }
+
 
     @ManyToOne(optional = false)
     public User getBuyer() {
@@ -38,23 +26,13 @@ public class Order extends BaseEntity{
     }
 
 
-    @ManyToMany
-    public Set<Product> getProducts() {
-        return products;
+    @Column(name = "internal_order_number")
+    public String getInternalOrderNumber() {
+        return internalOrderNumber;
     }
 
-    public Order setProducts(Set<Product> products) {
-        this.products = products;
-        return this;
-    }
-
-    @ManyToOne
-    public Address getShippingAddress() {
-        return shippingAddress;
-    }
-
-    public Order setShippingAddress(Address shippingAddress) {
-        this.shippingAddress = shippingAddress;
+    public Order setInternalOrderNumber(String internalOrderNumber) {
+        this.internalOrderNumber = internalOrderNumber;
         return this;
     }
 }

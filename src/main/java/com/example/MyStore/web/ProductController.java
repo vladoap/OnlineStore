@@ -1,15 +1,17 @@
 package com.example.MyStore.web;
 
+import com.example.MyStore.model.binding.ProductPurchaseBindingModel;
+import com.example.MyStore.model.entity.Picture;
+import com.example.MyStore.model.service.ProductDetailsServiceModel;
 import com.example.MyStore.model.service.ProductSummaryServiceModel;
+import com.example.MyStore.model.view.ProductDetailsViewModel;
 import com.example.MyStore.model.view.ProductsSummaryViewModel;
+import com.example.MyStore.service.PictureService;
 import com.example.MyStore.service.ProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -20,13 +22,19 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    private final PictureService pictureService;
     private final ModelMapper modelMapper;
 
-    public ProductController(ProductService productService, ModelMapper modelMapper) {
+    public ProductController(ProductService productService, PictureService pictureService, ModelMapper modelMapper) {
         this.productService = productService;
+        this.pictureService = pictureService;
         this.modelMapper = modelMapper;
     }
 
+    @ModelAttribute
+    public ProductPurchaseBindingModel productPurchaseBindingModel() {
+        return new ProductPurchaseBindingModel();
+    }
 
     @GetMapping("/all")
     public String getAllProducts(Model model, Principal principal,
@@ -43,7 +51,6 @@ public class ProductController {
         model.addAttribute("clickedPage", clickedPage);
         model.addAttribute("selectedCategoryName", null);
 
-        System.out.println("WORKINGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
         return "shop";
     }
 
@@ -63,14 +70,38 @@ public class ProductController {
         model.addAttribute("clickedPage", clickedPage);
         model.addAttribute("selectedCategoryName", categoryName);
 
+
+
         return "shop";
     }
 
     @GetMapping("/details/{id}")
-    public String productDetails(@PathVariable Long id) {
+    public String productDetails(@PathVariable Long id, Model model) {
+
+        ProductDetailsServiceModel productDetailsServiceModel = productService.getProductById(id);
+
+        ProductDetailsViewModel productDetailsViewModel = mapServiceToViewModel(productDetailsServiceModel);
+
+
+
+        List<List<Picture>> groupedPictures = new ArrayList<>();
+        List<Picture> pictures = productDetailsViewModel.getPictures();
+        int batchSize = 3;
+
+        for (int i = 0; i < pictures.size(); i += batchSize) {
+            int endIndex = Math.min(i + batchSize, pictures.size());
+            groupedPictures.add(pictures.subList(i, endIndex));
+        }
+
+        model.addAttribute("productDetails", productDetailsViewModel);
+        model.addAttribute("groupedPictures", groupedPictures);
+
 
         return "shop-single";
     }
+
+
+
 
     private static List<Integer> getPageCount(int pageSize, int totalProducts) {
         int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
@@ -82,17 +113,37 @@ public class ProductController {
         return pages;
     }
 
-    private List<ProductsSummaryViewModel> mapServiceToViewModel(List<ProductSummaryServiceModel> productsPageable) {
-        return productsPageable
+    private List<ProductsSummaryViewModel> mapServiceToViewModel(List<ProductSummaryServiceModel> productsServiceModel) {
+        return productsServiceModel
                 .stream()
-                .map(p -> modelMapper.map(p, ProductsSummaryViewModel.class))
+                .map(p -> {
+                    ProductsSummaryViewModel mappedProduct = modelMapper.map(p, ProductsSummaryViewModel.class);
+                    if (mappedProduct.getImageUrl() == null) {
+                        mappedProduct.setImageUrl(pictureService.getDefaultPicture().getUrl());
+                    }
+
+                    return mappedProduct;
+                })
                 .toList();
     }
 
+    private ProductDetailsViewModel mapServiceToViewModel(ProductDetailsServiceModel productServiceModel) {
+        return new ProductDetailsViewModel()
+                .setCategory(productServiceModel.getCategory().getName().name())
+                .setId(productServiceModel.getId())
+                .setDescription(productServiceModel.getDescription())
+                .setName(productServiceModel.getName())
+                .setPictures(productServiceModel.getPictures())
+                .setImageUrl(productServiceModel
+                        .getPictures()
+                        .stream()
+                        .findFirst().map(Picture::getUrl)
+                        .orElse(pictureService.getDefaultPicture().getUrl()))
+                .setPrice(productServiceModel.getPrice())
+                .setQuantity(productServiceModel.getQuantity())
+                .setSeller(productServiceModel.getSeller().getFirstName() + " " + productServiceModel.getSeller().getLastName());
 
-
-
-
+    }
 
 
 }
