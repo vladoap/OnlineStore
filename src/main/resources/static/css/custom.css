@@ -86,6 +86,57 @@
 
 
 
+.picture-frame {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 10px;
+    text-align: center;
+    display: inline-block;
+}
+
+.picture-frame img {
+    max-width: 100%; /* Make the image take 100% of the container's width */
+    max-height: 100%;/* Make the image take 100% of the container's width */
+    height: auto;
+}
+
+.delete-picture {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    color: red; /* Change the color as desired */
+    cursor: pointer;
+}
 
 
+.trash-icon {
+    display: none;
+}
 
+/* Show the trash can icon on hover */
+.picture-frame:hover .trash-icon {
+    display: block;
+}
+
+
+/*#product-pictures-container {*/
+/*    float: right; !* Float the container to the right *!*/
+/*    margin-left: 20px; !* Add some margin to create space between the form and pictures *!*/
+/*}*/
+
+/*.full-height-container {*/
+/*    display: flex;*/
+/*    flex-direction: column; !* Stack items vertically *!*/
+/*    justify-content: center; !* Center items vertically *!*/
+/*    align-items: center; !* Center items horizontally *!*/
+/*    min-height: 100vh;*/
+/*}*/
+
+/*.form-control {*/
+/*    width: 100%;*/
+/*    min-width: 400px; !* Set a minimum width if needed *!*/
+/*    max-width: 400px; !* Set a maximum width if needed *!*/
+/*}*/

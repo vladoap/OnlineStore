@@ -1,21 +1,28 @@
 package com.example.MyStore.web;
 
+import com.example.MyStore.model.binding.ProductAddBindingModel;
 import com.example.MyStore.model.binding.ProductPurchaseBindingModel;
 import com.example.MyStore.model.entity.Picture;
+import com.example.MyStore.model.enums.CategoryNameEnum;
+import com.example.MyStore.model.service.ProductAddServiceModel;
 import com.example.MyStore.model.service.ProductDetailsServiceModel;
 import com.example.MyStore.model.service.ProductSummaryServiceModel;
 import com.example.MyStore.model.view.ProductDetailsViewModel;
 import com.example.MyStore.model.view.ProductsSummaryViewModel;
 import com.example.MyStore.service.PictureService;
 import com.example.MyStore.service.ProductService;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/products")
@@ -46,7 +53,7 @@ public class ProductController {
 
         int totalProducts = productService.getAllProductsExceptOwn(principal.getName()).size();
 
-        model.addAttribute("products", mapServiceToViewModel(productsPageable));
+        model.addAttribute("products", mapServiceToDetailsViewModel(productsPageable));
         model.addAttribute("pages", getPageCount(pageSize, totalProducts));
         model.addAttribute("clickedPage", clickedPage);
         model.addAttribute("selectedCategoryName", null);
@@ -64,7 +71,7 @@ public class ProductController {
 
        int totalProducts = productService.getAllProductsForUser(principal.getName()).size();
 
-        model.addAttribute("products", mapServiceToViewModel(productsPageable));
+        model.addAttribute("products", mapServiceToDetailsViewModel(productsPageable));
         model.addAttribute("pages", getPageCount(pageSize, totalProducts));
         model.addAttribute("clickedPage", clickedPage);
 
@@ -83,7 +90,7 @@ public class ProductController {
 
         int totalProducts = productService.getAllProductsByCategoryExceptOwn(principal.getName(), categoryName).size();
 
-        model.addAttribute("products", mapServiceToViewModel(productsPageable));
+        model.addAttribute("products", mapServiceToDetailsViewModel(productsPageable));
         model.addAttribute("pages", getPageCount(pageSize, totalProducts));
         model.addAttribute("clickedPage", clickedPage);
         model.addAttribute("selectedCategoryName", categoryName);
@@ -98,10 +105,10 @@ public class ProductController {
 
         ProductDetailsServiceModel productDetailsServiceModel = productService.getProductById(id);
 
-        ProductDetailsViewModel productDetailsViewModel = mapServiceToViewModel(productDetailsServiceModel);
+        ProductDetailsViewModel productDetailsViewModel = mapServiceToDetailsViewModel(productDetailsServiceModel);
 
-        List<List<Picture>> groupedPictures = new ArrayList<>();
-        List<Picture> pictures = productDetailsViewModel.getPictures();
+        List<List<String>> groupedPictures = new ArrayList<>();
+        List<String> pictures = productDetailsViewModel.getPictures();
         int batchSize = 3;
 
         for (int i = 0; i < pictures.size(); i += batchSize) {
@@ -116,12 +123,35 @@ public class ProductController {
         return "shop-single";
     }
 
-//    @GetMapping("/edit/{id}")
-//    public String productEditGet(@PathVariable Long id, Model model) {
-//
-//
-//        return "product-edit";
-//    }
+    @GetMapping("/update/{id}")
+    public String productUpdateGet(@PathVariable Long id, Model model) {
+
+        if (!model.containsAttribute("productModel")) {
+            ProductAddServiceModel productAddServiceModel = productService.findProductById(id);
+            ProductAddBindingModel productAddBindingModel = mapServiceToAddBindingModel(productAddServiceModel);
+            model.addAttribute("productModel", productAddBindingModel);
+        }
+
+        model.addAttribute("categories", CategoryNameEnum.values());
+
+        return "product-update";
+    }
+
+    @PatchMapping("/update/{id}")
+    public String productUpdatePost(@PathVariable Long id, @Valid ProductAddBindingModel productModel, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+
+        if (bindingResult.hasErrors()) {
+            redirectAttributes
+                    .addFlashAttribute("productModel", productModel)
+                    .addFlashAttribute("org.springframework.validation.BindingResult.productModel", bindingResult);
+        }
+
+
+
+
+        return "redirect:own";
+    }
+
 
 
 
@@ -135,7 +165,7 @@ public class ProductController {
         return pages;
     }
 
-    private List<ProductsSummaryViewModel> mapServiceToViewModel(List<ProductSummaryServiceModel> productsServiceModel) {
+    private List<ProductsSummaryViewModel> mapServiceToDetailsViewModel(List<ProductSummaryServiceModel> productsServiceModel) {
         return productsServiceModel
                 .stream()
                 .map(p -> {
@@ -149,13 +179,13 @@ public class ProductController {
                 .toList();
     }
 
-    private ProductDetailsViewModel mapServiceToViewModel(ProductDetailsServiceModel productServiceModel) {
+    private ProductDetailsViewModel mapServiceToDetailsViewModel(ProductDetailsServiceModel productServiceModel) {
         return new ProductDetailsViewModel()
                 .setCategory(productServiceModel.getCategory().getName().name())
                 .setId(productServiceModel.getId())
                 .setDescription(productServiceModel.getDescription())
                 .setName(productServiceModel.getName())
-                .setPictures(productServiceModel.getPictures())
+                .setPictures(productServiceModel.getPictures().stream().map(Picture::getUrl).collect(Collectors.toList()))
                 .setImageUrl(productServiceModel
                         .getPictures()
                         .stream()
@@ -167,5 +197,17 @@ public class ProductController {
 
     }
 
+
+    private ProductAddBindingModel mapServiceToAddBindingModel(ProductAddServiceModel productAddServiceModel) {
+        return new ProductAddBindingModel()
+                .setCategory(productAddServiceModel.getCategory().getName().name())
+                .setId(productAddServiceModel.getId())
+                .setDescription(productAddServiceModel.getDescription())
+                .setName(productAddServiceModel.getName())
+                .setPictures(productAddServiceModel.getPictures().stream().map(Picture::getUrl).collect(Collectors.toList()))
+                .setPrice(productAddServiceModel.getPrice())
+                .setQuantity(productAddServiceModel.getQuantity());
+
+    }
 
 }

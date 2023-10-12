@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/commons :: header">
+
+</head>
+
+<body>
+
+<div th:replace="fragments/commons :: navbar">
+
+</div>
+
+
+<!--<div class="bg-light ">-->
+<!--    <div class="row">-->
+<!--        <h2 class="text-center text-dark" style="margin-top: 30px;">Update Product</h2>-->
+<!--        <div class="container full-height-container">-->
+<!--            <div class="row">-->
+
+<!--                &lt;!&ndash; Left side for the form &ndash;&gt;-->
+<!--                <form th:method="patch"-->
+<!--                      th:object="${productModel}"-->
+<!--                      th:action="@{/products/update/{id}(id=*{id})}"-->
+<!--                      id="form"-->
+<!--                      class="main-form col-md-6">-->
+<!--                    <div class="form-group col-md-6 mb-3">-->
+<!--                        <label for="name" class="text-dark" style="font-weight: bold !important;">Name</label>-->
+<!--                        <input id="name" type="text" class="form-control" placeholder="Name"-->
+<!--                               th:field="*{name}"-->
+<!--                               th:errorclass="is-invalid">-->
+<!--                        <p class="invalid-feedback errors alert alert-danger" th:if="${#fields.hasErrors('name')}"-->
+<!--                           th:errors="*{name}">Product name is required.</p>-->
+<!--                    </div>-->
+
+<!--                    <div class="form-group col-md-6 mb-3">-->
+<!--                        <label for="price" class="text-dark font-weight-bold" style="font-weight: bold !important;">Price</label>-->
+<!--                        <input id="price" type="number" min="0.1" step="0.10" class="form-control"-->
+<!--                               placeholder="Suggested price"-->
+<!--                               th:field="*{price}"-->
+<!--                               th:errorclass="is-invalid"-->
+<!--                        >-->
+<!--                        <p class="invalid-feedback errors alert alert-danger">-->
+<!--                            Suggested price is required.-->
+<!--                        </p>-->
+<!--                    </div>-->
+
+<!--                    <div class="form-group col-md-6 mb-3">-->
+<!--                        <label class="text-center text-dark font-weight-bold" for="category"-->
+<!--                               style="font-weight: bold !important;">Category</label>-->
+<!--                        <select th:name="category"-->
+<!--                                th:errorclass="is-invalid"-->
+<!--                                id="category" class="form-control">-->
+<!--                            <option th:each="category : ${categories}"-->
+<!--                                    th:value="${category}"-->
+<!--                                    th:text="${category}"-->
+<!--                                    th:selected="${category} == *{category}">-->
+<!--                                - Select Category - -->
+<!--                            </option>-->
+<!--                        </select>-->
+<!--                        <p class="invalid-feedback errors alert alert-danger">-->
+<!--                            Category is required.-->
+<!--                        </p>-->
+<!--                    </div>-->
+
+<!--                    <div class="form-group col-md-6 mb-3">-->
+<!--                        <label for="quantity" class="text-dark font-weight-bold" style="font-weight: bold !important;">Quantity</label>-->
+<!--                        <input th:field="*{quantity}" th:errorclass="is-invalid"-->
+<!--                               id="quantity" type="number" min="0" max="1000" step="1" class="form-control"-->
+<!--                               placeholder="Quantity">-->
+<!--                        <p class="invalid-feedback errors alert alert-danger">-->
+<!--                            Quantity is required.-->
+<!--                        </p>-->
+<!--                    </div>-->
+
+<!--                    <div class="form-group">-->
+<!--                        <label class="text-dark font-weight-bold" for="description"-->
+<!--                               style="font-weight: bold !important;">Description</label>-->
+<!--                        <textarea th:field="*{description}" th:errorclass="is-invalid"-->
+<!--                                  id="description" type="textarea" class="form-control" style="width: 480px;" rows="3"-->
+<!--                                  placeholder="Description"></textarea>-->
+<!--                        <p class="invalid-feedback errors alert alert-danger">-->
+<!--                            Description is required.-->
+<!--                        </p>-->
+<!--                    </div>-->
+
+<!--                    <div class="col-md-12 text-right">-->
+<!--                        <h5 class="text-dark" style="margin-top: 20px">Product Pictures</h5>-->
+<!--                        <div class="row">-->
+<!--                            <div th:each="pictureUrl, pictureStat : ${productModel.pictures}" class="col-md-2"-->
+<!--                                 style="margin-right: 5px !important;">-->
+<!--                                <div class="picture-frame">-->
+<!--                                    <img th:src="${pictureUrl}" alt="Product Image">-->
+<!--                                    <a href="#" class="delete-picture" th:attr="data-url=${pictureUrl}"-->
+<!--                                       onclick="deletePicture(this)">-->
+<!--                                        <span class="fas fa-trash text-danger trash-icon"></span>-->
+<!--                                    </a>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div class="col col-md-4" style="margin-top: 30px">-->
+<!--                        <div class="button-holder d-flex">-->
+<!--                            <input type="submit" class="btn btn-info btn-lg" value="Update Product">-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <input type="hidden" id="selectedPictures" name="pictures" th:field="*{pictures}"/>-->
+<!--                    <div id="productPictures" th:attr="data-pictures=${productModel.pictures}"-->
+<!--                         style="display: none;"></div>-->
+
+<!--                </form>-->
+
+
+<!--                <div class="col col-md-2">-->
+<!--                    <div class="text-center mb-3">-->
+<!--                        <h5>Choose Picture</h5>-->
+<!--                    </div>-->
+<!--                    <form th:action="@{/pictures/add/product/{id}(id = ${productModel.id})}" th:method="POST"-->
+<!--                          enctype="multipart/form-data">-->
+<!--                        <input type="hidden" id="id" name="routeId">-->
+<!--                        <div class="form-group text-center">-->
+<!--                            <label>-->
+<!--                                <input type="text" name="title" id="title" readonly>-->
+<!--                            </label>-->
+<!--                        </div>-->
+<!--                        <div class="form-group text-center">-->
+<!--                            <div class="image-upload">-->
+<!--                                <label for="picture">-->
+<!--                                    <img src="/images/add-img.png" alt=""/>-->
+<!--                                </label>-->
+<!--                                <input style="display: none" id="picture" type="file" name="picture"-->
+<!--                                       onchange="updateTitle(this)">-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="form-group text-center">-->
+<!--                            <button class="btn btn-secondary btn-sm">Upload Picture</button>-->
+<!--                        </div>-->
+<!--                    </form>-->
+<!--                </div>-->
+
+
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--</div>-->
+
+
+
+
+<div class="bg-light">
+    <div class="container full-height-container">
+        <div class="row">
+            <div class="col-md-6 main-form">
+                <h2 class="text-center text-dark" style="margin-top: 30px;">Update Product</h2>
+                <form th:method="patch"
+                      th:object="${productModel}"
+                      th:action="@{/products/update/{id}(id=*{id})}"
+                      id="form">
+
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label for="name" class="text-dark" style="font-weight: bold !important;">Name</label>
+                        <input id="name" type="text" class="form-control" placeholder="Name"
+                               th:field="*{name}"
+                               th:errorclass="is-invalid">
+                        <p class="invalid-feedback errors alert alert-danger" th:if="${#fields.hasErrors('name')}"
+                           th:errors="*{name}">Product name is required.</p>
+                    </div>
+
+                    <!-- Price -->
+                    <div class="form-group">
+                        <label for="price" class="text-dark font-weight-bold" style="font-weight: bold !important;">Price</label>
+                        <input id="price" type="number" min="0.1" step="0.10" class="form-control" placeholder="Suggested price"
+                               th:field="*{price}"
+                               th:errorclass="is-invalid"
+                        >
+                        <p class="invalid-feedback errors alert alert-danger">
+                            Suggested price is required.
+                        </p>
+                    </div>
+
+                    <!-- Category -->
+                    <div class="form-group">
+                        <label class="text-center text-dark font-weight-bold" for="category" style="font-weight: bold !important;">Category</label>
+                        <select th:name="category"
+                                th:errorclass="is-invalid"
+                                id="category" class="form-control">
+                            <option th:each="category : ${categories}"
+                                    th:value="${category}"
+                                    th:text="${category}"
+                                    th:selected="${category} == *{category}">
+                                - Select Category -
+                            </option>
+                        </select>
+                        <p class="invalid-feedback errors alert alert-danger">
+                            Category is required.
+                        </p>
+                    </div>
+
+                    <!-- Quantity -->
+                    <div class="form-group">
+                        <label for="quantity" class="text-dark font-weight-bold" style="font-weight: bold !important;">Quantity</label>
+                        <input th:field="*{quantity}" th:errorclass="is-invalid"
+                               id="quantity" type="number" min="0" max="1000" step="1" class="form-control" placeholder="Quantity">
+                        <p class="invalid-feedback errors alert alert-danger">
+                            Quantity is required.
+                        </p>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-group">
+                        <label class="text-dark font-weight-bold" for="description" style="font-weight: bold !important;">Description</label>
+                        <textarea th:field="*{description}" th:errorclass="is-invalid"
+                                  id="description" type="textarea" class="form-control" style="width: 100%;" rows="3" placeholder="Description"></textarea>
+                        <p class="invalid-feedback errors alert alert-danger">
+                            Description is required.
+                        </p>
+                    </div>
+
+                    <!-- Product Pictures -->
+                    <h5 class="text-dark" style="margin-top: 20px">Product Pictures</h5>
+                    <div class="row">
+                        <div th:each="pictureUrl, pictureStat : ${productModel.pictures}" class="col-md-2" style="margin-right: 5px !important;">
+                            <div class="picture-frame">
+                                <img th:src="${pictureUrl}" alt="Product Image">
+                                <a href="#" class="delete-picture" th:attr="data-url=${pictureUrl}" onclick="deletePicture(this)">
+                                    <span class="fas fa-trash text-danger trash-icon"></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Update Product Button -->
+                    <div class="text-center" style="margin-top: 20px;">
+                        <input type="submit" class="btn btn-info btn-lg" value="Update Product">
+                    </div>
+
+                    <!-- Hidden Input for Pictures -->
+                    <input type="hidden" id="selectedPictures" name="pictures" th:field="*{pictures}" />
+                    <div id="productPictures" th:attr="data-pictures=${productModel.pictures}" style="display: none;"></div>
+                </form>
+            </div>
+
+            <!-- Right side for adding pictures -->
+            <div class="col-md-6" style="margin-top: 30px;">
+                <div class="text-center mb-3">
+                    <h5>Choose Picture</h5>
+                </div>
+                <form th:action="@{/pictures/add/product/{id}(id = ${productModel.id})}" th:method="POST" enctype="multipart/form-data">
+                    <input type="hidden" id="id" name="routeId">
+                    <div class="form-group text-center">
+                        <label>
+                            <input type="text" name="title" id="title" readonly>
+                        </label>
+                    </div>
+                    <div class="form-group text-center">
+                        <div class="image-upload">
+                            <label for="picture">
+                                <img src="/images/add-img.png" alt=""/>
+                            </label>
+                            <input style="display: none" id="picture" type="file" name="picture" onchange="updateTitle(this)">
+                        </div>
+                    </div>
+                    <div class="form-group text-center">
+                        <button class="btn btn-secondary btn-sm">Upload Picture</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+</body>
+
+</html>

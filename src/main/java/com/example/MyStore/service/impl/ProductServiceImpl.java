@@ -4,6 +4,7 @@ import com.example.MyStore.exception.ProductNotFoundException;
 import com.example.MyStore.model.entity.Picture;
 import com.example.MyStore.model.entity.Product;
 import com.example.MyStore.model.enums.CategoryNameEnum;
+import com.example.MyStore.model.service.ProductAddServiceModel;
 import com.example.MyStore.model.service.ProductDetailsServiceModel;
 import com.example.MyStore.model.service.ProductSummaryServiceModel;
 import com.example.MyStore.repository.ProductRepository;
@@ -121,11 +122,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
-    private Product findById(Long id) {
-        return productRepository
-                .findById(id)
-                .orElseThrow(() -> new ProductNotFoundException("Product with ID: " + id + " not found."));
-    }
+
 
     @Override
     public List<ProductSummaryServiceModel> getTheLatestThreeProducts() {
@@ -135,6 +132,14 @@ public class ProductServiceImpl implements ProductService {
                 .findAll(pageable)
                 .map(this::map)
                 .toList();
+    }
+
+    @Override
+    public ProductAddServiceModel findProductById(Long id) {
+        return productRepository
+                .findById(id)
+                .map(product -> modelMapper.map(product, ProductAddServiceModel.class))
+                .orElseThrow(() -> new ProductNotFoundException("Product with ID: " + id + " not found."));
     }
 
 

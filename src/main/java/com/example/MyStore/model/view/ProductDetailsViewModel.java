@@ -14,7 +14,7 @@ public class ProductDetailsViewModel {
     private String description;
     private String seller;
     private String category;
-    private List<Picture> pictures;
+    private List<String> pictures;
     private Integer quantity;
     private BigDecimal price;
 
@@ -72,11 +72,11 @@ public class ProductDetailsViewModel {
         return this;
     }
 
-    public List<Picture> getPictures() {
+    public List<String> getPictures() {
         return pictures;
     }
 
-    public ProductDetailsViewModel setPictures(List<Picture> pictures) {
+    public ProductDetailsViewModel setPictures(List<String> pictures) {
         this.pictures = pictures;
         return this;
     }

@@ -1,6 +1,7 @@
 package com.example.MyStore.service;
 
 import com.example.MyStore.model.entity.Product;
+import com.example.MyStore.model.service.ProductAddServiceModel;
 import com.example.MyStore.model.service.ProductDetailsServiceModel;
 import com.example.MyStore.model.service.ProductSummaryServiceModel;
 
@@ -30,4 +31,5 @@ public interface ProductService {
     List<ProductSummaryServiceModel> getTheLatestThreeProducts();
 
 
+    ProductAddServiceModel findProductById(Long id);
 }

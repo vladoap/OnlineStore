@@ -38,7 +38,7 @@
                                     <div th:remove="tag" th:each="pic : ${#numbers.sequence(0,2)}" th:if="${iterStat.index * 3 + pic <= #lists.size(productDetails.getPictures()) - 1}">
                                         <div class="col-4">
                                             <a href="#">
-                                                <img class="card-img img-fluid" th:src="${productDetails.getPictures()[iterStat.index * 3 + pic].url}" th:alt="'Product Image ' + ${iterStat.index * 3 + pic + 1}" alt="Product Image">
+                                                <img class="card-img img-fluid" th:src="${productDetails.getPictures()[iterStat.index * 3 + pic]}" th:alt="'Product Image ' + ${iterStat.index * 3 + pic + 1}" alt="Product Image">
                                             </a>
                                         </div>
                                     </div>

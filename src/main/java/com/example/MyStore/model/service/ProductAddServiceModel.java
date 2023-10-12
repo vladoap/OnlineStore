@@ -1,4 +1,4 @@
-package com.example.MyStore.model.binding;
+package com.example.MyStore.model.service;
 
 import com.example.MyStore.model.entity.Category;
 import com.example.MyStore.model.entity.Picture;
@@ -7,22 +7,30 @@ import com.example.MyStore.model.entity.User;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class ProductAddBindingModel {
-
+public class ProductAddServiceModel {
 
     private Long id;
     private String name;
     private String description;
-    private String category;
-    private List<String> pictures;
+    private Category category;
+    private List<Picture> pictures;
     private Integer quantity;
     private BigDecimal price;
+
+    public Long getId() {
+        return id;
+    }
+
+    public ProductAddServiceModel setId(Long id) {
+        this.id = id;
+        return this;
+    }
 
     public String getName() {
         return name;
     }
 
-    public ProductAddBindingModel setName(String name) {
+    public ProductAddServiceModel setName(String name) {
         this.name = name;
         return this;
     }
@@ -31,25 +39,27 @@ public class ProductAddBindingModel {
         return description;
     }
 
-    public ProductAddBindingModel setDescription(String description) {
+    public ProductAddServiceModel setDescription(String description) {
         this.description = description;
         return this;
     }
 
-    public String getCategory() {
+
+
+    public Category getCategory() {
         return category;
     }
 
-    public ProductAddBindingModel setCategory(String category) {
+    public ProductAddServiceModel setCategory(Category category) {
         this.category = category;
         return this;
     }
 
-    public List<String> getPictures() {
+    public List<Picture> getPictures() {
         return pictures;
     }
 
-    public ProductAddBindingModel setPictures(List<String> pictures) {
+    public ProductAddServiceModel setPictures(List<Picture> pictures) {
         this.pictures = pictures;
         return this;
     }
@@ -58,7 +68,7 @@ public class ProductAddBindingModel {
         return quantity;
     }
 
-    public ProductAddBindingModel setQuantity(Integer quantity) {
+    public ProductAddServiceModel setQuantity(Integer quantity) {
         this.quantity = quantity;
         return this;
     }
@@ -67,17 +77,8 @@ public class ProductAddBindingModel {
         return price;
     }
 
-    public ProductAddBindingModel setPrice(BigDecimal price) {
+    public ProductAddServiceModel setPrice(BigDecimal price) {
         this.price = price;
-        return this;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public ProductAddBindingModel setId(Long id) {
-        this.id = id;
         return this;
     }
 }
