@@ -13,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
@@ -28,5 +29,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT p FROM Product p WHERE p.seller.username != :username AND p.category.name = :categoryName")
     List<Product> findAllByCategoryAndSellerUsernameIsNotByPagination(String username, @Param(value = "categoryName") CategoryNameEnum catName, Pageable pageable);
+
+    @Query("SELECT p FROM Product p WHERE p.seller.username = :username")
+    List<Product> findAllBySellerUsernameByPagination(String username, PageRequest pageRequest);
+
+    List<Product> findAllBySellerUsername(String username);
+
 
 }

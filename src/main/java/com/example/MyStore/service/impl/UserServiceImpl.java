@@ -1,6 +1,7 @@
 package com.example.MyStore.service.impl;
 
 import com.example.MyStore.model.entity.*;
+import com.example.MyStore.model.service.ProductDetailsServiceModel;
 import com.example.MyStore.model.service.UserRegisterServiceModel;
 import com.example.MyStore.repository.UserRepository;
 import com.example.MyStore.service.*;
@@ -69,7 +70,8 @@ public class UserServiceImpl implements UserService {
                 .setCreated(LocalDateTime.now());
         UserRole roleUser = userRoleService.getUserRole();
         user.setRoles(Set.of(roleUser));
-
+        user.setCart(new Cart().setCartItems(new HashSet<>()));
+        user.getCart().setCreated(LocalDateTime.now());
 
         AddressId userAddressId = new AddressId(userModel.getStreetName(), userModel.getCity(), userModel.getStreetNumber());
         Optional<Address> addressOpt = addressService.findById(userAddressId);
@@ -86,6 +88,7 @@ public class UserServiceImpl implements UserService {
             user.setAddress(userAddress);
         }
 
+
         userRepository.save(user);
 
         authenticateUser(user.getUsername());
@@ -100,24 +103,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void addCartItemInUserCart(Integer quantity, String buyerUsername, Product product) {
+    public void addCartItemInUserCart(Integer quantity, String buyerUsername, ProductDetailsServiceModel product) {
         User buyer = findByUsername(buyerUsername);
 
-        if (buyer.getProductsInCart() == null) {
-            buyer.setProductsInCart(new HashSet<>());
+        if (buyer.getCart().getCartItems() == null) {
+            buyer.getCart().setCartItems(new HashSet<>());
         }
 
-        Set<CartItem> cartItems = buyer.getProductsInCart();
 
-        Optional<CartItem> existingCartItemOpt = getCartItemByProductAndUsername(product, buyer.getUsername());
+        Set<CartItem> cartItems = buyer.getCart().getCartItems();
 
-        if (existingCartItemOpt.isEmpty()) {
-            CartItem cartItemToAdd = createCartItem(quantity, product);
-            cartItemService.save(cartItemToAdd);
+        Optional<CartItem> cartItemOpt = cartItems
+                .stream()
+                .filter(cartItem -> cartItem.getProductId().equals(product.getId()))
+                .findFirst();
+
+        if (cartItemOpt.isEmpty()) {
+            CartItem cartItemToAdd = cartItemService.createNewCartItem(quantity, product);
             cartItems.add(cartItemToAdd);
 
         } else {
-            CartItem existingCartItem = existingCartItemOpt.get();
+            CartItem existingCartItem = cartItemOpt.get();
             existingCartItem.setQuantity(existingCartItem.getQuantity() + quantity);
         }
 
@@ -126,15 +132,13 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public Optional<CartItem> getCartItemByProductAndUsername(Product product, String username) {
-        return findByUsername(username).getProductsInCart()
-                .stream()
-                .filter(cartItem -> cartItem.getProductId().equals(product.getId())).findFirst();
-    }
+    public Integer getCartItemQuantityForUser(Long productId, String username) {
+        initializeUserCart(username);
 
-    @Override
-    public Integer getCartItemQuantity(Product product, String username) {
-        return getCartItemByProductAndUsername(product, username)
+        return findByUsername(username).getCart().getCartItems()
+                .stream()
+                .filter(cartItem -> cartItem.getProductId().equals(productId))
+                .findFirst()
                 .map(CartItem::getQuantity)
                 .orElse(0);
     }
@@ -160,16 +164,15 @@ public class UserServiceImpl implements UserService {
         securityContextRepository.saveContext(context, httpServletRequest, httpServletResponse);
     }
 
-    private static CartItem createCartItem(Integer quantity, Product product) {
-        CartItem cartItemToAdd = new CartItem()
-                .setName(product.getName())
-                .setProductId(product.getId())
-                .setPrice(product.getPrice())
-                .setQuantity(quantity)
-                .setImageUrl(product.getPictures()
-                        .stream().findFirst().map(Picture::getUrl).orElse(null));
-        cartItemToAdd.setCreated(LocalDateTime.now());
-        return cartItemToAdd;
+    private void initializeUserCart(String username) {
+        User user = findByUsername(username);
+
+        if (user.getCart() == null) {
+            user.setCart(new Cart().setCartItems(new HashSet<>()));
+            user.getCart().setCreated(LocalDateTime.now());
+            userRepository.save(user);
+        }
     }
+
 
 }

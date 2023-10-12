@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/commons :: header">
+
+</head>
+
+<body >
+
+<div th:replace="fragments/commons :: navbar">
+
+</div>
+
+
+<div class="bg-light">
+<div class="container py-5">
+<div class="col-lg-9">
+    <div class="row">
+        <div th:each="p : ${products}" th:object="${p}" class="col-md-4">
+            <div class="product-container">
+                <div class="card mb-4 product-wap rounded-0" style="height: 400px;">
+                    <div class="card rounded-0">
+                        <div class="d-flex justify-content-center align-items-center" style="height: 100%;">
+                            <img class="card-img rounded-0 img-fluid" th:src="*{imageUrl}">
+                        </div>
+                        <div class="card-img-overlay rounded-0 product-overlay d-flex flex-column justify-content-end">
+                            <ul class="list-unstyled mt-auto">
+                                <li><a class="btn btn-success text-white" th:href="@{/products/details/{id}(id = *{id})}"><i
+                                        class="far fa-eye"></i></a></li>
+                                <form th:method="post" th:action="@{/purchase/{id}(id = *{id})}" class="purchaseForm">
+                                    <input type="hidden" name="quantity" value="1">
+                                </form>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-body text-center d-flex flex-column align-items-center">
+                        <a th:href="@{/products/details/{id}(id = *{id})}" th:text="*{name}" class="h3 text-decoration-none text-center">Oupidatat non</a>
+                        <p class="mt-2" th:text="${p.price} + ' Lv.'">$250.00</p>
+                    </div>
+                </div>
+
+                <!-- Buttons placed below the card with reduced margin -->
+                <div class="button-bar" style="margin-top: 5px;">
+                    <a th:href="@{/products/edit/{id}(id = *{id})}" class="btn btn-primary edit-button">Edit</a>
+                    <a th:href="@{/products/delete/{id}(id = *{id})}" class="btn btn-danger delete-button">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+</div>
+
+</body>
+
+</html>

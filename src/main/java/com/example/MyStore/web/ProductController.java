@@ -54,6 +54,24 @@ public class ProductController {
         return "shop";
     }
 
+    @GetMapping("/own")
+    public String getAllOwnProducts(Model model, Principal principal,
+                                    @RequestParam(name = "clickedPage", required = false, defaultValue = "0") Integer clickedPage,
+                                    @RequestParam(defaultValue = "1") int page,
+                                    @RequestParam(defaultValue = "6") int pageSize) {
+
+       List<ProductSummaryServiceModel> productsPageable = productService.getAllProductsForUserPageable(page, pageSize, principal.getName());
+
+       int totalProducts = productService.getAllProductsForUser(principal.getName()).size();
+
+        model.addAttribute("products", mapServiceToViewModel(productsPageable));
+        model.addAttribute("pages", getPageCount(pageSize, totalProducts));
+        model.addAttribute("clickedPage", clickedPage);
+
+        return "my-products";
+    }
+
+
     @GetMapping("/category/{name}")
     public String getAllProductsByCategory(Model model, Principal principal,
                                            @PathVariable(name = "name") String categoryName,
@@ -82,8 +100,6 @@ public class ProductController {
 
         ProductDetailsViewModel productDetailsViewModel = mapServiceToViewModel(productDetailsServiceModel);
 
-
-
         List<List<Picture>> groupedPictures = new ArrayList<>();
         List<Picture> pictures = productDetailsViewModel.getPictures();
         int batchSize = 3;
@@ -100,6 +116,12 @@ public class ProductController {
         return "shop-single";
     }
 
+//    @GetMapping("/edit/{id}")
+//    public String productEditGet(@PathVariable Long id, Model model) {
+//
+//
+//        return "product-edit";
+//    }
 
 
 

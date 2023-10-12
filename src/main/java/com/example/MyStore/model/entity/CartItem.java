@@ -3,6 +3,7 @@ package com.example.MyStore.model.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 import java.math.BigDecimal;
@@ -17,6 +18,8 @@ public class CartItem extends BaseEntity {
     private String imageUrl;
     private Integer quantity;
     private BigDecimal price;
+
+
 
     @Column(nullable = false, name = "product_id")
     public Long getProductId() {
@@ -67,4 +70,6 @@ public class CartItem extends BaseEntity {
         this.price = price;
         return this;
     }
+
+
 }

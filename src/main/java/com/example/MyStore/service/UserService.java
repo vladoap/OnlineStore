@@ -1,11 +1,8 @@
 package com.example.MyStore.service;
 
-import com.example.MyStore.model.entity.CartItem;
-import com.example.MyStore.model.entity.Product;
 import com.example.MyStore.model.entity.User;
+import com.example.MyStore.model.service.ProductDetailsServiceModel;
 import com.example.MyStore.model.service.UserRegisterServiceModel;
-
-import java.util.Optional;
 
 public interface UserService {
     boolean isUsernameFree(String username);
@@ -14,9 +11,8 @@ public interface UserService {
 
     User findByUsername(String username);
 
-    void addCartItemInUserCart(Integer quantity, String buyerUsername, Product product);
+    void addCartItemInUserCart(Integer quantity, String buyerUsername, ProductDetailsServiceModel product);
 
-    Optional<CartItem> getCartItemByProductAndUsername(Product product, String username);
 
-    Integer getCartItemQuantity(Product product, String username);
+    Integer getCartItemQuantityForUser(Long productId, String username);
 }

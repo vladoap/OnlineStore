@@ -1,7 +1,7 @@
 package com.example.MyStore.web;
 
 import com.example.MyStore.model.binding.ProductPurchaseBindingModel;
-import com.example.MyStore.model.entity.Product;
+import com.example.MyStore.model.service.ProductDetailsServiceModel;
 import com.example.MyStore.service.ProductService;
 import com.example.MyStore.service.UserService;
 import jakarta.validation.Valid;
@@ -39,9 +39,10 @@ public class PurchaseProductController {
             return "redirect:/products/details/" + id;
         }
 
-        Product product = productService.findById(id);
+        //TODO: should i get product in UserServiceImpl
+        ProductDetailsServiceModel product = productService.getProductById(id);
 
-        int availableQuantity = productService.getAvailableQuantityById(id) - userService.getCartItemQuantity(product, principal.getName());
+        int availableQuantity = productService.getAvailableQuantityById(id) - userService.getCartItemQuantityForUser(product.getId(), principal.getName());
 
         if (availableQuantity < 0) {
             availableQuantity = 0;

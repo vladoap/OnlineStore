@@ -29,8 +29,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-
-
 document.addEventListener("DOMContentLoaded", function () {
     var addToCartButtons = document.querySelectorAll(".addToCartButton");
     addToCartButtons.forEach(function (button) {

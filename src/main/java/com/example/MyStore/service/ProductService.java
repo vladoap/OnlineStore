@@ -9,7 +9,7 @@ import java.util.List;
 public interface ProductService {
     List<ProductSummaryServiceModel> getAllProducts();
 
-    List<ProductSummaryServiceModel> getAllProductsExceptOwn(String username);
+
 
     List<ProductSummaryServiceModel> getAllProductsExceptOwnPageable(int page, int pageSize, String username);
 
@@ -17,12 +17,17 @@ public interface ProductService {
 
     List<ProductSummaryServiceModel> getAllProductsByCategoryExceptOwnPageable(int page, int pageSize, String username, String categoryName);
 
+    List<ProductSummaryServiceModel> getAllProductsExceptOwn(String username);
+
+    List<ProductSummaryServiceModel> getAllProductsForUserPageable(int page, int pageSize, String username);
+
+    List<ProductSummaryServiceModel> getAllProductsForUser(String username);
 
     ProductDetailsServiceModel getProductById(Long id);
 
     Integer getAvailableQuantityById(Long id);
 
-    Product findById(Long id);
-
     List<ProductSummaryServiceModel> getTheLatestThreeProducts();
+
+
 }

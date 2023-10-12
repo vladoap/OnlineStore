@@ -19,7 +19,7 @@ public class User extends BaseEntity{
     private Picture profilePicture;
     private Set<UserRole> role;
     private Set<Product> products;
-    private Set<CartItem> productsInCart;
+    private Cart cart;
     private Address address;
 
 
@@ -128,13 +128,13 @@ public class User extends BaseEntity{
         return this;
     }
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    public Set<CartItem> getProductsInCart() {
-        return productsInCart;
+   @OneToOne(cascade = CascadeType.ALL)
+    public Cart getCart() {
+        return cart;
     }
 
-    public User setProductsInCart(Set<CartItem> productsInCart) {
-        this.productsInCart = productsInCart;
+    public User setCart(Cart cart) {
+        this.cart = cart;
         return this;
     }
 }

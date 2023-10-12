@@ -51,7 +51,6 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
-
     @Override
     public List<ProductSummaryServiceModel> getAllProductsExceptOwnPageable(int page, int pageSize, String username) {
 
@@ -84,6 +83,27 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<ProductSummaryServiceModel> getAllProductsForUserPageable(int page, int pageSize, String username) {
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
+
+        return productRepository.findAllBySellerUsernameByPagination(username, pageRequest)
+                .stream()
+                .map(this::map)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductSummaryServiceModel> getAllProductsForUser(String username) {
+        return productRepository
+                .findAllBySellerUsername(username)
+                .stream()
+                .map(this::map)
+                .collect(Collectors.toList());
+    }
+
+
+
+    @Override
     public ProductDetailsServiceModel getProductById(Long id) {
 
         return productRepository
@@ -100,8 +120,8 @@ public class ProductServiceImpl implements ProductService {
                 .getQuantity();
     }
 
-    @Override
-    public Product findById(Long id) {
+
+    private Product findById(Long id) {
         return productRepository
                 .findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Product with ID: " + id + " not found."));
