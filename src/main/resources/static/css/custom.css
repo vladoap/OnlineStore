@@ -121,22 +121,3 @@
     display: block;
 }
 
-
-/*#product-pictures-container {*/
-/*    float: right; !* Float the container to the right *!*/
-/*    margin-left: 20px; !* Add some margin to create space between the form and pictures *!*/
-/*}*/
-
-/*.full-height-container {*/
-/*    display: flex;*/
-/*    flex-direction: column; !* Stack items vertically *!*/
-/*    justify-content: center; !* Center items vertically *!*/
-/*    align-items: center; !* Center items horizontally *!*/
-/*    min-height: 100vh;*/
-/*}*/
-
-/*.form-control {*/
-/*    width: 100%;*/
-/*    min-width: 400px; !* Set a minimum width if needed *!*/
-/*    max-width: 400px; !* Set a maximum width if needed *!*/
-/*}*/

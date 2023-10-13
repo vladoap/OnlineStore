@@ -1,18 +1,22 @@
 package com.example.MyStore.web;
 
 import com.example.MyStore.model.binding.ProductAddBindingModel;
+import com.example.MyStore.model.binding.ProductUpdateBindingModel;
 import com.example.MyStore.model.binding.ProductPurchaseBindingModel;
 import com.example.MyStore.model.entity.Picture;
 import com.example.MyStore.model.enums.CategoryNameEnum;
 import com.example.MyStore.model.service.ProductAddServiceModel;
+import com.example.MyStore.model.service.ProductUpdateServiceModel;
 import com.example.MyStore.model.service.ProductDetailsServiceModel;
 import com.example.MyStore.model.service.ProductSummaryServiceModel;
 import com.example.MyStore.model.view.ProductDetailsViewModel;
 import com.example.MyStore.model.view.ProductsSummaryViewModel;
+import com.example.MyStore.service.CategoryService;
 import com.example.MyStore.service.PictureService;
 import com.example.MyStore.service.ProductService;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,17 +34,24 @@ public class ProductController {
 
     private final ProductService productService;
     private final PictureService pictureService;
+    private final CategoryService categoryService;
     private final ModelMapper modelMapper;
 
-    public ProductController(ProductService productService, PictureService pictureService, ModelMapper modelMapper) {
+    public ProductController(ProductService productService, PictureService pictureService, CategoryService categoryService, ModelMapper modelMapper) {
         this.productService = productService;
         this.pictureService = pictureService;
+        this.categoryService = categoryService;
         this.modelMapper = modelMapper;
     }
 
     @ModelAttribute
     public ProductPurchaseBindingModel productPurchaseBindingModel() {
         return new ProductPurchaseBindingModel();
+    }
+
+    @ModelAttribute
+    public ProductAddBindingModel productAddBindingModel() {
+        return new ProductAddBindingModel();
     }
 
     @GetMapping("/all")
@@ -67,9 +78,13 @@ public class ProductController {
                                     @RequestParam(defaultValue = "1") int page,
                                     @RequestParam(defaultValue = "6") int pageSize) {
 
-       List<ProductSummaryServiceModel> productsPageable = productService.getAllProductsForUserPageable(page, pageSize, principal.getName());
+        List<ProductSummaryServiceModel> productsPageable = productService.getAllProductsForUserPageable(page, pageSize, principal.getName());
 
-       int totalProducts = productService.getAllProductsForUser(principal.getName()).size();
+        int totalProducts = productService.getAllProductsForUser(principal.getName()).size();
+
+        if (totalProducts == 0) {
+            model.addAttribute("noProducts", true);
+        }
 
         model.addAttribute("products", mapServiceToDetailsViewModel(productsPageable));
         model.addAttribute("pages", getPageCount(pageSize, totalProducts));
@@ -77,6 +92,8 @@ public class ProductController {
 
         return "my-products";
     }
+
+
 
 
     @GetMapping("/category/{name}")
@@ -96,14 +113,13 @@ public class ProductController {
         model.addAttribute("selectedCategoryName", categoryName);
 
 
-
         return "shop";
     }
 
     @GetMapping("/details/{id}")
     public String productDetails(@PathVariable Long id, Model model) {
 
-        ProductDetailsServiceModel productDetailsServiceModel = productService.getProductById(id);
+        ProductDetailsServiceModel productDetailsServiceModel = productService.getById(id);
 
         ProductDetailsViewModel productDetailsViewModel = mapServiceToDetailsViewModel(productDetailsServiceModel);
 
@@ -123,13 +139,14 @@ public class ProductController {
         return "shop-single";
     }
 
+    @PreAuthorize("@productServiceImpl.isOwner(#principal.name, #id)")
     @GetMapping("/update/{id}")
-    public String productUpdateGet(@PathVariable Long id, Model model) {
+    public String productUpdateGet(@PathVariable Long id, Model model, Principal principal) {
 
         if (!model.containsAttribute("productModel")) {
-            ProductAddServiceModel productAddServiceModel = productService.findProductById(id);
-            ProductAddBindingModel productAddBindingModel = mapServiceToAddBindingModel(productAddServiceModel);
-            model.addAttribute("productModel", productAddBindingModel);
+            ProductUpdateServiceModel productUpdateServiceModel = productService.findById(id);
+            ProductUpdateBindingModel productUpdateBindingModel = mapServiceToAddBindingModel(productUpdateServiceModel);
+            model.addAttribute("productModel", productUpdateBindingModel);
         }
 
         model.addAttribute("categories", CategoryNameEnum.values());
@@ -137,22 +154,65 @@ public class ProductController {
         return "product-update";
     }
 
+
+    @PreAuthorize("@productServiceImpl.isOwner(#principal.name, #id)")
     @PatchMapping("/update/{id}")
-    public String productUpdatePost(@PathVariable Long id, @Valid ProductAddBindingModel productModel, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String productUpdatePost(@PathVariable Long id, Principal principal, @Valid ProductUpdateBindingModel productModel, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
             redirectAttributes
                     .addFlashAttribute("productModel", productModel)
                     .addFlashAttribute("org.springframework.validation.BindingResult.productModel", bindingResult);
+            return "redirect:/products/update/" + id;
         }
 
 
+        ProductUpdateServiceModel productUpdateServiceModel = mapAddBindingToServiceModel(productModel);
 
+        List<Picture> deletedPictures = productService.updateProduct(productUpdateServiceModel);
+        pictureService.deletePictures(deletedPictures);
+
+
+        return "redirect:/products/own";
+    }
+
+    @GetMapping("/add")
+    public String productAdd(Model model) {
+
+        if (!model.containsAttribute("productModel")) {
+
+            model.addAttribute("productModel", productAddBindingModel());
+        }
+        model.addAttribute("categories", CategoryNameEnum.values());
+        return "product-add";
+    }
+
+    @PostMapping("/add")
+    public String productAddPost(@Valid ProductAddBindingModel productModel, BindingResult bindingResult, RedirectAttributes redirectAttributes,
+                                 Principal principal) {
+
+        if (bindingResult.hasErrors()) {
+            redirectAttributes
+                    .addFlashAttribute("productModel", productModel)
+                    .addFlashAttribute("org.springframework.validation.BindingResult.productModel", bindingResult);
+            return "redirect:add";
+        }
+
+        ProductAddServiceModel productServiceModel = modelMapper.map(productModel, ProductAddServiceModel.class);
+        productServiceModel.setCategory(categoryService.findByName(productModel.getCategory()));
+
+        productService.addProduct(productServiceModel, principal.getName());
 
         return "redirect:own";
     }
 
+    @PreAuthorize("@productServiceImpl.isOwner(#principal.name, #id)")
+    @DeleteMapping("/delete/{id}")
+    public String productDelete(@PathVariable Long id, Principal principal) {
+        productService.deleteProduct(id);
 
+        return "redirect:/products/own";
+    }
 
 
     private static List<Integer> getPageCount(int pageSize, int totalProducts) {
@@ -198,16 +258,29 @@ public class ProductController {
     }
 
 
-    private ProductAddBindingModel mapServiceToAddBindingModel(ProductAddServiceModel productAddServiceModel) {
-        return new ProductAddBindingModel()
-                .setCategory(productAddServiceModel.getCategory().getName().name())
-                .setId(productAddServiceModel.getId())
-                .setDescription(productAddServiceModel.getDescription())
-                .setName(productAddServiceModel.getName())
-                .setPictures(productAddServiceModel.getPictures().stream().map(Picture::getUrl).collect(Collectors.toList()))
-                .setPrice(productAddServiceModel.getPrice())
-                .setQuantity(productAddServiceModel.getQuantity());
+    private ProductUpdateBindingModel mapServiceToAddBindingModel(ProductUpdateServiceModel productUpdateServiceModel) {
+        return new ProductUpdateBindingModel()
+                .setCategory(productUpdateServiceModel.getCategory().getName().name())
+                .setId(productUpdateServiceModel.getId())
+                .setDescription(productUpdateServiceModel.getDescription())
+                .setName(productUpdateServiceModel.getName())
+                .setPictures(productUpdateServiceModel.getPictures().stream().map(Picture::getUrl).collect(Collectors.toList()))
+                .setPrice(productUpdateServiceModel.getPrice())
+                .setQuantity(productUpdateServiceModel.getQuantity());
 
+    }
+
+    private ProductUpdateServiceModel mapAddBindingToServiceModel(ProductUpdateBindingModel productUpdateBindingModel) {
+        ProductUpdateServiceModel productModel = modelMapper.map(productUpdateBindingModel, ProductUpdateServiceModel.class);
+
+        List<Picture> pictures = productUpdateBindingModel.getPictures().stream()
+                .map(pictureService::findByUrl).toList();
+
+        productModel
+                .setPictures(pictures)
+                .setCategory(categoryService.findByName(productUpdateBindingModel.getCategory()));
+
+        return productModel;
     }
 
 }

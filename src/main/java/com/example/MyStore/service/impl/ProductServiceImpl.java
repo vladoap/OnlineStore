@@ -3,8 +3,10 @@ package com.example.MyStore.service.impl;
 import com.example.MyStore.exception.ProductNotFoundException;
 import com.example.MyStore.model.entity.Picture;
 import com.example.MyStore.model.entity.Product;
+import com.example.MyStore.model.entity.User;
 import com.example.MyStore.model.enums.CategoryNameEnum;
 import com.example.MyStore.model.service.ProductAddServiceModel;
+import com.example.MyStore.model.service.ProductUpdateServiceModel;
 import com.example.MyStore.model.service.ProductDetailsServiceModel;
 import com.example.MyStore.model.service.ProductSummaryServiceModel;
 import com.example.MyStore.repository.ProductRepository;
@@ -16,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,6 +29,7 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final UserService userService;
+
     private final ModelMapper modelMapper;
 
 
@@ -103,9 +108,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
-
     @Override
-    public ProductDetailsServiceModel getProductById(Long id) {
+    public ProductDetailsServiceModel getById(Long id) {
 
         return productRepository
                 .findById(id)
@@ -122,8 +126,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
-
-
     @Override
     public List<ProductSummaryServiceModel> getTheLatestThreeProducts() {
         Pageable pageable = PageRequest.of(0, 3, Sort.by("created"));
@@ -135,11 +137,65 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductAddServiceModel findProductById(Long id) {
+    public ProductUpdateServiceModel findById(Long id) {
         return productRepository
                 .findById(id)
-                .map(product -> modelMapper.map(product, ProductAddServiceModel.class))
+                .map(product -> modelMapper.map(product, ProductUpdateServiceModel.class))
                 .orElseThrow(() -> new ProductNotFoundException("Product with ID: " + id + " not found."));
+    }
+
+    @Override
+    public Product getProductById(Long id) {
+        return productRepository
+                .findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Product with ID: " + id + " not found."));
+    }
+
+    @Override
+    public List<Picture> updateProduct(ProductUpdateServiceModel productUpdateServiceModel) {
+        Product product = getProductById(productUpdateServiceModel.getId());
+        List<Picture> deletedPictures = new ArrayList<>();
+
+       product.getPictures().stream()
+                .filter(oldPic -> !productUpdateServiceModel.getPictures().contains(oldPic))
+                .forEach(deletedPictures::add);
+
+
+        product
+                .setQuantity(productUpdateServiceModel.getQuantity())
+                .setDescription(productUpdateServiceModel.getDescription())
+                .setPictures(productUpdateServiceModel.getPictures())
+                .setPrice(productUpdateServiceModel.getPrice())
+                .setName(productUpdateServiceModel.getName())
+                .setCategory(productUpdateServiceModel.getCategory());
+
+
+        productRepository.save(product);
+        return deletedPictures;
+    }
+
+    @Override
+    public void deleteProduct(Long id) {
+        productRepository.deleteById(id);
+    }
+
+    @Override
+    public void saveProduct(Product product) {
+        productRepository.save(product);
+    }
+
+    @Override
+    public void addProduct(ProductAddServiceModel productServiceModel, String username) {
+        User user = userService.findByUsername(username);
+
+        Product product = modelMapper.map(productServiceModel, Product.class);
+        product
+                .setSeller(user)
+                .setPictures(new ArrayList<>());
+        product.setCreated(LocalDateTime.now());
+
+        productRepository.save(product);
+
     }
 
 

@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "pictures")
 public class Picture extends BaseEntity {
@@ -44,5 +46,16 @@ public class Picture extends BaseEntity {
         return this;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Picture picture = (Picture) o;
+        return Objects.equals(title, picture.title) && Objects.equals(url, picture.url) && Objects.equals(publicId, picture.publicId);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, url, publicId);
+    }
 }

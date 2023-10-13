@@ -16,7 +16,23 @@
 <div class="bg-light">
 <div class="container py-5">
 <div class="col-lg-9">
+    <th:block th:if="${noProducts}">
+        <div class="col-md-12 text-center" style="min-height: 400px; display: flex; align-items: center; justify-content: center;">
+            <div style="margin-left: 290px;">
+                <h4>You don't have any products yet.</h4>
+            </div>
+        </div>
+    </th:block>
+    <th:block th:unless="${noProducts}">
+        <div class="col-md-12 text-center" style="min-height: 50px; display: flex; align-items: center; justify-content: center;">
+            <div style="margin-left: 290px;">
+                <h4>Your products.</h4>
+            </div>
+        </div>
+
+    </th:block>
     <div class="row">
+
         <div th:each="p : ${products}" th:object="${p}" class="col-md-4">
             <div class="product-container">
                 <div class="card mb-4 product-wap rounded-0" style="height: 400px;">
@@ -42,8 +58,10 @@
 
                 <!-- Buttons placed below the card with reduced margin -->
                 <div class="button-bar" style="margin-top: 5px;">
-                    <a th:href="@{/products/update/{id}(id = *{id})}" class="btn btn-primary edit-button">Edit</a>
-                    <a th:href="@{/products/delete/{id}(id = *{id})}" class="btn btn-danger delete-button">Delete</a>
+                    <a th:href="@{/products/update/{id}(id=*{id})}" class="btn btn-primary edit-button" style="width: 50%;">Edit</a>
+                    <form th:action="@{/products/delete/{id}(id=*{id})}" th:method="delete" style="display: inline-block; width: 50%;">
+                        <input type="submit" value="Delete" class="btn btn-danger delete-button" style="width: 100%;">
+                    </form>
                 </div>
             </div>
         </div>

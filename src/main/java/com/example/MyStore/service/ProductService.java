@@ -1,7 +1,9 @@
 package com.example.MyStore.service;
 
+import com.example.MyStore.model.entity.Picture;
 import com.example.MyStore.model.entity.Product;
 import com.example.MyStore.model.service.ProductAddServiceModel;
+import com.example.MyStore.model.service.ProductUpdateServiceModel;
 import com.example.MyStore.model.service.ProductDetailsServiceModel;
 import com.example.MyStore.model.service.ProductSummaryServiceModel;
 
@@ -24,12 +26,23 @@ public interface ProductService {
 
     List<ProductSummaryServiceModel> getAllProductsForUser(String username);
 
-    ProductDetailsServiceModel getProductById(Long id);
+    ProductDetailsServiceModel getById(Long id);
 
     Integer getAvailableQuantityById(Long id);
 
     List<ProductSummaryServiceModel> getTheLatestThreeProducts();
 
 
-    ProductAddServiceModel findProductById(Long id);
+    ProductUpdateServiceModel findById(Long id);
+
+    Product getProductById(Long id);
+
+    List<Picture> updateProduct(ProductUpdateServiceModel productUpdateServiceModel);
+
+    void deleteProduct(Long id);
+
+    void saveProduct(Product product);
+
+
+    void addProduct(ProductAddServiceModel productServiceModel, String username);
 }

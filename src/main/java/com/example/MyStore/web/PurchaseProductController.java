@@ -40,7 +40,7 @@ public class PurchaseProductController {
         }
 
         //TODO: should i get product in UserServiceImpl
-        ProductDetailsServiceModel product = productService.getProductById(id);
+        ProductDetailsServiceModel product = productService.getById(id);
 
         int availableQuantity = productService.getAvailableQuantityById(id) - userService.getCartItemQuantityForUser(product.getId(), principal.getName());
 

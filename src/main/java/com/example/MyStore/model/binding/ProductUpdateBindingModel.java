@@ -1,18 +1,21 @@
 package com.example.MyStore.model.binding;
 
+
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-public class ProductAddBindingModel {
+public class ProductUpdateBindingModel {
 
+
+    private Long id;
     private String name;
     private String description;
     private String category;
+    private List<String> pictures;
     private Integer quantity;
     private BigDecimal price;
-
 
     @NotBlank
     @Size(min = 3, message = "Name must be at least 3 symbols.")
@@ -20,10 +23,11 @@ public class ProductAddBindingModel {
         return name;
     }
 
-    public ProductAddBindingModel setName(String name) {
+    public ProductUpdateBindingModel setName(String name) {
         this.name = name;
         return this;
     }
+
 
     @NotBlank
     @Size(min = 5, message = "Description must be at least 3 symbols.")
@@ -31,7 +35,7 @@ public class ProductAddBindingModel {
         return description;
     }
 
-    public ProductAddBindingModel setDescription(String description) {
+    public ProductUpdateBindingModel setDescription(String description) {
         this.description = description;
         return this;
     }
@@ -41,10 +45,20 @@ public class ProductAddBindingModel {
         return category;
     }
 
-    public ProductAddBindingModel setCategory(String category) {
+    public ProductUpdateBindingModel setCategory(String category) {
         this.category = category;
         return this;
     }
+
+    public List<String> getPictures() {
+        return pictures;
+    }
+
+    public ProductUpdateBindingModel setPictures(List<String> pictures) {
+        this.pictures = pictures;
+        return this;
+    }
+
 
     @NotNull
     @Min(value = 1, message = "Quantity must be at least 1.")
@@ -52,7 +66,7 @@ public class ProductAddBindingModel {
         return quantity;
     }
 
-    public ProductAddBindingModel setQuantity(Integer quantity) {
+    public ProductUpdateBindingModel setQuantity(Integer quantity) {
         this.quantity = quantity;
         return this;
     }
@@ -63,8 +77,17 @@ public class ProductAddBindingModel {
         return price;
     }
 
-    public ProductAddBindingModel setPrice(BigDecimal price) {
+    public ProductUpdateBindingModel setPrice(BigDecimal price) {
         this.price = price;
+        return this;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public ProductUpdateBindingModel setId(Long id) {
+        this.id = id;
         return this;
     }
 }

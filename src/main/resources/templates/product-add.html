@@ -13,15 +13,14 @@
 </div>
 
 
-
 <div class="bg-light">
     <div class="container full-height-container">
         <div class="row">
-            <div class="col-md-6 main-form">
-                <h2 class="text-center text-dark" style="margin-top: 30px;">Update Product</h2>
-                <form th:method="patch"
+            <div class="col-md-6 main-form text-center" style="margin: 0 auto;">
+                <h2 class="text-center text-dark" style="margin-top: 30px;">Add Product</h2>
+                <form th:method="post"
                       th:object="${productModel}"
-                      th:action="@{/products/update/{id}(id=*{id})}"
+                      th:action="@{/products/add}"
                       id="form">
 
                     <!-- Name -->
@@ -84,55 +83,15 @@
                         </p>
                     </div>
 
-                    <!-- Product Pictures -->
-                    <h5 class="text-dark" style="margin-top: 20px">Product Pictures</h5>
-                    <div class="row">
-                        <div th:each="pictureUrl, pictureStat : ${productModel.pictures}" class="col-md-2" style="margin-right: 5px !important;">
-                            <div class="picture-frame">
-                                <img th:src="${pictureUrl}" alt="Product Image">
-                                <a href="#" class="delete-picture" th:attr="data-url=${pictureUrl}" onclick="deletePicture(this)">
-                                    <span class="fas fa-trash text-danger trash-icon"></span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
 
                     <div class="text-center" style="margin-top: 20px;">
-                        <input type="submit" class="btn btn-info btn-lg" value="Update Product">
+                        <input type="submit" class="btn btn-info btn-lg" value="Add Product">
                     </div>
 
-                    <input type="hidden" id="selectedPictures" name="pictures" th:field="*{pictures}" />
 
-                    <div id="productPictures" th:attr="data-pictures=${productModel.pictures}" style="display: none;"></div>
                 </form>
             </div>
 
-            <!-- Right side for adding pictures -->
-            <div class="col-md-6" style="margin-top: 30px;">
-                <div class="text-center mb-3">
-                    <h5>Choose Picture</h5>
-                </div>
-                <form th:action="@{/pictures/add/product/{id}(id = ${productModel.id})}" th:method="POST" enctype="multipart/form-data">
-                    <input type="hidden" id="id" name="pictureId">
-                    <div class="form-group text-center">
-                        <label>
-                            <input type="text" name="title" id="title" readonly>
-                        </label>
-                    </div>
-                    <div class="form-group text-center">
-                        <div class="image-upload">
-                            <label for="picture">
-                                <img src="/images/add-img.png" alt=""/>
-                            </label>
-                            <input style="display: none" id="picture" type="file" name="picture" onchange="updateTitle(this)">
-                        </div>
-                    </div>
-                    <div class="form-group text-center">
-                        <button class="btn btn-secondary btn-sm">Upload Picture</button>
-                    </div>
-                </form>
-            </div>
         </div>
     </div>
 </div>

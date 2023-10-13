@@ -79,7 +79,7 @@ public class Product extends BaseEntity {
         return this;
     }
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     public List<Picture> getPictures() {
         return pictures;
     }
