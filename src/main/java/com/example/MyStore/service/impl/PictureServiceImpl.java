@@ -1,8 +1,8 @@
 package com.example.MyStore.service.impl;
 
-import com.cloudinary.Cloudinary;
 import com.example.MyStore.exception.DefaultPictureNotFoundException;
 import com.example.MyStore.exception.PictureNotFoundException;
+import com.example.MyStore.model.CloudinaryImage;
 import com.example.MyStore.model.entity.Picture;
 import com.example.MyStore.model.entity.Product;
 import com.example.MyStore.model.service.PictureAddServiceModel;
@@ -10,9 +10,9 @@ import com.example.MyStore.repository.PictureRepository;
 import com.example.MyStore.service.CloudinaryService;
 import com.example.MyStore.service.PictureService;
 import com.example.MyStore.service.ProductService;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -22,6 +22,7 @@ import java.util.List;
 public class PictureServiceImpl implements PictureService {
 
     private static final String DEFAULT_PRODUCT_PICTURE_TITLE = "Default Product";
+    private static final String DEFAULT_PROFILE_PICTURE_TITLE = "Default Profile";
 
     private final PictureRepository pictureRepository;
     private final ProductService productService;
@@ -36,11 +37,34 @@ public class PictureServiceImpl implements PictureService {
     }
 
     @Override
-    public Picture getDefaultPicture() {
+    public Picture getDefaultProductPicture() {
         return pictureRepository
                 .findPictureByTitle(DEFAULT_PRODUCT_PICTURE_TITLE)
-                .orElseThrow(() -> new DefaultPictureNotFoundException("Default picture not found."));
+                .orElseThrow(() -> new DefaultPictureNotFoundException("Default product picture not found."));
     }
+
+    @Override
+    public Picture getDefaultProfilePicture() {
+        return pictureRepository
+                .findPictureByTitle(DEFAULT_PROFILE_PICTURE_TITLE)
+                .orElseThrow(() -> new DefaultPictureNotFoundException("Default profile picture not found."));
+    }
+
+    @Override
+    public Picture uploadPicture(MultipartFile file, String title) throws IOException {
+        CloudinaryImage cloudinaryImage = cloudinaryService.upload(file);
+
+        Picture picture = new Picture()
+                .setUrl(cloudinaryImage.getUrl())
+                .setPublicId(cloudinaryImage.getPublicId())
+                .setTitle(title);
+        picture.setCreated(LocalDateTime.now());
+
+        pictureRepository.save(picture);
+
+        return picture;
+    }
+
 
     @Override
     public Picture findByUrl(String imageUrl) {
@@ -49,22 +73,6 @@ public class PictureServiceImpl implements PictureService {
                 .orElseThrow(() -> new PictureNotFoundException("Picture with URL: " + imageUrl + " not found."));
     }
 
-    @Override
-    public void savePicture(Long productId, PictureAddServiceModel pictureModel) {
-        Product product = productService.getProductById(productId);
-
-        Picture picture = new Picture()
-                .setUrl(pictureModel.getUrl())
-                .setTitle(pictureModel.getTitle())
-                .setPublicId(pictureModel.getPublicId());
-        picture.setCreated(LocalDateTime.now());
-
-        pictureRepository.save(picture);
-
-        product.getPictures().add(picture);
-        productService.saveProduct(product);
-
-    }
 
     @Transactional
     @Override
@@ -83,4 +91,6 @@ public class PictureServiceImpl implements PictureService {
             }
         });
     }
+
+
 }

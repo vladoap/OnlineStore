@@ -1,16 +1,13 @@
 package com.example.MyStore.web;
 
-import com.example.MyStore.model.CloudinaryImage;
 import com.example.MyStore.model.binding.PictureAddBindingModel;
-import com.example.MyStore.model.service.PictureAddServiceModel;
-import com.example.MyStore.service.CloudinaryService;
+import com.example.MyStore.model.entity.Picture;
 import com.example.MyStore.service.PictureService;
+import com.example.MyStore.service.ProductService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,12 +22,14 @@ import java.security.Principal;
 public class PictureController {
 
 
-    private final CloudinaryService cloudinaryService;
-    private final PictureService pictureService;
 
-    public PictureController(CloudinaryService cloudinaryService, PictureService pictureService) {
-        this.cloudinaryService = cloudinaryService;
+    private final PictureService pictureService;
+    private final ProductService productService;
+
+    public PictureController(PictureService pictureService, ProductService productService) {
+
         this.pictureService = pictureService;
+        this.productService = productService;
     }
 
     @PreAuthorize("@productServiceImpl.isOwner(#principal.name, #id)")
@@ -49,14 +48,10 @@ public class PictureController {
 
         String title = pictureAddBindingModel.getTitle();
 
-        CloudinaryImage uploadedImage = cloudinaryService.upload(pictureAddBindingModel.getPicture());
+        Picture picture = pictureService.uploadPicture(pictureAddBindingModel.getPicture(), title);
 
-        PictureAddServiceModel pictureAddServiceModel = new PictureAddServiceModel()
-                .setUrl(uploadedImage.getUrl())
-                .setPublicId(uploadedImage.getPublicId())
-                .setTitle(title);
+        productService.addProductPicture(id, picture);
 
-        pictureService.savePicture(id, pictureAddServiceModel);
 
 
         return "redirect:/products/update/" + id;

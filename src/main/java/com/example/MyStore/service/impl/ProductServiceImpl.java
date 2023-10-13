@@ -198,6 +198,14 @@ public class ProductServiceImpl implements ProductService {
 
     }
 
+    @Override
+    public void addProductPicture(Long productId, Picture picture) {
+        Product product = getProductById(productId);
+        product.getPictures().add(picture);
+
+        productRepository.save(product);
+    }
+
 
     private ProductSummaryServiceModel map(Product product) {
         ProductSummaryServiceModel productServiceModel = modelMapper.map(product, ProductSummaryServiceModel.class);

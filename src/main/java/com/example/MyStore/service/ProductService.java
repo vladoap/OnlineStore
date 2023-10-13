@@ -45,4 +45,6 @@ public interface ProductService {
 
 
     void addProduct(ProductAddServiceModel productServiceModel, String username);
+
+    void addProductPicture(Long productId, Picture picture);
 }

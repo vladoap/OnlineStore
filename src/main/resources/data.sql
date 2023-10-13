@@ -53,6 +53,8 @@ INSERT INTO pictures(created, public_id, title, url)
 VALUES (now(), 'hxjclcbp3j6t7xs4wqps', 'Death Valley', 'https://res.cloudinary.com/dkhgpyqjy/image/upload/v1696629474/hxjclcbp3j6t7xs4wqps.jpg');
 INSERT INTO pictures(created, public_id, title, url)
 VALUES (now(), 'a8r1hacfbwkryxfdpygf', 'Default Product', 'https://res.cloudinary.com/dkhgpyqjy/image/upload/v1696845342/a8r1hacfbwkryxfdpygf.png');
+INSERT INTO pictures(created, public_id, title, url)
+VALUES (now(), 'wozk56pgeh0ifv0h2xy6', 'Default Profile', 'https://res.cloudinary.com/dkhgpyqjy/image/upload/v1696629474/wozk56pgeh0ifv0h2xy6.jpg');
 
 -- user roles
 INSERT INTO roles (id, name)

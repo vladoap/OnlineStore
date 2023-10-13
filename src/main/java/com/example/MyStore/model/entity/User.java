@@ -77,7 +77,7 @@ public class User extends BaseEntity{
     }
 
 
-    @OneToOne
+    @ManyToOne
     public Picture getProfilePicture() {
         return profilePicture;
     }

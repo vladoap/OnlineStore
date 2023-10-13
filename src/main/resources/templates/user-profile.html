@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/commons :: header">
+
+
+</head>
+
+<body>
+
+<div th:replace="fragments/commons :: navbar">
+
+</div>
+
+
+<div class="container-xl px-4 mt-4">
+
+    <hr class="mt-0 mb-4">
+    <div class="row">
+        <div class="col-xl-4">
+
+            <div class="card mb-4 mb-xl-0">
+                <div class="card-header">Profile Picture</div>
+                <div class="card-body text-center">
+
+                    <img id="profileImagePreview" class="img-account-profile rounded-circle mb-2"
+                         th:src="${userDetails.profilePicture}" alt="">
+
+
+                    <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
+
+
+                    <label for="profileImage" class="btn btn-primary" style="cursor: pointer">Upload new image</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-8">
+
+            <div class="card mb-4">
+                <div class="card-header">Account Details -
+                    <span sec:authorize="hasRole('ADMIN')" style="font-weight: bold;">Admin</span>
+                    <span th:unless="${#authorization.expression('hasRole(''ADMIN'')')}"
+                          style="font-weight: bold;">User</span>
+                </div>
+
+                <div class="card-body">
+                    <form
+                            th:action="@{/users/profile/update}"
+                            th:method="patch"
+                            th:object="${userDetails}"
+                            enctype="multipart/form-data"
+
+                    >
+                        <div class="row gx-3 mb-3">
+
+                            <div class="col-md-5">
+                                <select th:field="*{title}"
+                                        th:errorclass="is-invalid"
+                                        class="select" id="inputTitle">
+                                    <option value="">Title</option>
+
+                                    <option th:each="title : ${T(com.example.MyStore.model.enums.TitleEnum).values()}"
+                                            th:value="${title}"
+                                            th:text="${title}"
+                                            th:selected="${title} == *{title}">Title
+                                    </option>
+                                </select>
+                                <p class="invalid-feedback errors alert alert-danger" th:errors="*{title}"></p>
+                            </div>
+                        </div>
+
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputUsername">Username</label>
+                                <input class="form-control" id="inputUsername" type="text"
+                                       placeholder="Enter your username"
+                                       th:field="*{username}" th:errorclass="is-invalid">
+                                <p class="invalid-feedback errors alert alert-danger"
+                                   th:errors="*{username}">
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputPassword">Password</label>
+                                <input class="form-control" type="password" id="inputPassword"
+                                       placeholder="Password" th:field="*{password}" th:errorclass="is-invalid">
+                                <p class="invalid-feedback errors alert alert-danger"
+                                   th:errors="*{password}">
+                                </p>
+                                <p class="errors alert alert-danger"
+                                   th:if="${incorrectPassword}">
+                                    Incorrect Password!
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputFirstName">First name</label>
+                                <input class="form-control" id="inputFirstName" type="text"
+                                       placeholder="First name" th:field="*{firstName}" th:errorclass="is-invalid">
+                                <p class="invalid-feedback errors alert alert-danger"
+                                   th:errors="*{firstName}">
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputLastName">Last name</label>
+                                <input class="form-control" id="inputLastName" type="text"
+                                       placeholder="Last name" th:field="*{lastName}" th:errorclass="is-invalid">
+                                <p class="invalid-feedback errors alert alert-danger"
+                                   th:errors="*{lastName}">
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputCountry">Country </label>
+                                <input class="form-control" id="inputCountry" type="text"
+                                       placeholder="Country" th:field="*{country}" th:errorclass="is-invalid">
+                                <p class="invalid-feedback errors alert alert-danger"
+                                   th:errors="*{country}">
+                                </p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputCity">City</label>
+                                <input class="form-control" id="inputCity" type="text"
+                                       placeholder="City" th:field="*{city}" th:errorclass="is-invalid">
+                                <p class="invalid-feedback errors alert alert-danger"
+                                   th:errors="*{city}">
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputStreetName">Street Name </label>
+                                <input class="form-control" id="inputStreetName" type="text"
+                                       placeholder="Street Name" th:field="*{streetName}" th:errorclass="is-invalid">
+                                <p class="invalid-feedback errors alert alert-danger"
+                                   th:errors="*{streetName}">
+                                </p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputStreetNumber">Street Number</label>
+                                <input class="form-control" id="inputStreetNumber" type="text"
+                                       placeholder="Street Number" th:field="*{streetNumber}"
+                                       th:errorclass="is-invalid">
+                                <p class="invalid-feedback errors alert alert-danger"
+                                   th:errors="*{streetNumber}">
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="small mb-1" for="inputEmailAddress">Email address</label>
+                            <input class="form-control" id="inputEmailAddress" type="email"
+                                   placeholder="Email address" th:field="*{email}" th:errorclass="is-invalid">
+                            <p class="invalid-feedback errors alert alert-danger"
+                               th:errors="*{email}">
+                            </p>
+                        </div>
+
+                        <input type="hidden" name="profilePicture" th:field="*{profilePicture}"
+                               th:value="${userDetails.profilePicture}">
+                        <input type="file" id="profileImage" name="newProfilePicture" accept=".jpg, .png"
+                               style="display: none;">
+
+                            <input class="btn btn-primary button-size" type="submit" value="Save changes"></input>
+
+                        <div class="alert alert-success mt-2" th:if="${successMessageProfile}">
+                            <p th:text="${successMessageProfile}"></p>
+                        </div>
+                    </form>
+                    <div style="margin-top: 30px;"></div>
+
+
+                    <form
+                            th:action="@{/users/profile/password}"
+                            th:method="patch"
+                            th:object="${userPasswordChangeBindingModel}"
+                            >
+                        <div class="row gx-3 mb-3">
+
+                            <div th:if="${#fields.hasGlobalErrors()}" class="errors alert alert-danger">
+                                <p th:each="error : ${#fields.globalErrors()}" th:text="${error}">
+                                </p>
+                            </div>
+
+                            <div th:if="${PasswordIsTheSame}" class="errors alert alert-danger">
+                                The new password cannot be the same as the old password.
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputPassword">Old Password</label>
+                                <input class="form-control" type="password" id="oldPassword"
+                                       placeholder="Old Password" th:field="*{oldPassword}" th:errorclass="is-invalid">
+                                <p class="invalid-feedback errors alert alert-danger"
+                                   th:errors="*{oldPassword}">
+                                </p>
+                                <p class="errors alert alert-danger"
+                                   th:if="${incorrectPasswordChange}">
+                                    Incorrect Password!
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputPassword">New Password</label>
+                                <input class="form-control" type="password" id="newPassword"
+                                       placeholder="New Password" th:field="*{newPassword}" th:errorclass="is-invalid">
+                                <p class="invalid-feedback errors alert alert-danger"
+                                   th:errors="*{newPassword}">
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputPassword">Confirm New Password</label>
+                                <input class="form-control" type="password" id="confirmNewPassword"
+                                       placeholder="Confirm New Password" th:field="*{confirmNewPassword}" th:errorclass="is-invalid">
+                                <p class="invalid-feedback errors alert alert-danger"
+                                   th:errors="*{confirmNewPassword}">
+                                </p>
+                            </div>
+                        </div>
+
+
+
+                        <input class="btn btn-primary button-size" type="submit" value="Change Password"></input>
+
+                        <div class="alert alert-success mt-2" th:if="${successMessagePassword}">
+                            <p th:text="${successMessagePassword}"></p>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+
+</html>

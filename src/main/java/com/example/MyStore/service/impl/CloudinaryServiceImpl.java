@@ -26,6 +26,7 @@ public class CloudinaryServiceImpl implements CloudinaryService {
         File tempFile = File.createTempFile("temp-file", file.getOriginalFilename());
         file.transferTo(tempFile);
 
+        try {
         Map<String, String> uploadResult = cloudinary.uploader().upload(tempFile, Map.of());
 
         String publicId = uploadResult.getOrDefault(CLOUDINARY_PUBLIC_ID_NAME, "");
@@ -34,6 +35,9 @@ public class CloudinaryServiceImpl implements CloudinaryService {
         return new CloudinaryImage()
                 .setPublicId(publicId)
                 .setUrl(url);
+        } finally {
+            tempFile.delete();
+        }
     }
 
     @Override

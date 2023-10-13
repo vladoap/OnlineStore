@@ -231,7 +231,7 @@ public class ProductController {
                 .map(p -> {
                     ProductsSummaryViewModel mappedProduct = modelMapper.map(p, ProductsSummaryViewModel.class);
                     if (mappedProduct.getImageUrl() == null) {
-                        mappedProduct.setImageUrl(pictureService.getDefaultPicture().getUrl());
+                        mappedProduct.setImageUrl(pictureService.getDefaultProductPicture().getUrl());
                     }
 
                     return mappedProduct;
@@ -250,7 +250,7 @@ public class ProductController {
                         .getPictures()
                         .stream()
                         .findFirst().map(Picture::getUrl)
-                        .orElse(pictureService.getDefaultPicture().getUrl()))
+                        .orElse(pictureService.getDefaultProductPicture().getUrl()))
                 .setPrice(productServiceModel.getPrice())
                 .setQuantity(productServiceModel.getQuantity())
                 .setSeller(productServiceModel.getSeller().getFirstName() + " " + productServiceModel.getSeller().getLastName());

@@ -2,6 +2,7 @@ package com.example.MyStore.service.impl;
 
 import com.example.MyStore.model.entity.*;
 import com.example.MyStore.model.service.ProductDetailsServiceModel;
+import com.example.MyStore.model.service.UserDetailsServiceModel;
 import com.example.MyStore.model.service.UserRegisterServiceModel;
 import com.example.MyStore.repository.UserRepository;
 import com.example.MyStore.service.*;
@@ -44,8 +45,6 @@ public class UserServiceImpl implements UserService {
                            CartItemService cartItemService, AddressService addressService, UserDetailsService userDetailsService, SecurityContextRepository securityContextRepository,
                            HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-
-
         this.modelMapper = modelMapper;
         this.userRoleService = userRoleService;
         this.cartItemService = cartItemService;
@@ -64,34 +63,42 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void registerUser(UserRegisterServiceModel userModel) {
+        Address address = getAddressOrCreateNewIfNotExists(userModel.getCountry(), userModel.getCity(), userModel.getStreetName(), userModel.getStreetNumber());
         User user = modelMapper.map(userModel, User.class);
         user
                 .setPassword(passwordEncoder.encode(user.getPassword()))
                 .setCreated(LocalDateTime.now());
         UserRole roleUser = userRoleService.getUserRole();
-        user.setRoles(Set.of(roleUser));
-        user.setCart(new Cart().setCartItems(new HashSet<>()));
+        user
+                .setRoles(Set.of(roleUser))
+                .setCart(new Cart().setCartItems(new HashSet<>()))
+                .setAddress(address);
         user.getCart().setCreated(LocalDateTime.now());
-
-        AddressId userAddressId = new AddressId(userModel.getStreetName(), userModel.getCity(), userModel.getStreetNumber());
-        Optional<Address> addressOpt = addressService.findById(userAddressId);
-
-        if (addressOpt.isPresent()) {
-            user.setAddress(addressOpt.get());
-        } else {
-            Address userAddress = new Address()
-                    .setCountry(userModel.getCountry())
-                    .setId(userAddressId);
-
-            addressService.save(userAddress);
-
-            user.setAddress(userAddress);
-        }
 
 
         userRepository.save(user);
 
         authenticateUser(user.getUsername());
+    }
+
+
+
+    @Override
+    public void updateUserDetails(UserDetailsServiceModel userModel, String username) {
+        Address address = getAddressOrCreateNewIfNotExists(userModel.getCountry(), userModel.getCity(), userModel.getStreetName(), userModel.getStreetNumber());
+        User user = findByUsername(username);
+        if (user.getProfilePicture() != userModel.getProfilePicture()) {
+            user.setProfilePicture(userModel.getProfilePicture());
+        }
+        user
+                .setEmail(userModel.getEmail())
+                .setUsername(userModel.getUsername())
+                .setFirstName(userModel.getFirstName())
+                .setLastName(userModel.getLastName())
+                .setTitle(userModel.getTitle())
+                .setAddress(address);
+
+        userRepository.save(user);
     }
 
     //TODO: should it be private method that returns UserEntity
@@ -100,6 +107,29 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User with username " + username + " not found!"));
     }
+
+    @Override
+    public UserDetailsServiceModel getUserByUsername(String username) {
+        User user = findByUsername(username);
+        UserDetailsServiceModel userServiceModel = modelMapper.map(user, UserDetailsServiceModel.class);
+
+        AddressId userAddressId = user.getAddress().getId();
+        userServiceModel.setCity(userAddressId.getCity())
+                .setStreetNumber(userAddressId.getStreetNumber())
+                .setStreetName(userAddressId.getStreetName());
+        userServiceModel.setCountry(user.getAddress().getCountry());
+
+
+        return userServiceModel;
+    }
+
+    @Override
+    public boolean isPasswordCorrectForUser(String username, String password) {
+        User user = findByUsername(username);
+
+        return passwordEncoder.matches(password, user.getPassword());
+    }
+
 
     @Override
     @Transactional
@@ -143,6 +173,23 @@ public class UserServiceImpl implements UserService {
                 .orElse(0);
     }
 
+
+    private Address getAddressOrCreateNewIfNotExists(String country, String cityName, String streetName, Integer streetNumber) {
+        AddressId userAddressId = new AddressId(streetName, cityName, streetNumber);
+        Optional<Address> addressOpt = addressService.findById(userAddressId);
+
+        if (addressOpt.isPresent()) {
+            return addressOpt.get();
+        } else {
+            Address userAddress = new Address()
+                    .setCountry(country)
+                    .setId(userAddressId);
+
+            addressService.save(userAddress);
+
+            return userAddress;
+        }
+    }
 
     private void authenticateUser(String username) {
         UserDetails principal = userDetailsService.loadUserByUsername(username);
