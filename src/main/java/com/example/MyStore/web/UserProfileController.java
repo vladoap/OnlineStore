@@ -124,6 +124,7 @@ public class UserProfileController {
             return "redirect:update";
         }
 
+        userService.updatePassword(principal.getName(), userPasswordModel.getNewPassword());
 
         redirectAttributes.addFlashAttribute("successMessagePassword", "Password changed successfully");
         return "redirect:update";

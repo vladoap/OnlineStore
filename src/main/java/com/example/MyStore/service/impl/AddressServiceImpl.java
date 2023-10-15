@@ -26,4 +26,22 @@ public class AddressServiceImpl implements AddressService {
     public void save(Address address) {
         addressRepository.save(address);
     }
+
+    @Override
+    public Address getAddressOrCreateNewIfNotExists(String country, String cityName, String streetName, Integer streetNumber) {
+        AddressId userAddressId = new AddressId(streetName, cityName, streetNumber);
+        Optional<Address> addressOpt = findById(userAddressId);
+
+        if (addressOpt.isPresent()) {
+            return addressOpt.get();
+        } else {
+            Address userAddress = new Address()
+                    .setCountry(country)
+                    .setId(userAddressId);
+
+            addressRepository.save(userAddress);
+
+            return userAddress;
+        }
+    }
 }

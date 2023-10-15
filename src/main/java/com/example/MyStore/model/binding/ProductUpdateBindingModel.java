@@ -1,6 +1,9 @@
 package com.example.MyStore.model.binding;
 
 
+import com.example.MyStore.model.enums.CategoryNameEnum;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
@@ -12,7 +15,7 @@ public class ProductUpdateBindingModel {
     private Long id;
     private String name;
     private String description;
-    private String category;
+    private CategoryNameEnum category;
     private List<String> pictures;
     private Integer quantity;
     private BigDecimal price;
@@ -41,11 +44,12 @@ public class ProductUpdateBindingModel {
     }
 
     @NotNull(message = "Select category.")
-    public String getCategory() {
+    @Enumerated(EnumType.STRING)
+    public CategoryNameEnum getCategory() {
         return category;
     }
 
-    public ProductUpdateBindingModel setCategory(String category) {
+    public ProductUpdateBindingModel setCategory(CategoryNameEnum category) {
         this.category = category;
         return this;
     }

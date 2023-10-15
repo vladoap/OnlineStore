@@ -3,7 +3,7 @@ package com.example.MyStore.model.entity;
 import com.example.MyStore.model.enums.TitleEnum;
 import jakarta.persistence.*;
 
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -21,8 +21,7 @@ public class User extends BaseEntity{
     private Set<Product> products;
     private Cart cart;
     private Address address;
-
-
+    private List<Order> orders;
 
 
 
@@ -128,7 +127,9 @@ public class User extends BaseEntity{
         return this;
     }
 
-   @OneToOne(cascade = CascadeType.ALL)
+
+
+   @OneToOne
     public Cart getCart() {
         return cart;
     }
@@ -137,4 +138,16 @@ public class User extends BaseEntity{
         this.cart = cart;
         return this;
     }
+
+    @OneToMany(fetch = FetchType.EAGER)
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public User setOrders(List<Order> orders) {
+        this.orders = orders;
+        return this;
+    }
+
+
 }

@@ -2,37 +2,79 @@ package com.example.MyStore.model.entity;
 
 import jakarta.persistence.*;
 
-import java.util.Set;
+import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
 public class Order extends BaseEntity{
 
-    private User buyer;
-    private String internalOrderNumber;
+    private String recipientFirstName;
+    private String recipientLastName;
+    private String recipientEmail;
+    private List<OrderItem> products;
+    private Address deliveryAddress;
+    private BigDecimal totalPrice;
 
-
-
-
-
-    @ManyToOne(optional = false)
-    public User getBuyer() {
-        return buyer;
+    @Column(name = "recipient_first_name", nullable = false)
+    public String getRecipientFirstName() {
+        return recipientFirstName;
     }
 
-    public Order setBuyer(User buyer) {
-        this.buyer = buyer;
+    public Order setRecipientFirstName(String recipientFirstName) {
+        this.recipientFirstName = recipientFirstName;
+        return this;
+    }
+
+    @Column(name = "recipient_last_name", nullable = false)
+    public String getRecipientLastName() {
+        return recipientLastName;
+    }
+
+    public Order setRecipientLastName(String recipientLastName) {
+        this.recipientLastName = recipientLastName;
+        return this;
+    }
+
+    @Column(name = "recipient_email")
+    public String getRecipientEmail() {
+        return recipientEmail;
+    }
+
+    public Order setRecipientEmail(String recipientEmail) {
+        this.recipientEmail = recipientEmail;
+        return this;
+    }
+
+    @Column(name = "total_price")
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
+
+    public Order setTotalPrice(BigDecimal totalSum) {
+        this.totalPrice = totalSum;
+        return this;
+    }
+
+    @ManyToOne
+    public Address getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public Order setDeliveryAddress(Address shippingAddress) {
+        this.deliveryAddress = shippingAddress;
         return this;
     }
 
 
-    @Column(name = "internal_order_number")
-    public String getInternalOrderNumber() {
-        return internalOrderNumber;
+
+    @ManyToMany
+    public List<OrderItem> getProducts() {
+        return products;
     }
 
-    public Order setInternalOrderNumber(String internalOrderNumber) {
-        this.internalOrderNumber = internalOrderNumber;
+    public Order setProducts(List<OrderItem> products) {
+        this.products = products;
         return this;
     }
 }

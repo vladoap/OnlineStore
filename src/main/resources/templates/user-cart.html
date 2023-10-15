@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/commons :: header">
+
+</head>
+
+<body>
+
+<div th:replace="fragments/commons :: navbar">
+
+</div>
+
+<section class="h-100 h-custom" style="background-color: #eee;">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col">
+                <div class="card" style="max-height: 100%; overflow: auto;">
+                    <div class="card-body p-4">
+
+                        <div class="row">
+
+                            <div class="col-lg-7">
+
+                                <h5 class="mb-3"><a th:href="@{/products/all}" class="text-body"><i
+                                        class="fas fa-long-arrow-alt-left me-2"></i>Continue shopping</a></h5>
+                                <hr>
+
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <div>
+                                        <p class="mb-1">Shopping cart</p>
+                                        <p class="mb-0">You have <i
+                                                th:text="${@userServiceImpl.getCountOfCartItemsForUser(#authentication.name)}"></i>
+                                            items in your cart</p>
+                                    </div>
+
+                                </div>
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <div th:each="item, itemStat : ${cartModel.cartItems}"
+                                             th:object="${item}"
+
+                                             class="d-flex justify-content-between">
+                                            <div class="d-flex flex-row align-items-center">
+                                                <div>
+                                                    <img
+                                                            th:src="*{imageUrl}"
+                                                            class="img-fluid rounded-3" alt="Shopping item"
+                                                            style="width: 65px;">
+                                                </div>
+                                                <div class="ms-3">
+                                                    <h5 th:text="*{name}">Iphone 11 pro</h5>
+
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-row align-items-center">
+                                                <div style="width: 50px;">
+                                                    <h5 th:text="*{quantity}" class="fw-normal mb-0">2</h5>
+                                                </div>
+                                                <div style="width: 150px;" >
+                                                    <h5 th:text="${item.price * item.quantity} + ' Lv.'" class="mb-0">$900</h5>
+                                                </div>
+<!--                                                <a href="#!" style="color: #cecece;"><i class="fas fa-trash-alt"></i></a>-->
+
+                                                <form th:action="@{/purchase/cart/delete/{id}(id=*{productId})}" th:method="delete">
+                                                    <button type="submit" class="delete-button" style="border: none; background: none; padding: 0; margin: 0; color: #cecece;">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-5">
+
+                                <div class="card bg-primary text-white rounded-3">
+                                    <form
+                                            th:action="@{/purchase/cart}"
+                                            th:method="post"
+                                            th:object="${userModel}">
+
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                                <h5 class="mb-0">Shipping Details</h5>
+
+                                            </div>
+
+                                            <div class="row mb-4">
+                                                <div class="col-md-6">
+                                                    <div class="form-outline form-white">
+                                                        <input type="text" class="form-control form-control-lg"
+                                                               placeholder="First Name" size="7" id="firstName"
+                                                               minlength="0"
+                                                               maxlength="20" th:field="*{recipientFirstName}"
+                                                               th:errorclass="is-invalid"/>
+                                                        <label class="form-label" for="firstName">First Name</label>
+                                                        <p class="invalid-feedback errors alert alert-danger"
+                                                           th:errors="*{recipientFirstName}">
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-outline form-white">
+                                                        <input type="text" class="form-control form-control-lg"
+                                                               placeholder="Last Name" size="7" id="lastName"
+                                                               minlength="0"
+                                                               maxlength="20" th:field="*{recipientLastName}"
+                                                               th:errorclass="is-invalid"/>
+                                                        <label class="form-label" for="lastName">Last Name</label>
+                                                        <p class="invalid-feedback errors alert alert-danger"
+                                                           th:errors="*{recipientLastName}">
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-outline form-white mb-4">
+                                                <input type="text" id="email"
+                                                       class="form-control form-control-lg" size="17"
+                                                       placeholder="Email" th:field="*{recipientEmail}"
+                                                       th:errorclass="is-invalid"/>
+                                                <label class="form-label" for="email">Email</label>
+                                                <p class="invalid-feedback errors alert alert-danger"
+                                                   th:errors="*{recipientEmail}">
+                                                </p>
+                                            </div>
+
+
+                                            <div class="row mb-4">
+                                                <div class="col-md-6">
+                                                    <div class="form-outline form-white">
+                                                        <input type="text" class="form-control form-control-lg"
+                                                               placeholder="Country" size="7" id="country" minlength="0"
+                                                               maxlength="20" th:field="*{country}"
+                                                               th:errorclass="is-invalid"/>
+                                                        <label class="form-label" for="country">Country</label>
+                                                        <p class="invalid-feedback errors alert alert-danger"
+                                                           th:errors="*{country}">
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-outline form-white">
+                                                        <input type="text" class="form-control form-control-lg"
+                                                               placeholder="City" size="7" id="city" minlength="0"
+                                                               maxlength="20" th:field="*{city}"
+                                                               th:errorclass="is-invalid"/>
+                                                        <label class="form-label" for="city">City</label>
+                                                        <p class="invalid-feedback errors alert alert-danger"
+                                                           th:errors="*{city}">
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-4">
+                                                <div class="col-md-6">
+                                                    <div class="form-outline form-white">
+                                                        <input type="text" class="form-control form-control-lg"
+                                                               placeholder="Street Name" size="7" id="streetName"
+                                                               minlength="0"
+                                                               maxlength="20" th:field="*{streetName}"
+                                                               th:errorclass="is-invalid"/>
+                                                        <label class="form-label" for="streetName">Street Name</label>
+                                                        <p class="invalid-feedback errors alert alert-danger"
+                                                           th:errors="*{streetName}">
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-outline form-white">
+                                                        <input type="number" class="form-control form-control-lg"
+                                                               placeholder="Street Number" size="7" id="streetNumber"
+                                                               minlength="0"
+                                                               maxlength="7" th:field="*{streetNumber}"
+                                                               th:errorclass="is-invalid"/>
+                                                        <label class="form-label" for="streetNumber">Street
+                                                            Number</label>
+                                                        <p class="invalid-feedback errors alert alert-danger"
+                                                           th:errors="*{streetNumber}">
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <hr class="my-4">
+
+                                            <div class="d-flex justify-content-between">
+                                                <p class="mb-2">Subtotal</p>
+                                                <p class="mb-2"  th:text="${subtotal} + ' Lv.'"></p>
+                                            </div>
+
+
+                                            <button type="submit" class="btn btn-info btn-block btn-lg">
+                                                <div class="d-flex justify-content-between">
+
+                                                <span>Checkout <i
+                                                        class="fas fa-long-arrow-alt-right ms-2"></i></span>
+                                                </div>
+                                            </button>
+
+                                            <input type="hidden" name="subtotal" th:value="${subtotal}" />
+
+                                        </div>
+                                    </form>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</body>
+
+</html>

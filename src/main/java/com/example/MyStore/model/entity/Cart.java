@@ -8,10 +8,11 @@ import java.util.Set;
 @Table(name = "carts")
 public class Cart extends BaseEntity{
 
-    private User owner;
+
     private Set<CartItem> cartItems;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+
+    @OneToMany(fetch = FetchType.EAGER)
     public Set<CartItem> getCartItems() {
         return cartItems;
     }
@@ -20,5 +21,7 @@ public class Cart extends BaseEntity{
         this.cartItems = cartItems;
         return this;
     }
+
+
 
 }

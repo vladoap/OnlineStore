@@ -25,13 +25,11 @@ public class PictureServiceImpl implements PictureService {
     private static final String DEFAULT_PROFILE_PICTURE_TITLE = "Default Profile";
 
     private final PictureRepository pictureRepository;
-    private final ProductService productService;
     private final CloudinaryService cloudinaryService;
 
 
-    public PictureServiceImpl(PictureRepository pictureRepository, ProductService productService, CloudinaryService cloudinaryService) {
+    public PictureServiceImpl(PictureRepository pictureRepository,  CloudinaryService cloudinaryService) {
         this.pictureRepository = pictureRepository;
-        this.productService = productService;
         this.cloudinaryService = cloudinaryService;
 
     }

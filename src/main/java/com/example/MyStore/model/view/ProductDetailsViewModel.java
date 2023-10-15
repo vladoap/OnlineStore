@@ -1,6 +1,7 @@
 package com.example.MyStore.model.view;
 
 import com.example.MyStore.model.entity.*;
+import com.example.MyStore.model.enums.CategoryNameEnum;
 import com.example.MyStore.model.enums.TitleEnum;
 
 import java.math.BigDecimal;
@@ -13,7 +14,7 @@ public class ProductDetailsViewModel {
     private String imageUrl;
     private String description;
     private String seller;
-    private String category;
+    private CategoryNameEnum category;
     private List<String> pictures;
     private Integer quantity;
     private BigDecimal price;
@@ -63,11 +64,11 @@ public class ProductDetailsViewModel {
         return this;
     }
 
-    public String getCategory() {
+    public CategoryNameEnum getCategory() {
         return category;
     }
 
-    public ProductDetailsViewModel setCategory(String category) {
+    public ProductDetailsViewModel setCategory(CategoryNameEnum category) {
         this.category = category;
         return this;
     }

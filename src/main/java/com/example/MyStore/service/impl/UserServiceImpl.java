@@ -1,9 +1,8 @@
 package com.example.MyStore.service.impl;
 
+import com.example.MyStore.exception.CartNotFoundException;
 import com.example.MyStore.model.entity.*;
-import com.example.MyStore.model.service.ProductDetailsServiceModel;
-import com.example.MyStore.model.service.UserDetailsServiceModel;
-import com.example.MyStore.model.service.UserRegisterServiceModel;
+import com.example.MyStore.model.service.*;
 import com.example.MyStore.repository.UserRepository;
 import com.example.MyStore.service.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,10 +21,9 @@ import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -33,8 +31,10 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final UserRoleService userRoleService;
-    private final CartItemService cartItemService;
+    private final CartService cartService;
     private final AddressService addressService;
+    private final OrderService orderService;
+    private final ProductService productService;
     private final UserDetailsService userDetailsService;
     private final SecurityContextRepository securityContextRepository;
     private final HttpServletRequest httpServletRequest;
@@ -42,13 +42,15 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, UserRoleService userRoleService,
-                           CartItemService cartItemService, AddressService addressService, UserDetailsService userDetailsService, SecurityContextRepository securityContextRepository,
+                           CartService cartService, AddressService addressService, OrderService orderService, ProductService productService, UserDetailsService userDetailsService, SecurityContextRepository securityContextRepository,
                            HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.userRoleService = userRoleService;
-        this.cartItemService = cartItemService;
+        this.cartService = cartService;
         this.addressService = addressService;
+        this.orderService = orderService;
+        this.productService = productService;
         this.userDetailsService = userDetailsService;
         this.securityContextRepository = securityContextRepository;
         this.httpServletRequest = httpServletRequest;
@@ -61,17 +63,26 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username).isEmpty();
     }
 
+
+
+
+
     @Override
     public void registerUser(UserRegisterServiceModel userModel) {
-        Address address = getAddressOrCreateNewIfNotExists(userModel.getCountry(), userModel.getCity(), userModel.getStreetName(), userModel.getStreetNumber());
+
         User user = modelMapper.map(userModel, User.class);
+        Address address = addressService.getAddressOrCreateNewIfNotExists(userModel.getCountry(), userModel.getCity(), userModel.getStreetName(), userModel.getStreetNumber());
+        UserRole roleUser = userRoleService.getUserRole();
+
         user
                 .setPassword(passwordEncoder.encode(user.getPassword()))
                 .setCreated(LocalDateTime.now());
-        UserRole roleUser = userRoleService.getUserRole();
+
+         Cart cart = cartService.createNewCart();
+         user.setCart(cart);
+
         user
                 .setRoles(Set.of(roleUser))
-                .setCart(new Cart().setCartItems(new HashSet<>()))
                 .setAddress(address);
         user.getCart().setCreated(LocalDateTime.now());
 
@@ -82,10 +93,9 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
     @Override
     public void updateUserDetails(UserDetailsServiceModel userModel, String username) {
-        Address address = getAddressOrCreateNewIfNotExists(userModel.getCountry(), userModel.getCity(), userModel.getStreetName(), userModel.getStreetNumber());
+        Address address = addressService.getAddressOrCreateNewIfNotExists(userModel.getCountry(), userModel.getCity(), userModel.getStreetName(), userModel.getStreetNumber());
         User user = findByUsername(username);
         if (user.getProfilePicture() != userModel.getProfilePicture()) {
             user.setProfilePicture(userModel.getProfilePicture());
@@ -101,7 +111,57 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    //TODO: should it be private method that returns UserEntity
+
+    @Override
+    public Integer getCountOfCartItemsForUser(String username) {
+
+        initializeUserCart(username);
+        return findByUsername(username).getCart().getCartItems().size();
+
+    }
+
+
+    @Transactional
+    @Override
+    public void deleteCartItem(Long productId, String username) {
+        User buyer = findByUsername(username);
+        Cart cart = buyer.getCart();
+
+
+        CartItem cartItemToDelete = getCartItemByProductId(productId, cart);
+        cartService.deleteCartItemById(cartItemToDelete.getId());
+        cart.getCartItems().remove(cartItemToDelete);
+
+        userRepository.save(buyer);
+    }
+
+
+
+    @Transactional
+    @Override
+    public void deleteAllCartItems(String username) {
+        User user = findByUsername(username);
+
+        cartService.deleteAllCartItems(user.getCart());
+
+        userRepository.save(user);
+    }
+
+
+    @Override
+    public ShoppingCartServiceModel getCartForUser(String username) {
+        User user = findByUsername(username);
+        ShoppingCartServiceModel shoppingCart = new ShoppingCartServiceModel();
+
+        List<CartItemServiceModel> cartItems = user.getCart().getCartItems().stream()
+                .map(cartItem -> modelMapper.map(cartItem, CartItemServiceModel.class)).toList();
+
+        shoppingCart.setCartItems(cartItems);
+
+        return shoppingCart;
+    }
+
+
     @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
@@ -126,13 +186,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean isPasswordCorrectForUser(String username, String password) {
         User user = findByUsername(username);
-
         return passwordEncoder.matches(password, user.getPassword());
     }
 
 
-    @Override
     @Transactional
+    @Override
     public void addCartItemInUserCart(Integer quantity, String buyerUsername, ProductDetailsServiceModel product) {
         User buyer = findByUsername(buyerUsername);
 
@@ -140,24 +199,11 @@ public class UserServiceImpl implements UserService {
             buyer.getCart().setCartItems(new HashSet<>());
         }
 
-
-        Set<CartItem> cartItems = buyer.getCart().getCartItems();
-
-        Optional<CartItem> cartItemOpt = cartItems
-                .stream()
-                .filter(cartItem -> cartItem.getProductId().equals(product.getId()))
-                .findFirst();
-
-        if (cartItemOpt.isEmpty()) {
-            CartItem cartItemToAdd = cartItemService.createNewCartItem(quantity, product);
-            cartItems.add(cartItemToAdd);
-
-        } else {
-            CartItem existingCartItem = cartItemOpt.get();
-            existingCartItem.setQuantity(existingCartItem.getQuantity() + quantity);
-        }
+        cartService.addOrUpdateCartItem(buyer.getCart(), product, quantity);
 
         userRepository.save(buyer);
+
+
     }
 
 
@@ -171,25 +217,11 @@ public class UserServiceImpl implements UserService {
                 .findFirst()
                 .map(CartItem::getQuantity)
                 .orElse(0);
+
     }
 
 
-    private Address getAddressOrCreateNewIfNotExists(String country, String cityName, String streetName, Integer streetNumber) {
-        AddressId userAddressId = new AddressId(streetName, cityName, streetNumber);
-        Optional<Address> addressOpt = addressService.findById(userAddressId);
 
-        if (addressOpt.isPresent()) {
-            return addressOpt.get();
-        } else {
-            Address userAddress = new Address()
-                    .setCountry(country)
-                    .setId(userAddressId);
-
-            addressService.save(userAddress);
-
-            return userAddress;
-        }
-    }
 
     private void authenticateUser(String username) {
         UserDetails principal = userDetailsService.loadUserByUsername(username);
@@ -211,14 +243,105 @@ public class UserServiceImpl implements UserService {
         securityContextRepository.saveContext(context, httpServletRequest, httpServletResponse);
     }
 
+
+
     private void initializeUserCart(String username) {
         User user = findByUsername(username);
 
         if (user.getCart() == null) {
-            user.setCart(new Cart().setCartItems(new HashSet<>()));
-            user.getCart().setCreated(LocalDateTime.now());
+            Cart cart = new Cart().setCartItems(new HashSet<>());
+            cart.setCreated(LocalDateTime.now());
+
+            cartService.save(cart);
+            user.setCart(cart);
+
+
             userRepository.save(user);
         }
+    }
+
+    @Transactional
+    @Override
+    public void createOrderForUser(String username, UserOrderServiceModel userOrderServiceModel) {
+        User user = findByUsername(username);
+
+        if (user.getOrders() == null) {
+            user.setOrders(new ArrayList<>());
+        }
+
+        Address deliveryAddress = addressService.getAddressOrCreateNewIfNotExists(userOrderServiceModel.getCountry(),
+                userOrderServiceModel.getCity(), userOrderServiceModel.getStreetName(), userOrderServiceModel.getStreetNumber());
+
+        List<OrderItem> orderItems = user.getCart().getCartItems().stream()
+                .map(cartItem -> modelMapper.map(cartItem, OrderItem.class))
+                .toList();
+
+        BigDecimal totalPrice = orderItems.stream()
+                .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        Order order = new Order()
+                .setDeliveryAddress(deliveryAddress)
+                .setProducts(orderItems)
+                .setTotalPrice(totalPrice)
+                .setRecipientFirstName(userOrderServiceModel.getRecipientFirstName())
+                .setRecipientLastName(userOrderServiceModel.getRecipientLastName())
+                .setRecipientEmail(userOrderServiceModel.getRecipientEmail());
+        order.setCreated(LocalDateTime.now());
+
+        orderService.save(order);
+
+        List<Order> orders = user.getOrders();
+        orders.add(order);
+
+        userRepository.save(user);
+
+    }
+
+    @Override
+    public void updatePassword(String username, String newPassword) {
+        User user = findByUsername(username);
+        user.setPassword(passwordEncoder.encode(newPassword));
+
+        userRepository.save(user);
+    }
+
+
+//TODO: transactional?
+    @Override
+    public void updateShoppingCartWithProductQuantities(String username) {
+        initializeUserCart(username);
+        User user = findByUsername(username);
+
+        Cart cart = user.getCart();
+
+        user.getCart().getCartItems().stream().map(cartItem -> productService.getProductById(cartItem.getProductId()))
+                    .forEach(product -> updateCartItemQuantityIfLessThenCurrent(product, cart));
+
+        userRepository.save(user);
+    }
+
+
+
+
+    @Override
+    public void updateCartItemQuantityIfLessThenCurrent(Product product, Cart cart) {
+        CartItem cartItem = getCartItemByProductId(product.getId(), cart);
+
+        if (product.getQuantity() == 0) {
+            cartService.deleteCartItemById(cartItem.getId());
+            cart.getCartItems().remove(cartItem);
+        } else if (product.getQuantity() < cartItem.getQuantity()) {
+            cartItem.setQuantity(product.getQuantity());
+        }
+        cartService.save(cart);
+    }
+
+
+
+    private static CartItem getCartItemByProductId(Long productId, Cart cart) {
+        return cart.getCartItems().stream().filter(cartItem -> cartItem.getProductId().equals(productId))
+                .findFirst().orElseThrow(() -> new CartNotFoundException("Cart item not found in the cart."));
     }
 
 

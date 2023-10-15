@@ -1,14 +1,16 @@
 package com.example.MyStore.service;
 
+import com.example.MyStore.model.entity.Cart;
+import com.example.MyStore.model.entity.Product;
 import com.example.MyStore.model.entity.User;
-import com.example.MyStore.model.service.ProductDetailsServiceModel;
-import com.example.MyStore.model.service.UserDetailsServiceModel;
-import com.example.MyStore.model.service.UserRegisterServiceModel;
+import com.example.MyStore.model.service.*;
 
 public interface UserService {
     boolean isUsernameFree(String username);
 
     void registerUser(UserRegisterServiceModel userModel);
+
+    ShoppingCartServiceModel getCartForUser(String username);
 
     User findByUsername(String username);
 
@@ -23,4 +25,21 @@ public interface UserService {
     boolean isPasswordCorrectForUser(String username, String password);
 
     void updateUserDetails(UserDetailsServiceModel userModel, String username);
+
+    Integer getCountOfCartItemsForUser(String username);
+
+
+    void deleteCartItem(Long productId, String username);
+
+    void deleteAllCartItems(String username);
+
+    void updateCartItemQuantityIfLessThenCurrent(Product product, Cart cart);
+
+
+    void updateShoppingCartWithProductQuantities(String username);
+
+
+    void createOrderForUser(String username, UserOrderServiceModel userOrderServiceModel);
+
+    void updatePassword(String username, String newPassword);
 }

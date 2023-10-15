@@ -14,6 +14,7 @@ import com.example.MyStore.model.view.ProductsSummaryViewModel;
 import com.example.MyStore.service.CategoryService;
 import com.example.MyStore.service.PictureService;
 import com.example.MyStore.service.ProductService;
+import com.example.MyStore.service.UserService;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,13 +35,13 @@ public class ProductController {
 
     private final ProductService productService;
     private final PictureService pictureService;
-    private final CategoryService categoryService;
+    private final UserService userService;
     private final ModelMapper modelMapper;
 
-    public ProductController(ProductService productService, PictureService pictureService, CategoryService categoryService, ModelMapper modelMapper) {
+    public ProductController(ProductService productService, PictureService pictureService, UserService userService, ModelMapper modelMapper) {
         this.productService = productService;
         this.pictureService = pictureService;
-        this.categoryService = categoryService;
+        this.userService = userService;
         this.modelMapper = modelMapper;
     }
 
@@ -199,9 +200,9 @@ public class ProductController {
         }
 
         ProductAddServiceModel productServiceModel = modelMapper.map(productModel, ProductAddServiceModel.class);
-        productServiceModel.setCategory(categoryService.findByName(productModel.getCategory()));
 
-        productService.addProduct(productServiceModel, principal.getName());
+
+        productService.addProduct(productServiceModel, userService.findByUsername(principal.getName()));
 
         return "redirect:own";
     }
@@ -241,7 +242,7 @@ public class ProductController {
 
     private ProductDetailsViewModel mapServiceToDetailsViewModel(ProductDetailsServiceModel productServiceModel) {
         return new ProductDetailsViewModel()
-                .setCategory(productServiceModel.getCategory().getName().name())
+                .setCategory(productServiceModel.getCategory())
                 .setId(productServiceModel.getId())
                 .setDescription(productServiceModel.getDescription())
                 .setName(productServiceModel.getName())
@@ -260,7 +261,7 @@ public class ProductController {
 
     private ProductUpdateBindingModel mapServiceToAddBindingModel(ProductUpdateServiceModel productUpdateServiceModel) {
         return new ProductUpdateBindingModel()
-                .setCategory(productUpdateServiceModel.getCategory().getName().name())
+                .setCategory(productUpdateServiceModel.getCategory())
                 .setId(productUpdateServiceModel.getId())
                 .setDescription(productUpdateServiceModel.getDescription())
                 .setName(productUpdateServiceModel.getName())
@@ -276,9 +277,7 @@ public class ProductController {
         List<Picture> pictures = productUpdateBindingModel.getPictures().stream()
                 .map(pictureService::findByUrl).toList();
 
-        productModel
-                .setPictures(pictures)
-                .setCategory(categoryService.findByName(productUpdateBindingModel.getCategory()));
+        productModel.setPictures(pictures);
 
         return productModel;
     }

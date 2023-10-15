@@ -107,3 +107,11 @@ function updateTitle(input) {
     const titleInput = document.getElementById("title");
     titleInput.value = input.files[0].name;
 }
+
+
+
+
+
+
+
+

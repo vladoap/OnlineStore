@@ -3,6 +3,7 @@ package com.example.MyStore.model.service;
 import com.example.MyStore.model.entity.Category;
 import com.example.MyStore.model.entity.Picture;
 import com.example.MyStore.model.entity.User;
+import com.example.MyStore.model.enums.CategoryNameEnum;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -13,7 +14,7 @@ public class ProductDetailsServiceModel {
     private String name;
     private String description;
     private User seller;
-    private Category category;
+    private CategoryNameEnum category;
     private List<Picture> pictures;
     private Integer quantity;
     private BigDecimal price;
@@ -54,11 +55,11 @@ public class ProductDetailsServiceModel {
         return this;
     }
 
-    public Category getCategory() {
+    public CategoryNameEnum getCategory() {
         return category;
     }
 
-    public ProductDetailsServiceModel setCategory(Category category) {
+    public ProductDetailsServiceModel setCategory(CategoryNameEnum category) {
         this.category = category;
         return this;
     }

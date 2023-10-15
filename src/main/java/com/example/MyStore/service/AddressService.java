@@ -10,4 +10,6 @@ public interface AddressService {
     Optional<Address> findById(AddressId addressId);
 
     void save(Address address);
+
+    Address getAddressOrCreateNewIfNotExists(String country, String cityName, String streetName, Integer streetNumber);
 }
