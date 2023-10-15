@@ -5,6 +5,8 @@ import com.example.MyStore.model.entity.Product;
 import com.example.MyStore.model.entity.User;
 import com.example.MyStore.model.service.*;
 
+import java.util.List;
+
 public interface UserService {
     boolean isUsernameFree(String username);
 
@@ -42,4 +44,8 @@ public interface UserService {
     void createOrderForUser(String username, UserOrderServiceModel userOrderServiceModel);
 
     void updatePassword(String username, String newPassword);
+
+    List<UserDetailsForAdminServiceModel> getAllUsers();
+
+    void addProductForUser(ProductAddServiceModel productServiceModel, String username);
 }

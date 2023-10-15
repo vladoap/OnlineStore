@@ -8,7 +8,7 @@ public class AllProductsDTO {
 
     private List<ProductsSummaryViewModel> products;
     private List<Integer> pages;
-    private int clickedPage;
+
 
 
     public List<ProductsSummaryViewModel> getProducts() {
@@ -29,14 +29,7 @@ public class AllProductsDTO {
         return this;
     }
 
-    public int getClickedPage() {
-        return clickedPage;
-    }
 
-    public AllProductsDTO setClickedPage(int clickedPage) {
-        this.clickedPage = clickedPage;
-        return this;
-    }
 
 
 }

@@ -1,6 +1,5 @@
 package com.example.MyStore.service;
 
-import com.example.MyStore.model.entity.CartItem;
 import com.example.MyStore.model.entity.Picture;
 import com.example.MyStore.model.entity.Product;
 import com.example.MyStore.model.entity.User;
@@ -10,7 +9,6 @@ import com.example.MyStore.model.service.ProductDetailsServiceModel;
 import com.example.MyStore.model.service.ProductSummaryServiceModel;
 
 import java.util.List;
-import java.util.Set;
 
 public interface ProductService {
     List<ProductSummaryServiceModel> getAllProducts();
@@ -47,7 +45,7 @@ public interface ProductService {
     void saveProduct(Product product);
 
 
-    void addProduct(ProductAddServiceModel productServiceModel, User user);
+    void createProduct(ProductAddServiceModel productServiceModel, User user);
 
     void addProductPicture(Long productId, Picture picture);
 

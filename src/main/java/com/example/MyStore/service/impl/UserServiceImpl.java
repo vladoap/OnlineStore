@@ -306,6 +306,30 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    public List<UserDetailsForAdminServiceModel> getAllUsers() {
+       return userRepository.findAll().stream()
+                .map(user -> {
+                    UserDetailsForAdminServiceModel userModel = new UserDetailsForAdminServiceModel();
+                    userModel
+                            .setFullName(user.getFirstName() + " " + user.getLastName())
+                            .setProfilePicture(user.getProfilePicture().getUrl())
+                            .setUsername(user.getUsername())
+                            .setEmail(user.getEmail())
+                            .setOrdersCount(user.getOrders() == null ? 0 : user.getOrders().size())
+                            .setProductsCount(user.getProducts() == null ? 0 : user.getProducts().size());
+
+                    return userModel;
+                }).toList();
+    }
+
+    @Override
+    public void addProductForUser(ProductAddServiceModel productServiceModel, String username) {
+        User user = findByUsername(username);
+        productService.createProduct(productServiceModel, user);
+
+        userRepository.save(user);
+    }
 
 
     @Override

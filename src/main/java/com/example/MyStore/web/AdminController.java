@@ -13,4 +13,10 @@ public class AdminController {
 
         return "admin-offers";
     }
+
+    @GetMapping("users")
+    public String getAllUsers() {
+
+        return "admin-users-list";
+    }
 }

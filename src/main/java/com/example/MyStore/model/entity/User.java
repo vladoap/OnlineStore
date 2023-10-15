@@ -96,7 +96,7 @@ public class User extends BaseEntity{
         return this;
     }
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "seller", fetch = FetchType.EAGER)
     public Set<Product> getProducts() {
         return products;
     }

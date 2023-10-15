@@ -202,7 +202,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void addProduct(ProductAddServiceModel productServiceModel, User user) {
+    public void createProduct(ProductAddServiceModel productServiceModel, User user) {
 
         Product product = modelMapper.map(productServiceModel, Product.class);
         product
@@ -212,6 +212,8 @@ public class ProductServiceImpl implements ProductService {
         product.setCreated(LocalDateTime.now());
 
         productRepository.save(product);
+
+        user.getProducts().add(product);
 
     }
 

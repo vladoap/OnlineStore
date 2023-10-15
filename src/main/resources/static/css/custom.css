@@ -123,5 +123,23 @@
 
 
 
+/* Admin panel */
+.user-card {
+    height: 250px; /* Adjust the height as needed */
+}
+
+.user-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.user-image {
+    width: 150px; /* Fixed width for the images */
+    height: 150px; /* Fixed height for the images */
+    border-radius: 50%; /* To make the images round */
+    object-fit: cover; /* To maintain aspect ratio and cover the container */
+}
 
 

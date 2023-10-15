@@ -11,7 +11,6 @@ import com.example.MyStore.model.service.ProductDetailsServiceModel;
 import com.example.MyStore.model.service.ProductSummaryServiceModel;
 import com.example.MyStore.model.view.ProductDetailsViewModel;
 import com.example.MyStore.model.view.ProductsSummaryViewModel;
-import com.example.MyStore.service.CategoryService;
 import com.example.MyStore.service.PictureService;
 import com.example.MyStore.service.ProductService;
 import com.example.MyStore.service.UserService;
@@ -203,8 +202,9 @@ public class ProductController {
 
         ProductAddServiceModel productServiceModel = modelMapper.map(productModel, ProductAddServiceModel.class);
 
+        userService.addProductForUser(productServiceModel, principal.getName());
 
-        productService.addProduct(productServiceModel, userService.findByUsername(principal.getName()));
+
 
         return "redirect:own";
     }

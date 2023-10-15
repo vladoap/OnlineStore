@@ -1,10 +1,13 @@
 package com.example.MyStore.web.rest;
 
 import com.example.MyStore.model.dto.AllProductsDTO;
+import com.example.MyStore.model.dto.UserDetailsDTO;
 import com.example.MyStore.model.service.ProductSummaryServiceModel;
+import com.example.MyStore.model.service.UserDetailsForAdminServiceModel;
 import com.example.MyStore.model.view.ProductsSummaryViewModel;
 import com.example.MyStore.service.PictureService;
 import com.example.MyStore.service.ProductService;
+import com.example.MyStore.service.UserService;
 import com.example.MyStore.utils.PaginationUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -18,17 +21,18 @@ public class AdminRestController {
 
     private final ProductService productService;
     private final PictureService pictureService;
+    private final UserService userService;
     private final ModelMapper modelMapper;
 
-    public AdminRestController(ProductService productService, ModelMapper modelMapper, PictureService pictureService) {
+    public AdminRestController(ProductService productService, ModelMapper modelMapper, PictureService pictureService, UserService userService) {
         this.productService = productService;
         this.modelMapper = modelMapper;
         this.pictureService = pictureService;
+        this.userService = userService;
     }
 
     @GetMapping("/products")
     public ResponseEntity<AllProductsDTO> getAllOffers(
-            @RequestParam(name = "clickedPage", required = false, defaultValue = "0") Integer clickedPage,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "6") int pageSize) {
 
@@ -38,9 +42,8 @@ public class AdminRestController {
 
         AllProductsDTO allProducts = new AllProductsDTO();
         allProducts
-                .setProducts(mapServiceToDetailsViewModel(productsPageable))
-                .setPages(PaginationUtil.getPageCount(pageSize, totalProducts))
-                .setClickedPage(clickedPage);
+                .setProducts(mapProductServiceToViewModel(productsPageable))
+                .setPages(PaginationUtil.getPageCount(pageSize, totalProducts));
 
         return ResponseEntity.ok(allProducts);
     }
@@ -48,7 +51,7 @@ public class AdminRestController {
     @DeleteMapping("/products/delete/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
 
-        boolean isDeleted =  productService.deleteProduct(id);
+        boolean isDeleted = productService.deleteProduct(id);
 
         if (isDeleted) {
             return ResponseEntity.noContent().build();
@@ -58,8 +61,18 @@ public class AdminRestController {
 
     }
 
+    @GetMapping("/users")
+    public ResponseEntity<List<UserDetailsDTO>> getAllUsers() {
 
-    private List<ProductsSummaryViewModel> mapServiceToDetailsViewModel(List<ProductSummaryServiceModel> productsServiceModel) {
+        List<UserDetailsForAdminServiceModel> usersServiceModel = userService.getAllUsers();
+
+        List<UserDetailsDTO> usersDTO = mapUsersDetailsServiceToDTO(usersServiceModel);
+
+        return ResponseEntity.ok(usersDTO);
+    }
+
+
+    private List<ProductsSummaryViewModel> mapProductServiceToViewModel(List<ProductSummaryServiceModel> productsServiceModel) {
         return productsServiceModel
                 .stream()
                 .map(p -> {
@@ -73,6 +86,9 @@ public class AdminRestController {
                 .toList();
     }
 
+    private List<UserDetailsDTO> mapUsersDetailsServiceToDTO(List<UserDetailsForAdminServiceModel> usersServiceModel) {
+         return usersServiceModel.stream().map(user -> modelMapper.map(user, UserDetailsDTO.class)).toList();
+    }
 
 
 }
