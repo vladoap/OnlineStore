@@ -12,7 +12,7 @@ public class Order extends BaseEntity{
     private String recipientFirstName;
     private String recipientLastName;
     private String recipientEmail;
-    private List<OrderItem> products;
+    private List<OrderItem> orderItems;
     private Address deliveryAddress;
     private BigDecimal totalPrice;
 
@@ -69,12 +69,12 @@ public class Order extends BaseEntity{
 
 
     @ManyToMany
-    public List<OrderItem> getProducts() {
-        return products;
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
     }
 
-    public Order setProducts(List<OrderItem> products) {
-        this.products = products;
+    public Order setOrderItems(List<OrderItem> products) {
+        this.orderItems = products;
         return this;
     }
 }

@@ -6,6 +6,7 @@ import com.example.MyStore.service.impl.AppUserDetailsService;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,6 +18,11 @@ import org.springframework.security.web.context.DelegatingSecurityContextReposit
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -31,8 +37,9 @@ public class ApplicationSecurityConfiguration {
                                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                                 .requestMatchers("/webfonts/**").permitAll()
                                 .requestMatchers( "/","/users/login", "/users/register", "/users/login-error").permitAll()
-                                .requestMatchers("/admin/**").hasRole(UserRoleEnum.ADMIN.name())
-                                .anyRequest().authenticated())
+                                .requestMatchers("/admin/**", "/api/admin/**").hasRole(UserRoleEnum.ADMIN.name())
+                                .anyRequest().authenticated()
+                )
                                 .formLogin(fromLogin ->
                         fromLogin.
                                 loginPage("/users/login")
@@ -50,6 +57,15 @@ public class ApplicationSecurityConfiguration {
                 )
                 .securityContext(securityContext ->
                         securityContext.securityContextRepository(securityContextRepository)
+                )
+                .csrf(csrf -> csrf
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .requireCsrfProtectionMatcher(request -> {
+
+                            String httpMethod = request.getMethod();
+                            return !(httpMethod.equals("GET") || httpMethod.equals("HEAD") || httpMethod.equals("TRACE") ||
+                                    httpMethod.equals("OPTIONS") || httpMethod.equals("DELETE") || httpMethod.equals("POST"));
+                        })
                 );
 
         return http.build();

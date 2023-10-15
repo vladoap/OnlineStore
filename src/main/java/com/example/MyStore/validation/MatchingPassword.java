@@ -1,4 +1,4 @@
-package com.example.MyStore.validator;
+package com.example.MyStore.validation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
@@ -8,14 +8,18 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ElementType.FIELD, ElementType.METHOD})
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = UniqueUsernameValidator.class)
-public @interface UniqueUsername {
+@Constraint(validatedBy = MatchingPasswordValidator.class)
+public @interface MatchingPassword {
 
-    String message() default "Username is already in use.";
+    String message() default "Passwords do not match.";
 
     Class<?>[] groups() default { };
 
     Class<? extends Payload>[] payload() default { };
+
+    String passwordField();
+
+    String confirmPasswordField();
 }

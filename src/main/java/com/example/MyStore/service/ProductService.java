@@ -16,7 +16,7 @@ public interface ProductService {
     List<ProductSummaryServiceModel> getAllProducts();
 
 
-
+    List<ProductSummaryServiceModel> getAllProductsPageable(int page, int pageSize);
     List<ProductSummaryServiceModel> getAllProductsExceptOwnPageable(int page, int pageSize, String username);
 
     List<ProductSummaryServiceModel> getAllProductsByCategoryExceptOwn(String username, String categoryName);
@@ -42,7 +42,7 @@ public interface ProductService {
 
     List<Picture> updateProduct(ProductUpdateServiceModel productUpdateServiceModel);
 
-    void deleteProduct(Long id);
+    boolean deleteProduct(Long id);
 
     void saveProduct(Product product);
 

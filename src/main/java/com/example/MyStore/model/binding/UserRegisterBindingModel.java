@@ -1,8 +1,8 @@
 package com.example.MyStore.model.binding;
 
 import com.example.MyStore.model.enums.TitleEnum;
-import com.example.MyStore.validator.MatchingPassword;
-import com.example.MyStore.validator.UniqueUsername;
+import com.example.MyStore.validation.MatchingPassword;
+import com.example.MyStore.validation.UniqueUsername;
 import jakarta.validation.constraints.*;
 
 

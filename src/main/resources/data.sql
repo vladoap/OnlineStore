@@ -99,10 +99,10 @@ VALUES ('Mr', now(), 'ivan@ivan.bg', 'Ivan', 'Dimitrov', '$2a$12$Uiq0Ls15Q49e3UY
 
 
 -- users_roles
-INSERT INTO users_roles VALUES (1, 1);
-INSERT INTO users_roles VALUES (1, 2);
-INSERT INTO users_roles VALUES (2, 2);
-# INSERT INTO users_roles VALUES (3, 2);
+INSERT INTO users_roles(roles_id, user_id) VALUES (1, 1);
+INSERT INTO users_roles(roles_id, user_id) VALUES (1, 2);
+INSERT INTO users_roles(roles_id, user_id) VALUES (2, 2);
+INSERT INTO users_roles(roles_id, user_id) VALUES (2, 3);
 
 
 

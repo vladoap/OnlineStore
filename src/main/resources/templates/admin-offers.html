@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/commons :: header">
+
+</head>
+
+<body>
+
+<div th:replace="fragments/commons :: navbar">
+
+</div>
+
+
+
+<div class="bg-light">
+  <div class="container py-5">
+    <div class="row">
+      <div class="col-lg-9">
+        <div class="row" id="product-container">
+          <!-- Product cards will be loaded here -->
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <ul class="pagination pagination-lg justify-content-end" id="pagination-container">
+        <!-- Pagination links will be loaded here -->
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+
+
+</body>
+
+</html>

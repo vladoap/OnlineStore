@@ -17,7 +17,7 @@ public class User extends BaseEntity{
     private String email;
     private TitleEnum title;
     private Picture profilePicture;
-    private Set<UserRole> role;
+    private Set<UserRole> roles;
     private Set<Product> products;
     private Cart cart;
     private Address address;
@@ -88,15 +88,15 @@ public class User extends BaseEntity{
 
     @ManyToMany(fetch = FetchType.EAGER)
     public Set<UserRole> getRoles() {
-        return role;
+        return roles;
     }
 
     public User setRoles(Set<UserRole> userRoleEnums) {
-        this.role = userRoleEnums;
+        this.roles = userRoleEnums;
         return this;
     }
 
-    @OneToMany(mappedBy = "seller" ,fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
     public Set<Product> getProducts() {
         return products;
     }

@@ -14,74 +14,75 @@
 
 
 <div class="bg-light">
-<div  class="container py-5">
+    <div class="container py-5">
 
-    <div class="row">
-        <div class="col-lg-3">
-            <ul class="list-unstyled templatemo-accordion">
-                <li class="pb-3">
-                    <a class="collapsed d-flex justify-content-between h3 text-decoration-none" href="">
-                        <span th:text="${selectedCategoryName != null ? selectedCategoryName : 'Category'}">Category</span>
-                        <i class="pull-right fa fa-fw fa-chevron-circle-down mt-1"></i>
-                    </a>
-                    <ul class="collapse list-unstyled pl-3">
-                        <div th:each="cat : ${T(com.example.MyStore.model.enums.CategoryNameEnum).values()}"
-                             th:object="${cat}">
-                            <li>
-                                <a class="text-decoration-none" th:text="${cat}"
-                                   th:href="@{/products/category/{name}(name=${cat.name()})}" >Category Name</a>
-                            </li>
-                        </div>
-                    </ul>
-
-                </li>
-            </ul>
-            <a th:href="@{/products/all}" class="btn btn-secondary btn-sm mt-3">Clear Filters</a>
-        </div>
-
-
-
-
-
-        <div class="col-lg-9">
-            <div class="row">
-                <div th:each="p : ${products}" th:object="${p}" class="col-md-4">
-                    <div class="card mb-4 product-wap rounded-0" style="height: 400px;">
-                        <div class="card rounded-0">
-                            <div class="d-flex justify-content-center align-items-center" style="height: 100%;">
-                                <img class="card-img rounded-0 img-fluid" th:src="*{imageUrl}">
+        <div class="row">
+            <div class="col-lg-3">
+                <ul class="list-unstyled templatemo-accordion">
+                    <li class="pb-3">
+                        <a class="collapsed d-flex justify-content-between h3 text-decoration-none" href="">
+                            <span th:text="${selectedCategoryName != null ? selectedCategoryName : 'Category'}">Category</span>
+                            <i class="pull-right fa fa-fw fa-chevron-circle-down mt-1"></i>
+                        </a>
+                        <ul class="collapse list-unstyled pl-3">
+                            <div th:each="cat : ${T(com.example.MyStore.model.enums.CategoryNameEnum).values()}"
+                                 th:object="${cat}">
+                                <li>
+                                    <a class="text-decoration-none" th:text="${cat}"
+                                       th:href="@{/products/category/{name}(name=${cat.name()})}">Category Name</a>
+                                </li>
                             </div>
+                        </ul>
 
-                            <div class="card-img-overlay rounded-0 product-overlay d-flex flex-column justify-content-end">
-                                <ul class="list-unstyled mt-auto">
-                                    <li><a class="btn btn-success text-white" th:href="@{/products/details/{id}(id = *{id})}"><i
-                                            class="far fa-eye"></i></a></li>
-                                    <form th:method="post" th:action="@{/purchase/{id}(id = *{id})}" class="purchaseForm">
-                                        <input type="hidden" name="quantity" value="1"> <!-- You can adjust the quantity as needed -->
-                                        <li>
-                                            <a class="btn btn-success text-white addToCartButton">
-                                                <i class="fas fa-cart-plus"></i>
-                                            </a>
-                                        </li>
-                                    </form>
-                                </ul>
+                    </li>
+                </ul>
+                <a th:href="@{/products/all}" class="btn btn-secondary btn-sm mt-3">Clear Filters</a>
+            </div>
+
+
+            <div class="col-lg-9">
+                <div class="row">
+                    <div th:each="p : ${products}" th:object="${p}" class="col-md-4">
+                        <div class="card mb-4 product-wap rounded-0" style="height: 400px;">
+                            <div class="card rounded-0">
+                                <div class="d-flex justify-content-center align-items-center" style="height: 100%;">
+                                    <img class="card-img rounded-0 img-fluid" th:src="*{imageUrl}">
+                                </div>
+
+                                <div class="card-img-overlay rounded-0 product-overlay d-flex flex-column justify-content-end">
+                                    <ul class="list-unstyled mt-auto">
+                                        <li><a class="btn btn-success text-white"
+                                               th:href="@{/products/details/{id}(id = *{id})}"><i
+                                                class="far fa-eye"></i></a></li>
+                                        <form th:method="post" th:action="@{/purchase/{id}(id = *{id})}"
+                                              class="purchaseForm">
+                                            <input type="hidden" name="quantity" value="1">
+                                            <!-- You can adjust the quantity as needed -->
+                                            <li>
+                                                <a class="btn btn-success text-white addToCartButton">
+                                                    <i class="fas fa-cart-plus"></i>
+                                                </a>
+                                            </li>
+                                        </form>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                        <div class="card-body text-center d-flex flex-column align-items-center">
-                            <a th:href="@{/products/details/{id}(id = *{id})}" th:text="*{name}" class="h3 text-decoration-none text-center">Oupidatat non</a>
-                            <p class="mt-2" th:text="${p.price} + ' Lv.'">$250.00</p>
+                            <div class="card-body text-center d-flex flex-column align-items-center">
+                                <a th:href="@{/products/details/{id}(id = *{id})}" th:text="*{name}"
+                                   class="h3 text-decoration-none text-center">Oupidatat non</a>
+                                <p class="mt-2" th:text="${p.price} + ' Lv.'">$250.00</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
 
-
-        <div class="row">
+            <div class="row">
                 <ul class="pagination pagination-lg justify-content-end">
                     <li class="page-item" th:each="page, pageIndex : ${pages}">
-                        <a id="page-link-${pageIndex.index}" class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark"
+                        <a id="page-link-${pageIndex.index}"
+                           class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark"
                            th:href="@{/products/all(page=${page}, clickedPage=${pageIndex.index})}" th:text="${page}"
                            th:classappend="${clickedPage == pageIndex.index ? 'clicked' : ''}"></a>
                     </li>
@@ -93,7 +94,6 @@
     </div>
 </div>
 </div>
-
 
 
 </body>

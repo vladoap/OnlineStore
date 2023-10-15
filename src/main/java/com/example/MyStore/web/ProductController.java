@@ -15,6 +15,7 @@ import com.example.MyStore.service.CategoryService;
 import com.example.MyStore.service.PictureService;
 import com.example.MyStore.service.ProductService;
 import com.example.MyStore.service.UserService;
+import com.example.MyStore.utils.PaginationUtil;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -55,6 +56,7 @@ public class ProductController {
         return new ProductAddBindingModel();
     }
 
+
     @GetMapping("/all")
     public String getAllProducts(Model model, Principal principal,
                                  @RequestParam(name = "clickedPage", required = false, defaultValue = "0") Integer clickedPage,
@@ -66,7 +68,7 @@ public class ProductController {
         int totalProducts = productService.getAllProductsExceptOwn(principal.getName()).size();
 
         model.addAttribute("products", mapServiceToDetailsViewModel(productsPageable));
-        model.addAttribute("pages", getPageCount(pageSize, totalProducts));
+        model.addAttribute("pages", PaginationUtil.getPageCount(pageSize, totalProducts));
         model.addAttribute("clickedPage", clickedPage);
         model.addAttribute("selectedCategoryName", null);
 
@@ -88,7 +90,7 @@ public class ProductController {
         }
 
         model.addAttribute("products", mapServiceToDetailsViewModel(productsPageable));
-        model.addAttribute("pages", getPageCount(pageSize, totalProducts));
+        model.addAttribute("pages", PaginationUtil.getPageCount(pageSize, totalProducts));
         model.addAttribute("clickedPage", clickedPage);
 
         return "my-products";
@@ -109,7 +111,7 @@ public class ProductController {
         int totalProducts = productService.getAllProductsByCategoryExceptOwn(principal.getName(), categoryName).size();
 
         model.addAttribute("products", mapServiceToDetailsViewModel(productsPageable));
-        model.addAttribute("pages", getPageCount(pageSize, totalProducts));
+        model.addAttribute("pages", PaginationUtil.getPageCount(pageSize, totalProducts));
         model.addAttribute("clickedPage", clickedPage);
         model.addAttribute("selectedCategoryName", categoryName);
 
@@ -207,6 +209,7 @@ public class ProductController {
         return "redirect:own";
     }
 
+
     @PreAuthorize("@productServiceImpl.isOwner(#principal.name, #id)")
     @DeleteMapping("/delete/{id}")
     public String productDelete(@PathVariable Long id, Principal principal) {
@@ -216,15 +219,6 @@ public class ProductController {
     }
 
 
-    private static List<Integer> getPageCount(int pageSize, int totalProducts) {
-        int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
-
-        List<Integer> pages = new ArrayList<>();
-        for (int i = 1; i <= totalPages; i++) {
-            pages.add(i);
-        }
-        return pages;
-    }
 
     private List<ProductsSummaryViewModel> mapServiceToDetailsViewModel(List<ProductSummaryServiceModel> productsServiceModel) {
         return productsServiceModel

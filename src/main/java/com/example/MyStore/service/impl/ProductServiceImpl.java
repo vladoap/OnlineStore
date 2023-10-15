@@ -50,6 +50,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<ProductSummaryServiceModel> getAllProductsPageable(int page, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
+
+        return productRepository.findAll(pageRequest)
+                .stream()
+                .map(this::map)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<ProductSummaryServiceModel> getAllProductsExceptOwn(String username) {
         return productRepository
                 .findAllBySellerUsernameIsNot(username)
@@ -176,8 +186,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteProduct(Long id) {
-        productRepository.deleteById(id);
+    public boolean deleteProduct(Long id) {
+        Optional<Product> product = productRepository.findById(id);
+        if (product.isPresent()) {
+            productRepository.deleteById(id);
+            return true;
+        }
+
+        return false;
     }
 
     @Override

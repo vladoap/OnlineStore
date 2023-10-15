@@ -282,7 +282,7 @@ public class UserServiceImpl implements UserService {
 
         Order order = new Order()
                 .setDeliveryAddress(deliveryAddress)
-                .setProducts(orderItems)
+                .setOrderItems(orderItems)
                 .setTotalPrice(totalPrice)
                 .setRecipientFirstName(userOrderServiceModel.getRecipientFirstName())
                 .setRecipientLastName(userOrderServiceModel.getRecipientLastName())

@@ -3,6 +3,8 @@ package com.example.MyStore.model.entity;
 import com.example.MyStore.model.enums.UserRoleEnum;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "roles")
 public class UserRole {
@@ -35,4 +37,6 @@ public class UserRole {
         this.id = id;
         return this;
     }
+
+
 }

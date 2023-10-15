@@ -1,4 +1,4 @@
-package com.example.MyStore.validator;
+package com.example.MyStore.validation;
 
 import com.example.MyStore.service.UserService;
 import jakarta.validation.ConstraintValidator;

@@ -1,6 +1,6 @@
 package com.example.MyStore.model.binding;
 
-import com.example.MyStore.validator.MatchingPassword;
+import com.example.MyStore.validation.MatchingPassword;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 

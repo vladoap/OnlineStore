@@ -25,7 +25,11 @@
     <script src="/js/templatemo.js"></script>
     <script src="/js/custom.js"></script>
     <script src="/js/user-profile.js"></script>
-    <script src="/js/user-cart.js"></script>
+    <script src="/js/admin-panel.js" defer></script>
+
+
+
+
 
 
 </head>
@@ -69,8 +73,20 @@
                         <li class="nav-item">
                             <a class="nav-link" th:href="@{/contact}">Contact</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="contact.html">Admin</a>
+<!--                        <li class="nav-item">-->
+<!--                            <a class="nav-link" href="contact.html">Admin</a>-->
+<!--                        </li>-->
+                        <li  class="nav-item dropdown">
+                            <a  class="nav-link dropdown-toggle" href="/" id="navbarDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Admin
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" th:href="@{/admin/products}">Offer Management</a>
+                                <a class="dropdown-item" th:href="@{/admin/users}">User Management</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" th:href="@{/admin/statistic}">Statistics</a>
+                            </div>
                         </li>
 
                     </ul>
@@ -95,6 +111,7 @@
 
                 </div>
             </div>
+
 
         </div>
     </nav>
