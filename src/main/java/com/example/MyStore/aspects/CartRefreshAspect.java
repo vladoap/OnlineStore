@@ -1,5 +1,7 @@
 package com.example.MyStore.aspects;
 
+import com.example.MyStore.model.AppUserDetails;
+import com.example.MyStore.model.entity.User;
 import com.example.MyStore.service.UserService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -29,7 +31,7 @@ public class CartRefreshAspect {
     @Before("getMappingMethods()")
     public void beforeGetMappingMethodInvocation(JoinPoint joinPoint) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
+        System.out.println(authentication);
         if (authentication != null && authentication.isAuthenticated() && (authentication.getPrincipal() instanceof UserDetails)) {
             String username = authentication.getName();
             userService.updateShoppingCartWithProductQuantities(username);

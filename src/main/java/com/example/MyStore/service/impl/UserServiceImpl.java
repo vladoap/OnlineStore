@@ -307,7 +307,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
-//TODO: transactional?
+
     @Override
     public void updateShoppingCartWithProductQuantities(String username) {
         initializeUserCart(username);
