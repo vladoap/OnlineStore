@@ -21,8 +21,8 @@ function loadProducts(page) {
             const products = data.products;
             const pages = data.pages;
 
-            productContainer.innerHTML = ''; // Clear existing product content
-            paginationContainer.innerHTML = ''; // Clear existing pagination content
+            productContainer.innerHTML = '';
+            paginationContainer.innerHTML = '';
 
             products.forEach(product => {
                 const productCard = createProductCard(product);
@@ -113,19 +113,15 @@ function deleteProduct(productId) {
 
 
 
-// Code for Users Management
 
+// Code for Users Management
 document.addEventListener('DOMContentLoaded', function () {
     if (window.location.pathname.includes('/admin/users')) {
-
         loadUsers();
-
     }
 });
 
 function loadUsers() {
-
-
     fetch('/api/admin/users')
         .then(response => response.json())
         .then(users => {
@@ -135,41 +131,104 @@ function loadUsers() {
                 const userCard = document.createElement('div');
                 userCard.classList.add('col', 'col-md-9', 'col-lg-7', 'col-xl-5');
                 userCard.innerHTML = `
-        <div class="card user-card" style="border-radius: 15px;>
-          <div class="card-body p-4">
-            <div class="d-flex text-black">
-              <div class="flex-shrink-0 user-image-container" >
-                <img src="${user.profilePicture}" alt="User Profile Picture" class="img-fluid user-image">
-              </div>
-              <div class="flex-grow-1 ms-3">
-                <h5 class="mb-1">${user.fullName}</h5>
-                <p class="mb-2 pb-1" style="color: #2b2a2a;">@${user.username}</p>
-                <p class="mb-2 pb-1" style="color: #2b2a2a;">E-mail: ${user.email}</p>
-                <div class="d-flex justify-content-start rounded-3 p-2 mb-2" style="background-color: #efefef;">
-                  <div>
-                    <p class="small text-muted mb-1">Products</p>
-                    <p class="mb-0">${user.productsCount}</p>
-                  </div>
-                  <div class="px-5">
-                    <p class="small text-muted mb-1">Orders</p>
-                    <p class="mb-0">${user.ordersCount}</p>
-                  </div>
-                </div>
-                <div class="d-flex pt-1">
-                  <button type="button" class="btn btn-secondary flex-grow-1">Delete</button>
-                  <button type="button" class="btn btn-primary flex-grow-1" style="margin-left: 20px;">Promote to Admin</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
+                    <div class="card user-card" style="border-radius: 15px;">
+                        <div class="card-body p-4">
+                            <div class="d-flex text-black">
+                                <div class="flex-shrink-0 user-image-container">
+                                    <img src="${user.profilePicture}" alt="User Profile Picture" class="img-fluid user-image">
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h5 class="mb-1">${user.fullName}</h5>
+                                    <p class="mb-2 pb-1" style="color: #2b2a2a;">@${user.username}</p>
+                                    <p class="mb-2 pb-1" style="color: #2b2a2a;">E-mail: ${user.email}</p>
+                                    <div class="d-flex justify-content-start rounded-3 p-2 mb-2" style="background-color: #efefef;">
+                                        <div>
+                                            <p class="small text-muted mb-1">Products</p>
+                                            <p class="mb-0">${user.productsCount}</p>
+                                        </div>
+                                        <div class="px-5">
+                                            <p class="small text-muted mb-1">Orders</p>
+                                            <p class="mb-0">${user.ordersCount}</p>
+                                        </div>
+                                         <div >
+                                            <p class="small text-muted mb-1">Role</p>
+                                            <p class="mb-0" style="font-weight: bold !important;">${user.role}</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex pt-1">
+                                        <button type="button" class="btn btn-secondary custom-button" 
+                                            onclick="deleteUser(${user.id})">Delete</button>
+                                       ${user.role !== 'ADMIN' ? `<button type="button" class="btn btn-primary custom-button" 
+                                            style="margin-left: 20px;"
+                                            onclick="promoteToAdmin(${user.id})">Promote to Admin</button>` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
                 userList.appendChild(userCard);
+
+                checkUserIsNotCurrentUser(user.id, userCard);
             });
         })
         .catch(error => {
             console.error('Error fetching user data:', error);
         });
-
 }
 
+function deleteUser(userId) {
+    fetch(`/api/admin/users/delete/${userId}`, {
+        method: 'DELETE',
+    })
+        .then(response => {
+            if (response.ok) {
+               console.log('User deleted.')
+                window.location.reload();
+            } else {
+                console.error('Error deleting user');
+            }
+
+        })
+        .catch(error => {
+            console.error('Error deleting user:', error);
+        });
+}
+
+function promoteToAdmin(userId) {
+    console.log("OK in promoteToAdmin function");
+    fetch(`/api/admin/users/promote/${userId}`, {
+        method: 'PATCH',
+    })
+        .then(response => {
+            if (response.ok) {
+                console.log("User successfully promoted to Admin")
+                window.location.reload();
+            } else {
+                console.error('Error promoting user to admin');
+            }
+        })
+        .catch(error => {
+            console.error('Error promoting user to admin:', error);
+        });
+}
+
+
+function checkUserIsNotCurrentUser(userId, userCard) {
+
+    // Make an AJAX request to check if the user is not the current user
+    fetch(`/api/admin/user/${userId}`)
+        .then(response => response.json())
+        .then(isNotCurrentUser => {
+
+            if (isNotCurrentUser) {
+                const deleteButton = userCard.querySelector('button.btn-secondary');
+                deleteButton.style.display = 'none'; // Or 'inline-block' to match the other button
+            }
+
+        })
+        .catch(error => {
+            console.error('Error checking user:', error);
+        });
+}

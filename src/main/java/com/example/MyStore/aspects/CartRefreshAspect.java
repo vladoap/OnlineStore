@@ -4,6 +4,7 @@ import com.example.MyStore.model.AppUserDetails;
 import com.example.MyStore.model.entity.User;
 import com.example.MyStore.service.UserService;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -24,14 +25,15 @@ public class CartRefreshAspect {
         this.userService = userService;
     }
 
-    @Pointcut("@annotation(org.springframework.web.bind.annotation.GetMapping)")
+   @Pointcut("@annotation(org.springframework.web.bind.annotation.GetMapping) " +
+                     "&& !execution(* *..login(..))" +
+           "&& !execution(* *..register(..))")
     public void getMappingMethods() {
     }
 
     @Before("getMappingMethods()")
     public void beforeGetMappingMethodInvocation(JoinPoint joinPoint) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(authentication);
         if (authentication != null && authentication.isAuthenticated() && (authentication.getPrincipal() instanceof UserDetails)) {
             String username = authentication.getName();
             userService.updateShoppingCartWithProductQuantities(username);

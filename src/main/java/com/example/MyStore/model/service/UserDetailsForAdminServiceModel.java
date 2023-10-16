@@ -1,10 +1,14 @@
 package com.example.MyStore.model.service;
 
+import com.example.MyStore.model.enums.UserRoleEnum;
+
 public class UserDetailsForAdminServiceModel {
 
+    private Long id;
     private String profilePicture;
     private String fullName;
     private String username;
+    private UserRoleEnum role;
     private String email;
     private Integer productsCount;
     private Integer ordersCount;
@@ -60,6 +64,24 @@ public class UserDetailsForAdminServiceModel {
 
     public UserDetailsForAdminServiceModel setEmail(String email) {
         this.email = email;
+        return this;
+    }
+
+    public UserRoleEnum getRole() {
+        return role;
+    }
+
+    public UserDetailsForAdminServiceModel setRole(UserRoleEnum role) {
+        this.role = role;
+        return this;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public UserDetailsForAdminServiceModel setId(Long id) {
+        this.id = id;
         return this;
     }
 }

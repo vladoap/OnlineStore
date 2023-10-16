@@ -18,6 +18,11 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public UserRole getUserRole() {
-        return userRoleRepository.findByName(UserRoleEnum.USER).orElseThrow(() -> new IllegalArgumentException("Such Role doesn't exist."));
+        return userRoleRepository.findByName(UserRoleEnum.USER).orElseThrow(() -> new IllegalArgumentException("Role 'User' doesn't exist."));
+    }
+
+    @Override
+    public UserRole getAdminRole() {
+        return userRoleRepository.findByName(UserRoleEnum.ADMIN).orElseThrow(() -> new IllegalArgumentException("Role 'Admin' doesn't exist."));
     }
 }

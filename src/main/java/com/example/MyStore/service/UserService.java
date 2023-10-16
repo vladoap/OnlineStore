@@ -21,6 +21,8 @@ public interface UserService {
 
     Integer getCartItemQuantityForUser(Long productId, String username);
 
+    User findById(Long id);
+
     UserDetailsServiceModel getUserByUsername(String username
     );
 
@@ -45,7 +47,15 @@ public interface UserService {
 
     void updatePassword(String username, String newPassword);
 
-    List<UserDetailsForAdminServiceModel> getAllUsers();
+    List<UserDetailsForAdminServiceModel> getAllUsersDetailsExceptOwn(String username);
 
     void addProductForUser(ProductAddServiceModel productServiceModel, String username);
+
+    boolean promoteUserToAdmin(Long id);
+
+    UserDetailsForAdminServiceModel getUserDetailsById(Long id);
+
+    boolean isNotCurrentUser(Long id, String usernameCurrentUser);
+
+    boolean deleteUserById(Long id);
 }

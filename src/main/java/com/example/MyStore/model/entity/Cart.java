@@ -12,7 +12,7 @@ public class Cart extends BaseEntity{
     private Set<CartItem> cartItems;
 
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     public Set<CartItem> getCartItems() {
         return cartItems;
     }

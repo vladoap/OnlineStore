@@ -37,7 +37,7 @@
                         <div class="card-body d-flex flex-column justify-content-between align-items-start">
                             <a th:href="@{/products/details/{id}(id = *{id})}" class="h2 text-decoration-none text-dark" th:text="*{name}">Gym Weight</a>
 <!--                            <p class="card-text text-left" th:text="${product.description.length() > 100 ? #strings.substring(product.description, 0, 200) : description} + '...'">-->
-                            <p class="card-text text-left" th:text="${product.description.length() > 150 ? #strings.substring(product.description, 0, 150) : description} + '...'">
+                            <p class="card-text text-left" th:text="${product.description.length() > 150 ? #strings.substring(product.description, 0, 150) : product.description} + '...'">
                                 Description
                             </p>
                             <ul class="list-unstyled text-left" th:text="${product.price} + ' Lv.'">$240.00</ul>

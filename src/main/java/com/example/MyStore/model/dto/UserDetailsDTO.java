@@ -1,10 +1,14 @@
 package com.example.MyStore.model.dto;
 
+import com.example.MyStore.model.enums.UserRoleEnum;
+
 public class UserDetailsDTO {
 
+    private Long id;
     private String profilePicture;
     private String fullName;
     private String username;
+    private UserRoleEnum role;
     private String email;
     private Integer productsCount;
     private Integer ordersCount;
@@ -60,6 +64,24 @@ public class UserDetailsDTO {
 
     public UserDetailsDTO setEmail(String email) {
         this.email = email;
+        return this;
+    }
+
+    public UserRoleEnum getRole() {
+        return role;
+    }
+
+    public UserDetailsDTO setRole(UserRoleEnum role) {
+        this.role = role;
+        return this;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public UserDetailsDTO setId(Long id) {
+        this.id = id;
         return this;
     }
 }

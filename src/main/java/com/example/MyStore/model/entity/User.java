@@ -4,6 +4,7 @@ import com.example.MyStore.model.enums.TitleEnum;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -76,7 +77,7 @@ public class User extends BaseEntity{
     }
 
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     public Picture getProfilePicture() {
         return profilePicture;
     }
@@ -96,7 +97,7 @@ public class User extends BaseEntity{
         return this;
     }
 
-    @OneToMany(mappedBy = "seller", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "seller", fetch = FetchType.EAGER)
     public Set<Product> getProducts() {
         return products;
     }
@@ -106,7 +107,7 @@ public class User extends BaseEntity{
         return this;
     }
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     public Address getAddress() {
         return address;
     }
@@ -129,7 +130,7 @@ public class User extends BaseEntity{
 
 
 
-   @OneToOne
+   @OneToOne(cascade = CascadeType.REMOVE)
     public Cart getCart() {
         return cart;
     }
@@ -139,7 +140,7 @@ public class User extends BaseEntity{
         return this;
     }
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     public List<Order> getOrders() {
         return orders;
     }
@@ -149,5 +150,16 @@ public class User extends BaseEntity{
         return this;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(username, user.username);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(username);
+    }
 }

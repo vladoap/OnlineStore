@@ -125,7 +125,7 @@
 
 /* Admin panel */
 .user-card {
-    height: 250px; /* Adjust the height as needed */
+    height: 300px; /* Adjust the height as needed */
 }
 
 .user-image-container {
@@ -143,3 +143,8 @@
 }
 
 
+.custom-button {
+    width: 140px;
+    height: 60px;
+
+}

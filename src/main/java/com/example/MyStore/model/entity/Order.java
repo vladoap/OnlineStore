@@ -56,7 +56,7 @@ public class Order extends BaseEntity{
         return this;
     }
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     public Address getDeliveryAddress() {
         return deliveryAddress;
     }
@@ -68,7 +68,7 @@ public class Order extends BaseEntity{
 
 
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.REMOVE)
     public List<OrderItem> getOrderItems() {
         return orderItems;
     }

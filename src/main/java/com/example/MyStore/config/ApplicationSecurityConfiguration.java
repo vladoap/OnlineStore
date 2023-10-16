@@ -64,7 +64,7 @@ public class ApplicationSecurityConfiguration {
 
                             String httpMethod = request.getMethod();
                             return !(httpMethod.equals("GET") || httpMethod.equals("HEAD") || httpMethod.equals("TRACE") ||
-                                    httpMethod.equals("OPTIONS") || httpMethod.equals("DELETE") || httpMethod.equals("POST"));
+                                    httpMethod.equals("OPTIONS") || httpMethod.equals("DELETE") || httpMethod.equals("POST") || httpMethod.equals("PATCH"));
                         })
                 );
 

@@ -2,6 +2,7 @@ package com.example.MyStore.service.impl;
 
 import com.example.MyStore.exception.CartNotFoundException;
 import com.example.MyStore.model.entity.*;
+import com.example.MyStore.model.enums.UserRoleEnum;
 import com.example.MyStore.model.service.*;
 import com.example.MyStore.repository.UserRepository;
 import com.example.MyStore.service.*;
@@ -169,6 +170,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User with ID: " + id + " not found!"));
+    }
+
+    @Override
     public UserDetailsServiceModel getUserByUsername(String username) {
         User user = findByUsername(username);
         UserDetailsServiceModel userServiceModel = modelMapper.map(user, UserDetailsServiceModel.class);
@@ -307,20 +314,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDetailsForAdminServiceModel> getAllUsers() {
+    public List<UserDetailsForAdminServiceModel> getAllUsersDetailsExceptOwn(String username) {
        return userRepository.findAll().stream()
-                .map(user -> {
-                    UserDetailsForAdminServiceModel userModel = new UserDetailsForAdminServiceModel();
-                    userModel
-                            .setFullName(user.getFirstName() + " " + user.getLastName())
-                            .setProfilePicture(user.getProfilePicture().getUrl())
-                            .setUsername(user.getUsername())
-                            .setEmail(user.getEmail())
-                            .setOrdersCount(user.getOrders() == null ? 0 : user.getOrders().size())
-                            .setProductsCount(user.getProducts() == null ? 0 : user.getProducts().size());
+                .map(this::mapUserToUserDetailsForAdminServiceModel).toList();
+    }
 
-                    return userModel;
-                }).toList();
+    @Override
+    public UserDetailsForAdminServiceModel getUserDetailsById(Long id) {
+        return mapUserToUserDetailsForAdminServiceModel(findById(id));
     }
 
     @Override
@@ -330,6 +331,22 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
     }
+
+    @Override
+    public boolean promoteUserToAdmin(Long id) {
+        User user = findById(id);
+        if (user.getRoles().stream().anyMatch(r -> r.getName().equals(UserRoleEnum.ADMIN))) {
+            return false;
+        }
+        UserRole adminRole = userRoleService.getAdminRole();
+        user.getRoles().add(adminRole);
+
+        userRepository.save(user);
+
+        return true;
+    }
+
+
 
 
     @Override
@@ -346,8 +363,6 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
-
     @Override
     public void updateCartItemQuantityIfLessThenCurrent(Product product, Cart cart) {
         CartItem cartItem = getCartItemByProductId(product.getId(), cart);
@@ -361,12 +376,43 @@ public class UserServiceImpl implements UserService {
         cartService.save(cart);
     }
 
+    @Override
+    public boolean isNotCurrentUser(Long id, String usernameCurrentUser) {
+        return !findById(id).equals(findByUsername(usernameCurrentUser));
+    }
+
+    @Override
+    public boolean deleteUserById(Long id) {
+        User user = findById(id);
+        userRepository.deleteById(user.getId());
+        System.out.println();
+        return userRepository.findById(id).isEmpty();
+    }
 
 
     private static CartItem getCartItemByProductId(Long productId, Cart cart) {
         return cart.getCartItems().stream().filter(cartItem -> cartItem.getProductId().equals(productId))
                 .findFirst().orElseThrow(() -> new CartNotFoundException("Cart item not found in the cart."));
     }
+
+    private UserDetailsForAdminServiceModel mapUserToUserDetailsForAdminServiceModel(User user) {
+        UserDetailsForAdminServiceModel userModel = new UserDetailsForAdminServiceModel();
+        userModel
+                .setId(user.getId())
+                .setFullName(user.getFirstName() + " " + user.getLastName())
+                .setProfilePicture(user.getProfilePicture().getUrl())
+                .setUsername(user.getUsername())
+                .setEmail(user.getEmail())
+                .setOrdersCount(user.getOrders() == null ? 0 : user.getOrders().size())
+                .setProductsCount(user.getProducts() == null ? 0 : user.getProducts().size());
+
+        Set<UserRole> roles = user.getRoles();
+        boolean isAdmin = roles.stream().anyMatch(r -> r.getName().equals(UserRoleEnum.ADMIN));
+        userModel.setRole(isAdmin ? UserRoleEnum.ADMIN : UserRoleEnum.USER);
+
+        return userModel;
+    }
+
 
 
 }

@@ -2,6 +2,7 @@ package com.example.MyStore.web.rest;
 
 import com.example.MyStore.model.dto.AllProductsDTO;
 import com.example.MyStore.model.dto.UserDetailsDTO;
+import com.example.MyStore.model.entity.User;
 import com.example.MyStore.model.service.ProductSummaryServiceModel;
 import com.example.MyStore.model.service.UserDetailsForAdminServiceModel;
 import com.example.MyStore.model.view.ProductsSummaryViewModel;
@@ -11,8 +12,10 @@ import com.example.MyStore.service.UserService;
 import com.example.MyStore.utils.PaginationUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -62,14 +65,56 @@ public class AdminRestController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<UserDetailsDTO>> getAllUsers() {
+    public ResponseEntity<List<UserDetailsDTO>> getAllUsers(Principal principal) {
 
-        List<UserDetailsForAdminServiceModel> usersServiceModel = userService.getAllUsers();
+        List<UserDetailsForAdminServiceModel> usersServiceModel = userService.getAllUsersDetailsExceptOwn(principal.getName());
 
         List<UserDetailsDTO> usersDTO = mapUsersDetailsServiceToDTO(usersServiceModel);
 
         return ResponseEntity.ok(usersDTO);
     }
+
+    @PreAuthorize("@userServiceImpl.isNotCurrentUser(#id, #principal.name)")
+    @PatchMapping("/users/promote/{id}")
+    public ResponseEntity<UserDetailsDTO> promoteToAdmin(@PathVariable Long id, Principal principal) {
+
+        boolean isPromoted = userService.promoteUserToAdmin(id);
+
+        UserDetailsDTO userDto = null;
+        if (isPromoted) {
+           userDto = modelMapper.map(userService.getUserDetailsById(id), UserDetailsDTO.class);
+        }
+
+        if (userDto == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+
+        return ResponseEntity.ok(userDto);
+    }
+
+    @PreAuthorize("@userServiceImpl.isNotCurrentUser(#id, #principal.name)")
+    @DeleteMapping("users/delete/{id}")
+    public ResponseEntity<UserDetailsDTO> deleteUser(@PathVariable Long id, Principal principal) {
+       boolean isDeleted = userService.deleteUserById(id);
+
+       if (isDeleted) {
+           return ResponseEntity.noContent().build();
+       }
+
+       return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<Boolean> isCurrentLoggedUser(@PathVariable Long id, Principal principal) {
+
+        if (userService.isNotCurrentUser(id, principal.getName())) {
+            return ResponseEntity.ok(false);
+        }
+
+        return ResponseEntity.ok(true);
+    }
+
 
 
     private List<ProductsSummaryViewModel> mapProductServiceToViewModel(List<ProductSummaryServiceModel> productsServiceModel) {
