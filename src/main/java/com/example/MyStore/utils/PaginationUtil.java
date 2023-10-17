@@ -5,6 +5,9 @@ import java.util.List;
 
 public class PaginationUtil {
 
+    private PaginationUtil() {
+    }
+
     public static List<Integer> getPageCount(int pageSize, int totalProducts) {
         int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
 
@@ -14,4 +17,6 @@ public class PaginationUtil {
         }
         return pages;
     }
+
+
 }

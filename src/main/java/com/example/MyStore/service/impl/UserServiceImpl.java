@@ -332,6 +332,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+
     @Override
     public boolean promoteUserToAdmin(Long id) {
         User user = findById(id);

@@ -9,8 +9,6 @@ public class AllProductsDTO {
     private List<ProductsSummaryViewModel> products;
     private List<Integer> pages;
 
-
-
     public List<ProductsSummaryViewModel> getProducts() {
         return products;
     }

@@ -11,6 +11,7 @@ public class CloudinaryConfigurationProperties {
     private String apiSecret;
     private String cloudName;
 
+
     public String getApiKey() {
         return apiKey;
     }

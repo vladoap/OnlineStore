@@ -1,5 +1,6 @@
 package com.example.MyStore.model.binding;
 
+import com.example.MyStore.utils.PaginationUtil;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 

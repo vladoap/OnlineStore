@@ -28,11 +28,11 @@ public class CartRefreshAspect {
    @Pointcut("@annotation(org.springframework.web.bind.annotation.GetMapping) " +
                      "&& !execution(* *..login(..))" +
            "&& !execution(* *..register(..))")
-    public void getMappingMethods() {
+    private void getMappingMethods() {
     }
 
     @Before("getMappingMethods()")
-    public void beforeGetMappingMethodInvocation(JoinPoint joinPoint) {
+    private void beforeGetMappingMethodInvocation(JoinPoint joinPoint) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated() && (authentication.getPrincipal() instanceof UserDetails)) {
             String username = authentication.getName();
