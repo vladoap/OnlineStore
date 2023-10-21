@@ -78,6 +78,7 @@
                         <h6>Description:</h6>
                         <p th:text="*{description}">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temp incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse. Donec condimentum elementum convallis. Nunc sed orci a diam ultrices aliquet interdum quis nulla.</p>
 
+                        <th:block th:if="${@productServiceImpl.isNotOwner(#authentication.principal.username, productDetails.id)}">
                         <form
                                 th:action="@{/purchase/{id}(id = ${productDetails.id})}"
                                 th:method="post"
@@ -120,6 +121,8 @@
 
 
                         </form>
+
+                        </th:block>
                     </div>
                 </div>
             </div>

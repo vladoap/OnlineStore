@@ -2,6 +2,7 @@ package com.example.MyStore.web;
 
 import com.example.MyStore.model.service.ProductSummaryServiceModel;
 import com.example.MyStore.model.view.ProductLatestViewModel;
+import com.example.MyStore.service.PictureService;
 import com.example.MyStore.service.ProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
@@ -15,10 +16,12 @@ import java.util.List;
 public class HomeController {
 
     private final ProductService productService;
+    private final PictureService pictureService;
     private final ModelMapper modelMapper;
 
-    public HomeController(ProductService productService, ModelMapper modelMapper) {
+    public HomeController(ProductService productService, PictureService pictureService, ModelMapper modelMapper) {
         this.productService = productService;
+        this.pictureService = pictureService;
         this.modelMapper = modelMapper;
     }
 
@@ -36,7 +39,14 @@ public class HomeController {
 
         List<ProductLatestViewModel> productsViewModel = productsServiceModel
                 .stream()
-                .map(product -> modelMapper.map(product, ProductLatestViewModel.class))
+                .map(product ->  {
+                    ProductLatestViewModel mappedProduct = modelMapper.map(product, ProductLatestViewModel.class);
+                    if (mappedProduct.getImageUrl() == null) {
+                        mappedProduct.setImageUrl(pictureService.getDefaultProductPicture().getUrl());
+                    }
+
+                    return mappedProduct;
+                })
                 .toList();
 
          model.addAttribute("latestProducts", productsViewModel);
@@ -53,4 +63,6 @@ public class HomeController {
     public String contact() {
         return "contact";
     }
+
+
 }

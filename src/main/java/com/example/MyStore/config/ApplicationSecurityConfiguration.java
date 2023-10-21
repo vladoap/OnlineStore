@@ -36,11 +36,11 @@ public class ApplicationSecurityConfiguration {
                         authorizeHttpRequests
                                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                                 .requestMatchers("/webfonts/**").permitAll()
-                                .requestMatchers( "/","/users/login", "/users/register", "/users/login-error").permitAll()
-                                .requestMatchers("/admin/**", "/api/admin/**").hasRole(UserRoleEnum.ADMIN.name())
+                                .requestMatchers("/", "/users/login", "/users/register", "/users/login-error").permitAll()
+                                .requestMatchers("/admin/**", "/api/admin/**", "/statistics").hasRole(UserRoleEnum.ADMIN.name())
                                 .anyRequest().authenticated()
                 )
-                                .formLogin(fromLogin ->
+                .formLogin(fromLogin ->
                         fromLogin.
                                 loginPage("/users/login")
                                 .usernameParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY)
@@ -71,7 +71,6 @@ public class ApplicationSecurityConfiguration {
         return http.build();
 
     }
-
 
 
     @Bean

@@ -9,6 +9,7 @@ import com.example.MyStore.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.modelmapper.ModelMapper;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -147,6 +148,8 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
     }
+
+
 
 
     @Override
@@ -388,6 +391,11 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(user.getId());
         System.out.println();
         return userRepository.findById(id).isEmpty();
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
 

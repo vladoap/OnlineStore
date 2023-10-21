@@ -148,3 +148,20 @@
     height: 60px;
 
 }
+
+
+
+.equal-height-cards {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.equal-height-cards .card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.equal-height-cards .card-body {
+    flex-grow: 1;
+}

@@ -58,4 +58,6 @@ public interface UserService {
     boolean isNotCurrentUser(Long id, String usernameCurrentUser);
 
     boolean deleteUserById(Long id);
+
+    List<User> getAllUsers();
 }

@@ -20,6 +20,6 @@ public class CategoryServiceImpl implements CategoryService {
     public Category findByName(String category) {
         return categoryRepository
                 .findByName(CategoryNameEnum.valueOf(category))
-                .orElseThrow(() -> new CategoryNotFoundException("Category with name: " + category + "not found."));
+                .orElseThrow(() -> new CategoryNotFoundException("Category with name: " + category + " not found."));
     }
 }

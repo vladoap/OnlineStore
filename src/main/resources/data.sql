@@ -26,9 +26,9 @@ VALUES (now(), 'dtqlensu4cvw1hzrejq3', 'chair3', 'https://res.cloudinary.com/dkh
 INSERT INTO pictures(created, public_id, title, url)
 VALUES (now(), 'rcnxfjmttqje5cpu4sbk', 'table', 'https://res.cloudinary.com/dkhgpyqjy/image/upload/v1696629475/rcnxfjmttqje5cpu4sbk.jpg');
 INSERT INTO pictures(created, public_id, title, url)
-VALUES (now(), 'jehdd4cbei0jukozvcu7', 't-shirt1', 'https://res.cloudinary.com/dkhgpyqjy/image/upload/v1696629475/jehdd4cbei0jukozvcu7.png');
+VALUES (now(), 'c8utowfgjpttmiwzyoq8', 't-shirt1', 'https://res.cloudinary.com/dkhgpyqjy/image/upload/v1697905430/c8utowfgjpttmiwzyoq8.png');
 INSERT INTO pictures(created, public_id, title, url)
-VALUES (now(), 'gac4rf5eq0rhhqzqtub7', 't-shirt2', 'https://res.cloudinary.com/dkhgpyqjy/image/upload/v1696629475/gac4rf5eq0rhhqzqtub7.jpg');
+VALUES (now(), 'kayboxenlzwnvdcudniy', 't-shirt2', 'https://res.cloudinary.com/dkhgpyqjy/image/upload/v1697905502/kayboxenlzwnvdcudniy.jpg');
 INSERT INTO pictures(created, public_id, title, url)
 VALUES (now(), 'dtf6wwde42wbmgbfxwfc', 'smartwatch1', 'https://res.cloudinary.com/dkhgpyqjy/image/upload/v1696629475/dtf6wwde42wbmgbfxwfc.png');
 INSERT INTO pictures(created, public_id, title, url)
@@ -48,11 +48,11 @@ VALUES (now(), 'sicv3xr8ntbx7ufn8crn', 'hoodie3', 'https://res.cloudinary.com/dk
 INSERT INTO pictures(created, public_id, title, url)
 VALUES (now(), 'n5kltn3sj3trgevmjmay', 'Deluge', 'https://res.cloudinary.com/dkhgpyqjy/image/upload/v1696629475/n5kltn3sj3trgevmjmay.jpg');
 INSERT INTO pictures(created, public_id, title, url)
-VALUES (now(), 'k8lrxingtzowiijuhlx1', 'Brooklyn Crime Novel', 'https://res.cloudinary.com/dkhgpyqjy/image/upload/v1696629474/k8lrxingtzowiijuhlx1.jpg');
+VALUES (now(), 'd6dydctz6zmwtr7e33r8', 'Brooklyn Crime Novel', 'https://res.cloudinary.com/dkhgpyqjy/image/upload/v1697905623/d6dydctz6zmwtr7e33r8.jpg');
 INSERT INTO pictures(created, public_id, title, url)
 VALUES (now(), 'hxjclcbp3j6t7xs4wqps', 'Death Valley', 'https://res.cloudinary.com/dkhgpyqjy/image/upload/v1696629474/hxjclcbp3j6t7xs4wqps.jpg');
 INSERT INTO pictures(created, public_id, title, url)
-VALUES (now(), 'a8r1hacfbwkryxfdpygf', 'Default Product', 'https://res.cloudinary.com/dkhgpyqjy/image/upload/v1696845342/a8r1hacfbwkryxfdpygf.png');
+VALUES (now(), 'q4dj3noeyv7c7goojyus', 'Default Product', 'https://res.cloudinary.com/dkhgpyqjy/image/upload/v1697906166/q4dj3noeyv7c7goojyus.png');
 INSERT INTO pictures(created, public_id, title, url)
 VALUES (now(), 'wozk56pgeh0ifv0h2xy6', 'Default Profile', 'https://res.cloudinary.com/dkhgpyqjy/image/upload/v1696629474/wozk56pgeh0ifv0h2xy6.jpg');
 
