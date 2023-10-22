@@ -2,8 +2,8 @@ spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: "jdbc:mysql://localhost:3306/onlineStore?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC"
-    username: root
-    password: 111111
+    username: ${SQL_USERNAME}
+    password: ${SQL_PASSWORD}
   servlet:
     multipart:
       max-file-size: 10MB
@@ -17,8 +17,8 @@ spring:
 
 
 #  sql:
-#         init:
-#              mode: always
+#    init:
+#      mode: always
 
   jpa:
 
@@ -42,6 +42,9 @@ cloudinary:
   api-key: ${CLOUDINARY_API_KEY}
   api-secret: ${CLOUDINARY_API_SECRET}
   cloud-name: ${CLOUDINARY_CLOUD_NAME}
+
+
+
 
 #logging:
 #  level:

@@ -13,6 +13,7 @@ public class ProductsSummaryViewModel {
     private Long id;
     private String name;
     private String imageUrl;
+    private Integer quantity;
     private BigDecimal price;
 
     public Long getId() {
@@ -48,6 +49,15 @@ public class ProductsSummaryViewModel {
 
     public ProductsSummaryViewModel setPrice(BigDecimal price) {
         this.price = price;
+        return this;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public ProductsSummaryViewModel setQuantity(Integer quantity) {
+        this.quantity = quantity;
         return this;
     }
 }

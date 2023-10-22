@@ -60,4 +60,6 @@ public interface UserService {
     boolean deleteUserById(Long id);
 
     List<User> getAllUsers();
+
+    boolean isEmailFree(String email);
 }

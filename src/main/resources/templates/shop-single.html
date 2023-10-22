@@ -75,10 +75,14 @@
                             </li>
                         </ul>
 
+
                         <h6>Description:</h6>
                         <p th:text="*{description}">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temp incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse. Donec condimentum elementum convallis. Nunc sed orci a diam ultrices aliquet interdum quis nulla.</p>
 
-                        <th:block th:if="${@productServiceImpl.isNotOwner(#authentication.principal.username, productDetails.id)}">
+                        <p th:if="*{quantity == 0}" class="text-danger" style="font-weight: bold !important; font-size: 20px !important;">Out of Stock</p>
+
+
+                        <th:block th:if="${@productServiceImpl.isNotOwner(#authentication.principal.username, productDetails.id)} and *{quantity > 0}">
                         <form
                                 th:action="@{/purchase/{id}(id = ${productDetails.id})}"
                                 th:method="post"
@@ -86,6 +90,8 @@
 
 
                             <input type="hidden" name="product-title" value="Activewear">
+
+
                             <div class="row">
                                 <div class="col-auto">
                                     <ul class="list-inline pb-3">
@@ -111,8 +117,6 @@
 
                             </div>
 
-
-
                             <div class="row pb-3">
                                 <div style="text-align: center;">
                                     <button type="submit" class="btn btn-success btn-lg" name="submit" value="buy" style="font-size: 20px;">Add to Cart</button>
@@ -123,6 +127,7 @@
                         </form>
 
                         </th:block>
+
                     </div>
                 </div>
             </div>

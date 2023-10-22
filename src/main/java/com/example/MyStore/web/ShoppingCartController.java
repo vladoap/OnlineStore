@@ -138,7 +138,7 @@ public class ShoppingCartController {
         userService.deleteAllCartItems(principal.getName());
 
 
-        return "redirect:cart";
+        return "successful-order";
     }
 
 

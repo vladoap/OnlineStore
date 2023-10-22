@@ -46,7 +46,7 @@ public class PictureController {
             return "redirect:/products/update/" + id;
         }
 
-        String title = pictureAddBindingModel.getTitle();
+        String title = file.getOriginalFilename();
 
         Picture picture = pictureService.uploadPicture(pictureAddBindingModel.getPicture(), title);
 

@@ -103,10 +103,10 @@ form.addEventListener('submit', function (event) {
 
 
 
-function updateTitle(input) {
-    const titleInput = document.getElementById("title");
-    titleInput.value = input.files[0].name;
-}
+// function updateTitle(input) {
+//     const titleInput = document.getElementById("title");
+//     titleInput.value = input.files[0].name;
+// }
 
 
 

@@ -134,6 +134,7 @@ public class ProductController {
             groupedPictures.add(pictures.subList(i, endIndex));
         }
 
+
         model.addAttribute("productDetails", productDetailsViewModel);
         model.addAttribute("groupedPictures", groupedPictures);
 

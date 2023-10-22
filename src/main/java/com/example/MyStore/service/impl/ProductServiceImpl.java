@@ -124,7 +124,12 @@ public class ProductServiceImpl implements ProductService {
 
         return productRepository
                 .findById(id)
-                .map(product -> modelMapper.map(product, ProductDetailsServiceModel.class))
+                .map(product -> {
+                    ProductDetailsServiceModel mappedProduct = modelMapper.map(product, ProductDetailsServiceModel.class);
+                    mappedProduct.setCategory(product.getCategory().getName());
+
+                    return mappedProduct;
+                })
                 .orElseThrow(() -> new ProductNotFoundException("Product with ID: " + id + " not found."));
     }
 

@@ -125,7 +125,7 @@
 
 /* Admin panel */
 .user-card {
-    height: 300px; /* Adjust the height as needed */
+    height: 350px; /* Adjust the height as needed */
 }
 
 .user-image-container {
@@ -164,4 +164,13 @@
 
 .equal-height-cards .card-body {
     flex-grow: 1;
+}
+
+
+
+.out-of-stock-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }

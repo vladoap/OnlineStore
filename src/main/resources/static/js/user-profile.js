@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-// Add an event listener to the file input
+
     fileInput.addEventListener("change", function () {
         if (fileInput.files && fileInput.files[0]) {
             const reader = new FileReader();

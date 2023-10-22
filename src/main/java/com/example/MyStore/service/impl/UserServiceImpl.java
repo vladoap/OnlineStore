@@ -66,7 +66,10 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
+    @Override
+    public boolean isEmailFree(String email) {
+        return userRepository.findByEmail(email).isEmpty();
+    }
 
 
     @Override
@@ -397,6 +400,8 @@ public class UserServiceImpl implements UserService {
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
+
+
 
 
     private static CartItem getCartItemByProductId(Long productId, Cart cart) {

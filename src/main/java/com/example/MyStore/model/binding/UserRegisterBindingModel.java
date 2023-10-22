@@ -2,6 +2,7 @@ package com.example.MyStore.model.binding;
 
 import com.example.MyStore.model.enums.TitleEnum;
 import com.example.MyStore.validation.MatchingPassword;
+import com.example.MyStore.validation.UniqueEmail;
 import com.example.MyStore.validation.UniqueUsername;
 import jakarta.validation.constraints.*;
 
@@ -78,6 +79,8 @@ public class UserRegisterBindingModel {
         return this;
     }
 
+
+    @UniqueEmail
     @NotBlank
     @Email(message = "Enter valid email.")
     public String getEmail() {

@@ -7,6 +7,7 @@ public class ProductSummaryServiceModel {
     private Long id;
     private String name;
     private String description;
+    private Integer quantity;
     private String imageUrl;
     private BigDecimal price;
 
@@ -52,6 +53,15 @@ public class ProductSummaryServiceModel {
 
     public ProductSummaryServiceModel setDescription(String description) {
         this.description = description;
+        return this;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public ProductSummaryServiceModel setQuantity(Integer quantity) {
+        this.quantity = quantity;
         return this;
     }
 }

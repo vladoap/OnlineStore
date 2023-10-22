@@ -47,31 +47,37 @@
                             <div class="card rounded-0">
                                 <div class="d-flex justify-content-center align-items-center" style="height: 100%;">
                                     <img class="card-img rounded-0 img-fluid" th:src="*{imageUrl}">
+                                    <p th:if="${p.quantity == 0}" class="text-danger out-of-stock-text" style="font-weight: bold !important; font-size: 20px !important;">Out of Stock</p>
                                 </div>
+
 
                                 <div class="card-img-overlay rounded-0 product-overlay d-flex flex-column justify-content-end">
                                     <ul class="list-unstyled mt-auto">
                                         <li><a class="btn btn-success text-white"
                                                th:href="@{/products/details/{id}(id = *{id})}"><i
                                                 class="far fa-eye"></i></a></li>
+                                        <th:block th:if="${p.quantity != 0}">
                                         <form th:method="post" th:action="@{/purchase/{id}(id = *{id})}"
                                               class="purchaseForm">
                                             <input type="hidden" name="quantity" value="1">
-                                            <!-- You can adjust the quantity as needed -->
+
                                             <li>
                                                 <a class="btn btn-success text-white addToCartButton">
                                                     <i class="fas fa-cart-plus"></i>
                                                 </a>
                                             </li>
                                         </form>
+                                        </th:block>
                                     </ul>
                                 </div>
                             </div>
+
                             <div class="card-body text-center d-flex flex-column align-items-center">
                                 <a th:href="@{/products/details/{id}(id = *{id})}" th:text="*{name}"
                                    class="h3 text-decoration-none text-center">Oupidatat non</a>
                                 <p class="mt-2" th:text="${p.price} + ' Lv.'">$250.00</p>
                             </div>
+
                         </div>
                     </div>
                 </div>
