@@ -1,3 +1,4 @@
+
 -- addresses
 INSERT INTO addresses (city, street_name, street_number, country)
 VALUES ('Plovdiv', 'Vasil Aprilov', '150', 'Bulgaria');
@@ -191,16 +192,6 @@ INSERT INTO products_pictures(pictures_id, product_id)
 VALUES (20 ,9);
 INSERT INTO products_pictures(pictures_id, product_id)
 VALUES (18 ,10);
-
-
-
-
-
-
-
-
-
-
 
 
 

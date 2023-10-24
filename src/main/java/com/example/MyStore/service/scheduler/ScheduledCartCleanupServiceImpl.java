@@ -1,6 +1,6 @@
-package com.example.MyStore.service.impl;
+package com.example.MyStore.service.scheduler;
 
-import com.example.MyStore.service.ScheduledCartCleanupService;
+import com.example.MyStore.service.scheduler.ScheduledCartCleanupService;
 import com.example.MyStore.service.UserService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;

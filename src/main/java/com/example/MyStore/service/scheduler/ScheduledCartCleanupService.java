@@ -1,4 +1,4 @@
-package com.example.MyStore.service;
+package com.example.MyStore.service.scheduler;
 
 import org.springframework.scheduling.annotation.Scheduled;
 

@@ -1,10 +1,7 @@
-package com.example.MyStore.aspects;
+package com.example.MyStore.aop;
 
-import com.example.MyStore.model.AppUserDetails;
-import com.example.MyStore.model.entity.User;
 import com.example.MyStore.service.UserService;
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
+
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -32,7 +29,7 @@ public class CartRefreshAspect {
     }
 
     @Before("getMappingMethods()")
-    private void beforeGetMappingMethodInvocation(JoinPoint joinPoint) {
+    private void beforeGetMappingMethodInvocation() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated() && (authentication.getPrincipal() instanceof UserDetails)) {
             String username = authentication.getName();

@@ -1,4 +1,4 @@
-package com.example.MyStore.interceptor;
+package com.example.MyStore.web.interceptor;
 
 import com.example.MyStore.service.StatsService;
 import jakarta.servlet.http.HttpServletRequest;
