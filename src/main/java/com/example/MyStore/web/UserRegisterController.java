@@ -8,6 +8,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolderStrategy;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,11 +29,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class UserRegisterController {
 
     private final UserService userService;
+    private final UserDetailsService userDetailsService;
+    private final SecurityContextRepository securityContextRepository;
     private final PictureService pictureService;
     private final ModelMapper modelMapper;
 
-    public UserRegisterController(UserService userService, PictureService pictureService, ModelMapper modelMapper) {
+    public UserRegisterController(UserService userService, UserDetailsService userDetailsService, SecurityContextRepository securityContextRepository, PictureService pictureService, ModelMapper modelMapper) {
         this.userService = userService;
+        this.userDetailsService = userDetailsService;
+        this.securityContextRepository = securityContextRepository;
         this.pictureService = pictureService;
         this.modelMapper = modelMapper;
     }
@@ -56,7 +68,30 @@ public class UserRegisterController {
         userServiceModel.setProfilePicture(pictureService.getDefaultProfilePicture());
         userService.registerUser(userServiceModel);
 
+        authenticateUser(userServiceModel.getUsername(), request, response);
 
      return "redirect:/home";
+    }
+
+
+    private void authenticateUser(String username, HttpServletRequest request, HttpServletResponse response) {
+        UserDetails principal = userDetailsService.loadUserByUsername(username);
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                principal,
+                principal.getPassword(),
+                principal.getAuthorities()
+        );
+
+        SecurityContextHolderStrategy strategy = SecurityContextHolder.getContextHolderStrategy();
+
+        SecurityContext context = strategy.getContext();
+
+        context.setAuthentication(authentication);
+
+        strategy.setContext(context);
+
+        securityContextRepository.saveContext(context, request, response);
+
     }
 }

@@ -37,7 +37,7 @@ public interface UserService {
 
     void deleteAllCartItems(String username);
 
-    void updateCartItemQuantityIfLessThenCurrent(Product product, Cart cart);
+//    void updateCartItemQuantityIfLessThenCurrent(Product product, Cart cart);
 
 
     void updateShoppingCartWithProductQuantities(String username);

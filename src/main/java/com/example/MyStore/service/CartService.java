@@ -1,6 +1,8 @@
 package com.example.MyStore.service;
 
 import com.example.MyStore.model.entity.Cart;
+import com.example.MyStore.model.entity.CartItem;
+import com.example.MyStore.model.entity.Product;
 import com.example.MyStore.model.service.ProductDetailsServiceModel;
 
 public interface CartService {
@@ -15,7 +17,10 @@ public interface CartService {
 
     void save(Cart cart);
 
-    void deleteCartItemById(Long cartItemId);
+    void deleteCartItemByProductId(Long productId, Cart userCart);
 
     Cart createNewCart();
+
+
+    void deleteCartItem(CartItem cartItem);
 }

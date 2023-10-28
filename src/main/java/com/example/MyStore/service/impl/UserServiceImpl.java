@@ -6,20 +6,9 @@ import com.example.MyStore.model.enums.UserRoleEnum;
 import com.example.MyStore.model.service.*;
 import com.example.MyStore.repository.UserRepository;
 import com.example.MyStore.service.*;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.modelmapper.ModelMapper;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.context.SecurityContextHolderStrategy;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,15 +26,11 @@ public class UserServiceImpl implements UserService {
     private final AddressService addressService;
     private final OrderService orderService;
     private final ProductService productService;
-    private final UserDetailsService userDetailsService;
-    private final SecurityContextRepository securityContextRepository;
-    private final HttpServletRequest httpServletRequest;
-    private final HttpServletResponse httpServletResponse;
     private final PasswordEncoder passwordEncoder;
 
     public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, UserRoleService userRoleService,
-                           CartService cartService, AddressService addressService, OrderService orderService, ProductService productService, UserDetailsService userDetailsService, SecurityContextRepository securityContextRepository,
-                           HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, PasswordEncoder passwordEncoder) {
+                           CartService cartService, AddressService addressService, OrderService orderService, ProductService productService,
+                          PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.userRoleService = userRoleService;
@@ -53,10 +38,6 @@ public class UserServiceImpl implements UserService {
         this.addressService = addressService;
         this.orderService = orderService;
         this.productService = productService;
-        this.userDetailsService = userDetailsService;
-        this.securityContextRepository = securityContextRepository;
-        this.httpServletRequest = httpServletRequest;
-        this.httpServletResponse = httpServletResponse;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -94,7 +75,6 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
 
-        authenticateUser(user.getUsername());
     }
 
 
@@ -119,23 +99,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Integer getCountOfCartItemsForUser(String username) {
-
-        initializeUserCart(username);
         return findByUsername(username).getCart().getCartItems().size();
 
     }
+
 
 
     @Transactional
     @Override
     public void deleteCartItem(Long productId, String username) {
         User buyer = findByUsername(username);
-        Cart cart = buyer.getCart();
 
-
-        CartItem cartItemToDelete = getCartItemByProductId(productId, cart);
-        cartService.deleteCartItemById(cartItemToDelete.getId());
-        cart.getCartItems().remove(cartItemToDelete);
+        cartService.deleteCartItemByProductId(productId, buyer.getCart());
 
         userRepository.save(buyer);
     }
@@ -222,7 +197,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Integer getCartItemQuantityForUser(Long productId, String username) {
-        initializeUserCart(username);
 
         return findByUsername(username).getCart().getCartItems()
                 .stream()
@@ -233,45 +207,6 @@ public class UserServiceImpl implements UserService {
 
     }
 
-
-
-
-    private void authenticateUser(String username) {
-        UserDetails principal = userDetailsService.loadUserByUsername(username);
-
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                principal,
-                principal.getPassword(),
-                principal.getAuthorities()
-        );
-
-        SecurityContextHolderStrategy strategy = SecurityContextHolder.getContextHolderStrategy();
-
-        SecurityContext context = strategy.getContext();
-
-        context.setAuthentication(authentication);
-
-        strategy.setContext(context);
-
-        securityContextRepository.saveContext(context, httpServletRequest, httpServletResponse);
-    }
-
-
-
-    private void initializeUserCart(String username) {
-        User user = findByUsername(username);
-
-        if (user.getCart() == null) {
-            Cart cart = new Cart().setCartItems(new HashSet<>());
-            cart.setCreated(LocalDateTime.now());
-
-            cartService.save(cart);
-            user.setCart(cart);
-
-
-            userRepository.save(user);
-        }
-    }
 
     @Transactional
     @Override
@@ -340,8 +275,8 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public boolean promoteUserToAdmin(Long id) {
-        User user = findById(id);
+    public boolean promoteUserToAdmin(Long userId) {
+        User user = findById(userId);
         if (user.getRoles().stream().anyMatch(r -> r.getName().equals(UserRoleEnum.ADMIN))) {
             return false;
         }
@@ -355,33 +290,28 @@ public class UserServiceImpl implements UserService {
 
 
 
-
+    @Transactional
     @Override
     public void updateShoppingCartWithProductQuantities(String username) {
-        initializeUserCart(username);
         User user = findByUsername(username);
-
         Cart cart = user.getCart();
+        List<CartItem> cartItems = new ArrayList<>(cart.getCartItems());
 
-        user.getCart().getCartItems().stream().map(cartItem -> productService.getProductById(cartItem.getProductId()))
-                    .forEach(product -> updateCartItemQuantityIfLessThenCurrent(product, cart));
+        for (CartItem cartItem : cartItems) {
+            Product product = productService.getProductById(cartItem.getProductId());
+
+            if (product.getQuantity() == 0) {
+                cart.getCartItems().remove(cartItem);
+                cartService.deleteCartItem(cartItem);
+            } else if (product.getQuantity() < cartItem.getQuantity()) {
+                cartItem.setQuantity(product.getQuantity());
+            }
+        }
 
         userRepository.save(user);
     }
 
 
-    @Override
-    public void updateCartItemQuantityIfLessThenCurrent(Product product, Cart cart) {
-        CartItem cartItem = getCartItemByProductId(product.getId(), cart);
-
-        if (product.getQuantity() == 0) {
-            cartService.deleteCartItemById(cartItem.getId());
-            cart.getCartItems().remove(cartItem);
-        } else if (product.getQuantity() < cartItem.getQuantity()) {
-            cartItem.setQuantity(product.getQuantity());
-        }
-        cartService.save(cart);
-    }
 
     @Override
     public boolean isNotCurrentUser(Long id, String usernameCurrentUser) {
@@ -389,11 +319,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean deleteUserById(Long id) {
-        User user = findById(id);
+    public boolean deleteUserById(Long userId) {
+        User user = findById(userId);
         userRepository.deleteById(user.getId());
-        System.out.println();
-        return userRepository.findById(id).isEmpty();
+
+        return userRepository.findById(userId).isEmpty();
     }
 
     @Override
@@ -401,13 +331,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
-
-
-
-    private static CartItem getCartItemByProductId(Long productId, Cart cart) {
-        return cart.getCartItems().stream().filter(cartItem -> cartItem.getProductId().equals(productId))
-                .findFirst().orElseThrow(() -> new CartNotFoundException("Cart item not found in the cart."));
-    }
 
     private UserDetailsForAdminServiceModel mapUserToUserDetailsForAdminServiceModel(User user) {
         UserDetailsForAdminServiceModel userModel = new UserDetailsForAdminServiceModel();
@@ -426,7 +349,6 @@ public class UserServiceImpl implements UserService {
 
         return userModel;
     }
-
 
 
 }

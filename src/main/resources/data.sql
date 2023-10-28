@@ -88,15 +88,21 @@ Dive into a diverse selection of reading materials, including fiction, non-ficti
 Discover the magic of storytelling and the joy of learning within the pages of our carefully curated books.',
         'Books');
 
+INSERT INTO carts (id, created)
+VALUES (1, now());
+INSERT INTO carts (id, created)
+VALUES (2, now());
+INSERT INTO carts (id, created)
+VALUES (3, now());
+
 
 -- users
-INSERT INTO users (title, created, email, first_name, last_name, password, username, address_city, address_street_name, address_street_number, profile_picture_id)
-VALUES ('Mr', now(), 'gosho@gosho.bg', 'Georgi', 'Ivanov', '$2a$12$Uiq0Ls15Q49e3UYaSxMCfOCfxrRWjVPDwWeiVNu5wWIHRph48Jmy6', 'gosho', 'Plovdiv', 'Macedonia', 32, 2);
-INSERT INTO users (title, created, email, first_name, last_name, password, username, address_city, address_street_name, address_street_number, profile_picture_id)
-VALUES ('Mr', now(), 'peter@todorv.bg', 'Peter', 'Petrov', '$2a$12$Uiq0Ls15Q49e3UYaSxMCfOCfxrRWjVPDwWeiVNu5wWIHRph48Jmy6', 'pesho', 'Sofia', 'Vitosha', 5, 3);
-INSERT INTO users (title, created, email, first_name, last_name, password, username, address_city, address_street_name, address_street_number, profile_picture_id)
-VALUES ('Mr', now(), 'ivan@ivan.bg', 'Ivan', 'Dimitrov', '$2a$12$Uiq0Ls15Q49e3UYaSxMCfOCfxrRWjVPDwWeiVNu5wWIHRph48Jmy6', 'ivan', 'Sofia', 'Vitosha', 10, 1);
-
+INSERT INTO users (title, created, email, first_name, last_name, password, username, address_city, address_street_name, address_street_number, profile_picture_id, cart_id)
+VALUES ('Mr', now(), 'gosho@gosho.bg', 'Georgi', 'Ivanov', '$2a$12$Uiq0Ls15Q49e3UYaSxMCfOCfxrRWjVPDwWeiVNu5wWIHRph48Jmy6', 'gosho', 'Plovdiv', 'Macedonia', 32, 2, 1);
+INSERT INTO users (title, created, email, first_name, last_name, password, username, address_city, address_street_name, address_street_number, profile_picture_id, cart_id)
+VALUES ('Mr', now(), 'peter@todorv.bg', 'Peter', 'Petrov', '$2a$12$Uiq0Ls15Q49e3UYaSxMCfOCfxrRWjVPDwWeiVNu5wWIHRph48Jmy6', 'pesho', 'Sofia', 'Vitosha', 5, 3, 2);
+INSERT INTO users (title, created, email, first_name, last_name, password, username, address_city, address_street_name, address_street_number, profile_picture_id, cart_id)
+VALUES ('Mr', now(), 'ivan@ivan.bg', 'Ivan', 'Dimitrov', '$2a$12$Uiq0Ls15Q49e3UYaSxMCfOCfxrRWjVPDwWeiVNu5wWIHRph48Jmy6', 'ivan', 'Sofia', 'Vitosha', 10, 1, 3);
 
 
 -- users_roles

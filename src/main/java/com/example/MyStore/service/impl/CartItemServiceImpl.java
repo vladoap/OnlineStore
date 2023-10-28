@@ -6,6 +6,7 @@ import com.example.MyStore.model.service.ProductDetailsServiceModel;
 import com.example.MyStore.repository.CartItemRepository;
 import com.example.MyStore.service.CartItemService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -42,6 +43,7 @@ public class CartItemServiceImpl implements CartItemService {
     public void deleteById(Long id) {
         cartItemRepository.deleteById(id);
     }
+
 
     @Override
     public void delete(CartItem cartItem) {

@@ -3,7 +3,7 @@ package com.example.MyStore.service.impl;
 import com.example.MyStore.exception.CartNotFoundException;
 import com.example.MyStore.model.entity.Cart;
 import com.example.MyStore.model.entity.CartItem;
-import com.example.MyStore.model.entity.Picture;
+import com.example.MyStore.model.entity.Product;
 import com.example.MyStore.model.service.ProductDetailsServiceModel;
 import com.example.MyStore.repository.CartRepository;
 import com.example.MyStore.service.CartItemService;
@@ -33,9 +33,6 @@ public class CartServiceImpl implements CartService {
     public Cart findCartById(Long id) {
         return cartRepository.findById(id).orElseThrow(() -> new CartNotFoundException("Cart with ID: " + id + " not found."));
     }
-
-
-
 
 
     @Override
@@ -73,9 +70,17 @@ public class CartServiceImpl implements CartService {
     }
 
 
+
+
     @Override
-    public void deleteCartItemById(Long cartItemId) {
-         cartItemService.deleteById(cartItemId);
+    public void deleteCartItemByProductId(Long productId, Cart cart) {
+
+       CartItem cartItemToDelete = cart.getCartItems().stream().filter(cartItem -> cartItem.getProductId().equals(productId))
+                .findFirst().orElseThrow(() -> new CartNotFoundException("Cart item not found in the cart."));
+
+       cart.getCartItems().remove(cartItemToDelete);
+
+       cartItemService.delete(cartItemToDelete);
     }
 
     @Override
@@ -84,6 +89,15 @@ public class CartServiceImpl implements CartService {
         cart.setCreated(LocalDateTime.now());
         return cartRepository.save(cart);
     }
+
+    @Override
+    public void deleteCartItem(CartItem cartItem) {
+        cartItemService.delete(cartItem);
+    }
+
+
+
+
 
 
 }
