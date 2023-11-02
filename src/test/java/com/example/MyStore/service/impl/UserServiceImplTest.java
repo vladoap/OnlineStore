@@ -433,7 +433,7 @@ class UserServiceImplTest {
 
 
 
-    private static User initUser() {
+     static User initUser() {
         User user = new User()
                 .setUsername("admin")
                 .setEmail("admin@admin.bg")
@@ -478,16 +478,6 @@ class UserServiceImplTest {
     }
 
 
-    private UserRole createUserRole() {
-        return new UserRole().setName(UserRoleEnum.USER);
-    }
-
-    private Address createAddress(String country, String city, String streetName, Integer streetNumber) {
-        AddressId userAddressId = new AddressId(streetName, city, streetNumber);
-        return new Address()
-                .setCountry(country)
-                .setId(userAddressId);
-    }
 
 
 }

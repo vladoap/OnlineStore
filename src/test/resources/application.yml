@@ -1,0 +1,30 @@
+spring:
+  sql:
+    init:
+      mode: never
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    database-platform: org.hibernate.dialect.HSQLDialect
+
+  datasource:
+    url: jdbc:hsqldb:mem:testdb;sql.syntax_mys=true
+
+
+
+cloudinary:
+  api-key: ${CLOUDINARY_API_KEY}
+  api-secret: ${CLOUDINARY_API_SECRET}
+  cloud-name: ${CLOUDINARY_CLOUD_NAME}
+
+
+schedulers:
+  cron: "0 0 0 * * *"
+
+
+
+# cloudinary:
+#  api-key: 538483344557369
+#  api-secret: SgwAotpjiGSWWQLQukZpZT9g6yM
+#  cloud-name: dkhgpyqjy

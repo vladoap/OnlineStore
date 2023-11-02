@@ -59,7 +59,7 @@ public class Product extends BaseEntity {
         return this;
     }
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     public User getSeller() {
         return seller;
     }

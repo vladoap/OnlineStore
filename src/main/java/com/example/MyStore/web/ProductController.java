@@ -57,14 +57,15 @@ public class ProductController {
 
 
     @GetMapping("/all")
-    public String getAllProducts(Model model, Principal principal,
-                                 @RequestParam(name = "clickedPage", required = false, defaultValue = "0") Integer clickedPage,
-                                 @RequestParam(defaultValue = "1") int page,
-                                 @RequestParam(defaultValue = "6") int pageSize) {
+    public String getAllProductsExceptOwn(Model model, Principal principal,
+                                          @RequestParam(name = "clickedPage", required = false, defaultValue = "0") Integer clickedPage,
+                                          @RequestParam(defaultValue = "1") int page,
+                                          @RequestParam(defaultValue = "6") int pageSize) {
 
         List<ProductSummaryServiceModel> productsPageable = productService.getAllProductsExceptOwnPageable(page, pageSize, principal.getName());
 
         int totalProducts = productService.getAllProductsExceptOwn(principal.getName()).size();
+        System.out.println(totalProducts);
 
         model.addAttribute("products", mapServiceToDetailsViewModel(productsPageable));
         model.addAttribute("pages", PaginationUtil.getPageCount(pageSize, totalProducts));

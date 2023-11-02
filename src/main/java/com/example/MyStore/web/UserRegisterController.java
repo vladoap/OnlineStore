@@ -74,6 +74,7 @@ public class UserRegisterController {
     }
 
 
+
     private void authenticateUser(String username, HttpServletRequest request, HttpServletResponse response) {
         UserDetails principal = userDetailsService.loadUserByUsername(username);
 

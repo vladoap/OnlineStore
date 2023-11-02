@@ -156,7 +156,12 @@ public class ProductServiceImpl implements ProductService {
     public ProductUpdateServiceModel findById(Long id) {
         return productRepository
                 .findById(id)
-                .map(product -> modelMapper.map(product, ProductUpdateServiceModel.class))
+                .map(product ->  {
+                    ProductUpdateServiceModel mappedProduct = modelMapper.map(product, ProductUpdateServiceModel.class);
+                    mappedProduct.setCategory(product.getCategory().getName());
+
+                    return mappedProduct;
+                })
                 .orElseThrow(() -> new ProductNotFoundException("Product with ID: " + id + " not found."));
     }
 
@@ -206,6 +211,7 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product);
     }
 
+
     @Override
     public void createProduct(ProductAddServiceModel productServiceModel, User user) {
 
@@ -244,8 +250,10 @@ public class ProductServiceImpl implements ProductService {
                         int newQuantity = product.getQuantity() - totalQuantity;
                         if (newQuantity >= 0) {
                             product.setQuantity(newQuantity);
-                            productRepository.save(product);
+                        } else {
+                            product.setQuantity(0);
                         }
+                        productRepository.save(product);
                     } else {
                         throw new ProductNotFoundException("Product with ID: " + productId + " not found.");
                     }

@@ -297,18 +297,21 @@ public class UserServiceImpl implements UserService {
         Cart cart = user.getCart();
         List<CartItem> cartItems = new ArrayList<>(cart.getCartItems());
 
-        for (CartItem cartItem : cartItems) {
-            Product product = productService.getProductById(cartItem.getProductId());
+        if (cartItems.size() > 0) {
 
-            if (product.getQuantity() == 0) {
-                cart.getCartItems().remove(cartItem);
-                cartService.deleteCartItem(cartItem);
-            } else if (product.getQuantity() < cartItem.getQuantity()) {
-                cartItem.setQuantity(product.getQuantity());
+            for (CartItem cartItem : cartItems) {
+                Product product = productService.getProductById(cartItem.getProductId());
+
+                if (product.getQuantity() == 0) {
+                    cart.getCartItems().remove(cartItem);
+                    cartService.deleteCartItem(cartItem);
+                } else if (product.getQuantity() < cartItem.getQuantity()) {
+                    cartItem.setQuantity(product.getQuantity());
+                }
             }
-        }
 
-        userRepository.save(user);
+            userRepository.save(user);
+        }
     }
 
 

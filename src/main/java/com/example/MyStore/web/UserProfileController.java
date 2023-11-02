@@ -57,8 +57,8 @@ public class UserProfileController {
     }
 
     @PatchMapping("/update")
-    public String userUpdatePost(@Valid UserDetailsBindingModel userDetailsBindingModel, BindingResult bindingResult, RedirectAttributes redirectAttributes,
-                                 Principal principal) throws IOException {
+    public String userUpdatePatch(@Valid UserDetailsBindingModel userDetailsBindingModel, BindingResult bindingResult, RedirectAttributes redirectAttributes,
+                                  Principal principal) throws IOException {
 
         if (bindingResult.hasErrors()) {
             redirectAttributes
@@ -69,6 +69,7 @@ public class UserProfileController {
         }
 
         boolean isPasswordCorrect = userService.isPasswordCorrectForUser(principal.getName(), userDetailsBindingModel.getPassword());
+
 
         if (!isPasswordCorrect) {
             redirectAttributes
@@ -81,7 +82,7 @@ public class UserProfileController {
         UserDetailsServiceModel userServiceModel = modelMapper.map(userDetailsBindingModel, UserDetailsServiceModel.class);
 
 
-        if (!userDetailsBindingModel.getNewProfilePicture().isEmpty()) {
+        if (userDetailsBindingModel.getNewProfilePicture() != null && !userDetailsBindingModel.getNewProfilePicture().isEmpty() ) {
             String title = userDetailsBindingModel.getNewProfilePicture().getOriginalFilename();
             Picture picture = pictureService.uploadPicture(userDetailsBindingModel.getNewProfilePicture(), title);
             userServiceModel.setProfilePicture(picture);
@@ -108,6 +109,7 @@ public class UserProfileController {
             return "redirect:update";
         }
 
+
         boolean isPasswordCorrect = userService.isPasswordCorrectForUser(principal.getName(), userPasswordModel.getOldPassword());
 
         if (!isPasswordCorrect) {
@@ -123,6 +125,7 @@ public class UserProfileController {
                     .addFlashAttribute("PasswordIsTheSame", true);
             return "redirect:update";
         }
+
 
         userService.updatePassword(principal.getName(), userPasswordModel.getNewPassword());
 
