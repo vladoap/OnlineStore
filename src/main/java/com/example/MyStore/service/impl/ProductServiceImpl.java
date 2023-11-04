@@ -175,12 +175,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Picture> updateProduct(ProductUpdateServiceModel productUpdateServiceModel) {
         Product product = getProductById(productUpdateServiceModel.getId());
+
         List<Picture> deletedPictures = new ArrayList<>();
 
         product.getPictures().stream()
                 .filter(oldPic -> !productUpdateServiceModel.getPictures().contains(oldPic))
                 .forEach(deletedPictures::add);
-
 
         product
                 .setQuantity(productUpdateServiceModel.getQuantity())
@@ -204,11 +204,6 @@ public class ProductServiceImpl implements ProductService {
         }
 
         return false;
-    }
-
-    @Override
-    public void saveProduct(Product product) {
-        productRepository.save(product);
     }
 
 
@@ -260,16 +255,6 @@ public class ProductServiceImpl implements ProductService {
                 });
     }
 
-
-
-    private List<Product> mapCartItemsToProducts(Set<CartItem> boughtProducts) {
-        return boughtProducts
-                .stream()
-                .map(cartItem -> productRepository.findById(cartItem.getId())
-                        .orElseThrow(() -> new ProductNotFoundException("Product with ID: " + cartItem.getProductId() + " not found.")))
-                .collect(Collectors.toList());
-
-    }
 
 
     private ProductSummaryServiceModel map(Product product) {

@@ -42,8 +42,6 @@ public class UserProfileController {
 
         if (!model.containsAttribute("userDetails")) {
 
-            User user = userService.findByUsername(principal.getName());
-
             UserDetailsServiceModel userDetailsServiceModel = userService.getUserByUsername(principal.getName());
 
             UserDetailsBindingModel userDetailsBindingModel = modelMapper.map(userDetailsServiceModel, UserDetailsBindingModel.class);

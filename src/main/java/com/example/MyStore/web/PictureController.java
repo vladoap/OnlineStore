@@ -52,8 +52,6 @@ public class PictureController {
 
         productService.addProductPicture(id, picture);
 
-
-
         return "redirect:/products/update/" + id;
     }
 }

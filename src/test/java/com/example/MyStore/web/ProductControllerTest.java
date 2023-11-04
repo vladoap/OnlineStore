@@ -9,10 +9,7 @@ import com.example.MyStore.model.entity.User;
 import com.example.MyStore.model.enums.CategoryNameEnum;
 import com.example.MyStore.model.view.ProductDetailsViewModel;
 import com.example.MyStore.model.view.ProductsSummaryViewModel;
-import com.example.MyStore.repository.CategoryRepository;
-import com.example.MyStore.repository.PictureRepository;
-import com.example.MyStore.repository.ProductRepository;
-import com.example.MyStore.repository.UserRepository;
+import com.example.MyStore.repository.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -56,6 +54,9 @@ class ProductControllerTest {
     private PictureRepository pictureRepository;
 
     @Autowired
+    private UserRoleRepository userRoleRepository;
+
+    @Autowired
     private TestDataHelper testDataHelper;
 
     private User testUser;
@@ -74,6 +75,7 @@ class ProductControllerTest {
         pictureRepository.deleteAll();
         productRepository.deleteAll();
         categoryRepository.deleteAll();
+        userRoleRepository.deleteAll();
     }
 
     @SuppressWarnings("unchecked")
@@ -297,13 +299,20 @@ class ProductControllerTest {
         Integer newQuantity = 100;
         BigDecimal newPrice = BigDecimal.valueOf(12.35);
 
-        Product productToTest = getTestProduct();
+        Product productToTest = testDataHelper.initNewProductForUser1();
+        Picture newPicture = new Picture()
+                .setTitle("TestTitle")
+                .setUrl("TestUrl")
+                .setPublicId("testPublicId");
+        newPicture
+                .setCreated(LocalDateTime.now())
+                .setId(30L);
+        productToTest.setPictures(new ArrayList<>(List.of(newPicture)));
+        productRepository.save(productToTest);
 
-        String pictureUrls = productToTest.getPictures()
-                .stream()
-                .map(Picture::getUrl)
-                .collect(Collectors.joining(", "));
+        String emptyString = "";
 
+        assertEquals(1, productToTest.getPictures().size());
 
         mockMvc
                 .perform(patch("/products/update/" + productToTest.getId())
@@ -313,7 +322,7 @@ class ProductControllerTest {
                         .param("category", newCategory.name())
                         .param("quantity", newQuantity.toString())
                         .param("price", newPrice.toString())
-                        .param("pictures", pictureUrls)
+                        .param("pictures", emptyString)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .andExpect(status().is3xxRedirection())
@@ -326,7 +335,8 @@ class ProductControllerTest {
         assertEquals(newCategory, updatedProduct.getCategory().getName());
         assertEquals(newQuantity, updatedProduct.getQuantity());
         assertEquals(newPrice, updatedProduct.getPrice());
-        assertEquals(pictureUrls, updatedProduct.getPictures().stream().map(Picture::getUrl).collect(Collectors.joining(", ")));
+        assertEquals(0, updatedProduct.getPictures().size());
+        assertTrue(pictureRepository.findPictureByUrl(newPicture.getUrl()).isEmpty());
     }
 
     @Test

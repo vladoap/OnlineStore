@@ -13,7 +13,6 @@ import java.util.List;
 public interface ProductService {
     List<ProductSummaryServiceModel> getAllProducts();
 
-
     List<ProductSummaryServiceModel> getAllProductsPageable(int page, int pageSize);
     List<ProductSummaryServiceModel> getAllProductsExceptOwnPageable(int page, int pageSize, String username);
 
@@ -41,8 +40,6 @@ public interface ProductService {
     List<Picture> updateProduct(ProductUpdateServiceModel productUpdateServiceModel);
 
     boolean deleteProduct(Long id);
-
-    void saveProduct(Product product);
 
 
     void createProduct(ProductAddServiceModel productServiceModel, User user);

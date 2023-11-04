@@ -42,12 +42,6 @@ class UserProfileControllerTest {
     private UserRepository userRepository;
 
     @Autowired
-    private AddressRepository addressRepository;
-
-    @Autowired
-    private CartRepository cartRepository;
-
-    @Autowired
     private UserRoleRepository userRoleRepository;
 
     @Autowired

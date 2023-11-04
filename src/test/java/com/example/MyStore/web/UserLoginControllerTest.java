@@ -1,6 +1,7 @@
 package com.example.MyStore.web;
 
 import com.example.MyStore.repository.UserRepository;
+import com.example.MyStore.repository.UserRoleRepository;
 import com.example.MyStore.service.UserService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -27,10 +28,14 @@ class UserLoginControllerTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserRoleRepository userRoleRepository;
+
 
     @AfterEach
     public void tearDown () {
         userRepository.deleteAll();
+        userRoleRepository.deleteAll();
     }
 
     @Test

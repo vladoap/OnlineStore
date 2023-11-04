@@ -54,7 +54,7 @@ class ShoppingCartControllerTest {
     private PictureRepository pictureRepository;
 
     @Autowired
-    private CartItemRepository cartItemRepository;
+    private UserRoleRepository userRoleRepository;
 
     @Autowired
     private TestDataHelper testDataHelper;
@@ -73,6 +73,7 @@ class ShoppingCartControllerTest {
         pictureRepository.deleteAll();
         productRepository.deleteAll();
         categoryRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
