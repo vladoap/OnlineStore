@@ -33,7 +33,7 @@ public class HomeController {
         return "index";
     }
 
-    @GetMapping("home")
+    @GetMapping("/home")
     public String home(Model model) {
         List<ProductSummaryServiceModel> productsServiceModel = productService.getTheLatestThreeProducts();
 

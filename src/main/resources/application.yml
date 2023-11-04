@@ -17,9 +17,9 @@ spring:
 
 
 
-#  sql:
-#    init:
-#      mode: always
+  sql:
+    init:
+      mode: always
 
   jpa:
 

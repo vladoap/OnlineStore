@@ -71,12 +71,14 @@ public class AdminRestController {
 
         List<UserDetailsDTO> usersDTO = mapUsersDetailsServiceToDTO(usersServiceModel);
 
+
         return ResponseEntity.ok(usersDTO);
     }
 
     @PreAuthorize("@userServiceImpl.isNotCurrentUser(#id, #principal.name)")
     @PatchMapping("/users/promote/{id}")
     public ResponseEntity<UserDetailsDTO> promoteToAdmin(@PathVariable Long id, Principal principal) {
+
 
         boolean isPromoted = userService.promoteUserToAdmin(id);
 
@@ -89,12 +91,11 @@ public class AdminRestController {
             return ResponseEntity.notFound().build();
         }
 
-
         return ResponseEntity.ok(userDto);
     }
 
     @PreAuthorize("@userServiceImpl.isNotCurrentUser(#id, #principal.name)")
-    @DeleteMapping("users/delete/{id}")
+    @DeleteMapping("/users/delete/{id}")
     public ResponseEntity<UserDetailsDTO> deleteUser(@PathVariable Long id, Principal principal) {
        boolean isDeleted = userService.deleteUserById(id);
 
