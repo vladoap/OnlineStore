@@ -190,8 +190,8 @@ public class ProductServiceImpl implements ProductService {
                 .setName(productUpdateServiceModel.getName())
                 .setCategory(categoryService.findByName(productUpdateServiceModel.getCategory().name()));
 
-
         productRepository.save(product);
+
         return deletedPictures;
     }
 

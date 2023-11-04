@@ -63,7 +63,7 @@ class UserProfileControllerTest {
 
     @BeforeEach
     public void setUp() {
-        testUser = testDataHelper.initUser1();
+        testUser = testDataHelper.getUser1();
         userRepository.save(testUser);
     }
 

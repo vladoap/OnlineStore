@@ -9,6 +9,7 @@ import com.example.MyStore.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -43,21 +44,33 @@ public class TestDataHelper {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public Set<UserRole> initRoles() {
-        UserRole adminRole = new UserRole()
-                .setName(UserRoleEnum.ADMIN);
+    public Set<UserRole> getRoles() {
+         UserRole adminRole;
+         UserRole userRole;
+        if (userRoleRepository.count() == 0) {
+            adminRole = new UserRole()
+                    .setName(UserRoleEnum.ADMIN);
 
-        UserRole userRole = new UserRole()
-                .setName(UserRoleEnum.USER);
+            userRole = new UserRole()
+                    .setName(UserRoleEnum.USER);
 
-        userRoleRepository.saveAll(Set.of(adminRole, userRole));
+            userRoleRepository.saveAll(Set.of(adminRole, userRole));
+        } else {
+            adminRole = userRoleRepository.findByName(UserRoleEnum.ADMIN).get();
+            userRole = userRoleRepository.findByName(UserRoleEnum.USER).get();
+        }
+
 
         return Set.of(adminRole, userRole);
     }
 
-    public User initUser1() {
+    public User getUser1() {
 
-        Set<UserRole> userRoles = initRoles();
+        if (userRepository.findByUsername("admin").isPresent()) {
+            return userRepository.findByUsername("admin").get();
+        }
+
+        Set<UserRole> userRoles = getRoles();
 
         Picture picture = new Picture()
                 .setTitle("profilePicture1")
@@ -104,9 +117,14 @@ public class TestDataHelper {
         return user;
     }
 
-    public User initUser2() {
+    public User getUser2() {
 
-        Set<UserRole> userRoles = initRoles();
+        if (userRepository.findByUsername("gosho").isPresent()) {
+            return userRepository.findByUsername("gosho").get();
+        }
+
+            Set<UserRole> userRoles = getRoles();
+
 
         Picture picture = new Picture()
                 .setTitle("profilePicture2")
@@ -173,10 +191,10 @@ public class TestDataHelper {
 
         Picture picture1 = new Picture()
                 .setTitle("product1")
-                .setUrl("https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pexels.com%2Fsearch%2Fproduct%2520photography%2F&psig=AOvVaw3LgFCrurwhaATFj8CZx8h9&ust=1699002974249000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCNCQqZL9pIIDFQAAAAAdAAAAABAE")
+                .setUrl("jljklurl/asdasdsad")
                 .setPublicId("picture-product-1");
         picture1
-                .setId(2L)
+                .setId(3L)
                 .setCreated(LocalDateTime.now());
 
         Picture picture2 = new Picture()
@@ -184,31 +202,32 @@ public class TestDataHelper {
                 .setUrl("https://expertphotography.b-cdn.net/wp-content/uploads/2018/09/product-photography-types-water-bottle.jpg")
                 .setPublicId("picture-product-2");
         picture2
-                .setId(3L)
+                .setId(4L)
                 .setCreated(LocalDateTime.now());
 
         pictureRepository.save(picture1);
         pictureRepository.save(picture2);
-
+       getDefaultProductPicture();
 
         Product product1 = new Product()
                 .setName("product1")
                 .setDescription("Description of product 1")
                 .setCategory(bookCat)
                 .setPictures(List.of(picture1))
-                .setSeller(initUser1())
+                .setSeller(getUser1())
                 .setQuantity(10)
                 .setPrice(BigDecimal.valueOf(12.53));
         product1
                 .setId(1L)
                 .setCreated(LocalDateTime.now());
 
+        //product2 is with default product's picture.
         Product product2 = new Product()
                 .setName("product2")
                 .setDescription("Description of product 2")
                 .setCategory(electronicsCat)
-                .setPictures(List.of(picture2))
-                .setSeller(initUser2())
+//                .setPictures(List.of(picture2))
+                .setSeller(getUser2())
                 .setQuantity(150)
                 .setPrice(BigDecimal.valueOf(25.25));
         product2
@@ -220,5 +239,26 @@ public class TestDataHelper {
 
 
         return List.of(product1, product2);
+    }
+
+
+    public Picture getDefaultProductPicture() {
+        String pictureURL = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHz8hRSRb_YqaXfegiKdsmCbBy46IIDT1z7A&usqp=CAU";
+
+        if (pictureRepository.findPictureByUrl(pictureURL).isPresent()) {
+            return pictureRepository.findPictureByUrl(pictureURL).get();
+        }
+
+
+        Picture defaultProductPicture = new Picture()
+                .setTitle("Default Product")
+                .setUrl(pictureURL)
+                .setPublicId("default product picture");
+        defaultProductPicture
+                .setId(10L)
+                .setCreated(LocalDateTime.now());
+
+        pictureRepository.save(defaultProductPicture);
+        return defaultProductPicture;
     }
 }

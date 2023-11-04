@@ -65,7 +65,6 @@ public class ProductController {
         List<ProductSummaryServiceModel> productsPageable = productService.getAllProductsExceptOwnPageable(page, pageSize, principal.getName());
 
         int totalProducts = productService.getAllProductsExceptOwn(principal.getName()).size();
-        System.out.println(totalProducts);
 
         model.addAttribute("products", mapServiceToDetailsViewModel(productsPageable));
         model.addAttribute("pages", PaginationUtil.getPageCount(pageSize, totalProducts));
@@ -114,7 +113,6 @@ public class ProductController {
         model.addAttribute("pages", PaginationUtil.getPageCount(pageSize, totalProducts));
         model.addAttribute("clickedPage", clickedPage);
         model.addAttribute("selectedCategoryName", categoryName);
-
 
         return "shop";
     }
@@ -170,12 +168,11 @@ public class ProductController {
             return "redirect:/products/update/" + id;
         }
 
-
         ProductUpdateServiceModel productUpdateServiceModel = mapAddBindingToServiceModel(productModel);
 
         List<Picture> deletedPictures = productService.updateProduct(productUpdateServiceModel);
-        pictureService.deletePictures(deletedPictures);
 
+        pictureService.deletePictures(deletedPictures);
 
         return "redirect:/products/own";
     }
@@ -205,8 +202,6 @@ public class ProductController {
         ProductAddServiceModel productServiceModel = modelMapper.map(productModel, ProductAddServiceModel.class);
 
         userService.addProductForUser(productServiceModel, principal.getName());
-
-
 
         return "redirect:own";
     }
@@ -270,8 +265,10 @@ public class ProductController {
     private ProductUpdateServiceModel mapAddBindingToServiceModel(ProductUpdateBindingModel productUpdateBindingModel) {
         ProductUpdateServiceModel productModel = modelMapper.map(productUpdateBindingModel, ProductUpdateServiceModel.class);
 
+
         List<Picture> pictures = productUpdateBindingModel.getPictures().stream()
-                .map(pictureService::findByUrl).toList();
+                .map(pictureService::findByUrl).collect(Collectors.toList());
+
 
         productModel.setPictures(pictures);
 
