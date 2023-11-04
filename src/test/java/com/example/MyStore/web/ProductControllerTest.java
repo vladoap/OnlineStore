@@ -23,13 +23,9 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.*;
@@ -64,12 +60,11 @@ class ProductControllerTest {
 
     private User testUser;
 
-    private List<Product> productsToTest;
 
     @BeforeEach
     public void setUp() {
         testUser = testDataHelper.getUser1();
-        productsToTest = testDataHelper.initProducts();
+        testDataHelper.initProducts();
     }
 
 
@@ -406,7 +401,18 @@ class ProductControllerTest {
     }
 
 
+    @Test
+    public void testProductDelete() throws Exception {
 
+        Product newProduct = testDataHelper.initNewProductForUser1();
+
+        mockMvc
+                .perform(delete("/products/delete/" + newProduct.getId())
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().is3xxRedirection());
+
+    }
 
     private Product getTestProduct() {
         String productName = "product1";

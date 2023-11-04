@@ -33,14 +33,12 @@ import java.util.*;
 public class ShoppingCartController {
 
     private final ProductService productService;
-    private final OrderService orderService;
     private final ModelMapper modelMapper;
     private final UserService userService;
 
 
-    public ShoppingCartController(ProductService productService, OrderService orderService, ModelMapper modelMapper, UserService userService) {
+    public ShoppingCartController(ProductService productService, ModelMapper modelMapper, UserService userService) {
         this.productService = productService;
-        this.orderService = orderService;
         this.modelMapper = modelMapper;
         this.userService = userService;
 
@@ -118,7 +116,7 @@ public class ShoppingCartController {
 
 
     @PostMapping("/cart")
-    public String shoppingCartBuyPost(Principal principal, String subtotal, @Valid UserOrderBindingModel userModel, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String shoppingCartBuyPost(Principal principal, @Valid UserOrderBindingModel userModel, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
             redirectAttributes
@@ -145,7 +143,6 @@ public class ShoppingCartController {
     @DeleteMapping("/cart/delete/{id}")
     public String deleteItemInCart(@PathVariable Long id, Principal principal) {
         userService.deleteCartItem(id, principal.getName());
-
 
         return "redirect:/purchase/cart";
     }

@@ -9,7 +9,6 @@ import com.example.MyStore.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -90,6 +89,7 @@ public class TestDataHelper {
                 .setFirstName("Test")
                 .setLastName("TestTest")
                 .setRoles(userRoles)
+                .setProducts(new HashSet<>())
                 .setProfilePicture(picture);
 
         AddressId addressId = new AddressId("Vasil Aprilov", "Sofia", 25);
@@ -144,6 +144,7 @@ public class TestDataHelper {
                 .setFirstName("Georgi")
                 .setLastName("Georgiev")
                 .setRoles(userRoles)
+                .setProducts(new HashSet<>())
                 .setProfilePicture(picture);
 
         AddressId addressId = new AddressId("Bulgaria", "Plovdiv", 150);
@@ -260,5 +261,44 @@ public class TestDataHelper {
 
         pictureRepository.save(defaultProductPicture);
         return defaultProductPicture;
+    }
+
+    public Product initNewProductForUser1() {
+        Product newProduct = new Product()
+                .setName("product5")
+                .setDescription("asdjasdkjsadlkas")
+                .setCategory(categoryRepository.findByName(CategoryNameEnum.Electronics).get())
+                .setQuantity(15)
+                .setPrice(BigDecimal.valueOf(12.25))
+                .setSeller(getUser1());
+        newProduct
+                .setId(20L)
+                .setCreated(LocalDateTime.now());
+        productRepository.save(newProduct);
+
+        getUser1().getProducts().add(newProduct);
+        userRepository.save(getUser1());
+
+        return newProduct;
+    }
+
+    public Product initNewProductForUser2() {
+
+        Product newProduct = new Product()
+                .setName("product6")
+                .setDescription("asdjasdkjsadlkas")
+                .setCategory(categoryRepository.findByName(CategoryNameEnum.Books).get())
+                .setQuantity(100)
+                .setPrice(BigDecimal.valueOf(55.25))
+                .setSeller(getUser2());
+        newProduct
+                .setId(21L)
+                .setCreated(LocalDateTime.now());
+        productRepository.save(newProduct);
+
+        getUser2().getProducts().add(newProduct);
+        userRepository.save(getUser2());
+
+        return newProduct;
     }
 }

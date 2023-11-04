@@ -22,9 +22,3 @@ cloudinary:
 schedulers:
   cron: "0 0 0 * * *"
 
-
-
-# cloudinary:
-#  api-key: 538483344557369
-#  api-secret: SgwAotpjiGSWWQLQukZpZT9g6yM
-#  cloud-name: dkhgpyqjy

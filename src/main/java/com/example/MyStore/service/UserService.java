@@ -62,4 +62,6 @@ public interface UserService {
     List<User> getAllUsers();
 
     boolean isEmailFree(String email);
+
+    void save(User currentUser);
 }

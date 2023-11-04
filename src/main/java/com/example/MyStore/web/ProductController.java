@@ -4,6 +4,8 @@ import com.example.MyStore.model.binding.ProductAddBindingModel;
 import com.example.MyStore.model.binding.ProductUpdateBindingModel;
 import com.example.MyStore.model.binding.ProductPurchaseBindingModel;
 import com.example.MyStore.model.entity.Picture;
+import com.example.MyStore.model.entity.Product;
+import com.example.MyStore.model.entity.User;
 import com.example.MyStore.model.enums.CategoryNameEnum;
 import com.example.MyStore.model.service.ProductAddServiceModel;
 import com.example.MyStore.model.service.ProductUpdateServiceModel;
@@ -210,6 +212,7 @@ public class ProductController {
     @PreAuthorize("@productServiceImpl.isOwner(#principal.name, #id)")
     @DeleteMapping("/delete/{id}")
     public String productDelete(@PathVariable Long id, Principal principal) {
+
         productService.deleteProduct(id);
 
         return "redirect:/products/own";

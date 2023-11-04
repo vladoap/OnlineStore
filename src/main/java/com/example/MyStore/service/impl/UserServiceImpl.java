@@ -1,6 +1,5 @@
 package com.example.MyStore.service.impl;
 
-import com.example.MyStore.exception.CartNotFoundException;
 import com.example.MyStore.model.entity.*;
 import com.example.MyStore.model.enums.UserRoleEnum;
 import com.example.MyStore.model.service.*;
@@ -50,6 +49,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean isEmailFree(String email) {
         return userRepository.findByEmail(email).isEmpty();
+    }
+
+    @Override
+    public void save(User currentUser) {
+        userRepository.save(currentUser);
     }
 
 
@@ -190,7 +194,6 @@ public class UserServiceImpl implements UserService {
         cartService.addOrUpdateCartItem(buyer.getCart(), product, quantity);
 
         userRepository.save(buyer);
-
 
     }
 

@@ -2,7 +2,6 @@ package com.example.MyStore.web.rest;
 
 import com.example.MyStore.model.dto.AllProductsDTO;
 import com.example.MyStore.model.dto.UserDetailsDTO;
-import com.example.MyStore.model.entity.User;
 import com.example.MyStore.model.service.ProductSummaryServiceModel;
 import com.example.MyStore.model.service.UserDetailsForAdminServiceModel;
 import com.example.MyStore.model.view.ProductsSummaryViewModel;
@@ -53,6 +52,7 @@ public class AdminRestController {
 
     @DeleteMapping("/products/delete/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
+
 
         boolean isDeleted = productService.deleteProduct(id);
 
