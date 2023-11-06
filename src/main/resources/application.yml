@@ -22,9 +22,9 @@ spring:
 
 
 
-#  sql:
-#    init:
-#      mode: always
+  sql:
+    init:
+      mode: always
 
   jpa:
 
@@ -48,8 +48,6 @@ cloudinary:
   api-key: ${CLOUDINARY_API_KEY}
   api-secret: ${CLOUDINARY_API_SECRET}
   cloud-name: ${CLOUDINARY_CLOUD_NAME}
-
-
 
 
 #logging:

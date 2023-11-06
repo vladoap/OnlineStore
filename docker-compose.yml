@@ -5,10 +5,8 @@ services:
     ports:
       - "3307:3306"
     environment:
-#      - MYSQL_ROOT_PASSWORD=111111
-      - MYSQL_DATABASE=onlinestore
+      - MYSQL_DATABASE=onlineStore
       - MYSQL_ROOT_PASSWORD=111111
-      - MYSQL_USER=root
 
 
     healthcheck:
