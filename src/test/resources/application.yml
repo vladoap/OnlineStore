@@ -13,18 +13,10 @@ spring:
 
 
 
-#cloudinary:
-#  api-key: ${CLOUDINARY_API_KEY}
-#  api-secret: ${CLOUDINARY_API_SECRET}
-#  cloud-name: ${CLOUDINARY_CLOUD_NAME}
-
-# mvn test -DCLOUDINARY_API_KEY=538483344557369 -DCLOUDINARY_API_SECRET=SgwAotpjiGSWWQLQukZpZT9g6yM -DCLOUDINARY_CLOUD_NAME=dkhgpyqjy
 cloudinary:
-  api-key: 538483344557369
-  api-secret: SgwAotpjiGSWWQLQukZpZT9g6yM
-  cloud-name: dkhgpyqjy
-
-
+  api-key: ${CLOUDINARY_API_KEY}
+  api-secret: ${CLOUDINARY_API_SECRET}
+  cloud-name: ${CLOUDINARY_CLOUD_NAME}
 
 
 schedulers:
