@@ -1,7 +1,13 @@
 spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
+
+    # for deployment to azure
+#    url: jdbc:mysql://mystore-db.mysql.database.azure.com:3306/mystore-db?allowPublicKeyRetrieval=true&sslMode=REQUIRED&createDatabaseIfNotExist=true&serverTimezone=UTC
+
+    # for spring app
     url: "jdbc:mysql://${MYSQL_HOST:localhost}:3306/onlineStore?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC"
+
     username: ${SQL_USERNAME}
     password: ${SQL_PASSWORD}
 
@@ -15,16 +21,9 @@ spring:
         enabled: true
 
 
-#
-#  autoconfigure:
-#    exclude: org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
-
-
-
-
-  sql:
-    init:
-      mode: always
+#  sql:
+#    init:
+#      mode: always
 
   jpa:
 
