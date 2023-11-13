@@ -9,8 +9,11 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
+
 @ControllerAdvice
 public class MyStoreControllerAdvice {
+
 
 
     @ExceptionHandler(Exception.class)
@@ -23,7 +26,7 @@ public class MyStoreControllerAdvice {
     }
 
     @ExceptionHandler({ProductNotFoundException.class, CartNotFoundException.class, DefaultPictureNotFoundException.class,
-    PictureNotFoundException.class, CategoryNotFoundException.class, UsernameNotFoundException.class})
+            PictureNotFoundException.class, CategoryNotFoundException.class, UsernameNotFoundException.class})
     public ModelAndView handleNotFound(Exception e) {
         ModelAndView modelAndView = new ModelAndView("error/not-found");
         modelAndView.addObject("message", e.getMessage());
@@ -34,3 +37,4 @@ public class MyStoreControllerAdvice {
 
 
 }
+
