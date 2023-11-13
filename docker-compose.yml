@@ -22,10 +22,10 @@ services:
     environment:
       - MYSQL_HOST=db
       - SQL_USERNAME=root
-      - SQL_PASSWORD=111111
-      - CLOUDINARY_API_KEY=538483344557369
-      - CLOUDINARY_API_SECRET=SgwAotpjiGSWWQLQukZpZT9g6yM
-      - CLOUDINARY_CLOUD_NAME=dkhgpyqjy
+      - SQL_PASSWORD=
+      - CLOUDINARY_API_KEY=
+      - CLOUDINARY_API_SECRET=
+      - CLOUDINARY_CLOUD_NAME=
 
     depends_on:
       db:
