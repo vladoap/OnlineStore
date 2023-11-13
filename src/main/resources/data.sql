@@ -29,7 +29,7 @@ VALUES (now(), 'rcnxfjmttqje5cpu4sbk', 'table', 'https://res.cloudinary.com/dkhg
 INSERT INTO pictures(created, public_id, title, url)
 VALUES (now(), 'c8utowfgjpttmiwzyoq8', 't-shirt1', 'https://res.cloudinary.com/dkhgpyqjy/image/upload/v1697905430/c8utowfgjpttmiwzyoq8.png');
 INSERT INTO pictures(created, public_id, title, url)
-VALUES (now(), 'kayboxenlzwnvdcudniy', 't-shirt2', 'https://res.cloudinary.com/dkhgpyqjy/image/upload/v1697905502/kayboxenlzwnvdcudniy.jpg');
+VALUES (now(), 'gvta9vn5xm2theeajc6y', 't-shirt2', 'https://res.cloudinary.com/dkhgpyqjy/image/upload/v1699891939/gvta9vn5xm2theeajc6y.jpg');
 INSERT INTO pictures(created, public_id, title, url)
 VALUES (now(), 'dtf6wwde42wbmgbfxwfc', 'smartwatch1', 'https://res.cloudinary.com/dkhgpyqjy/image/upload/v1696629475/dtf6wwde42wbmgbfxwfc.png');
 INSERT INTO pictures(created, public_id, title, url)
