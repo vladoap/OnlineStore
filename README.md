@@ -29,3 +29,14 @@ Before starting the project, ensure the following environment variables are set:
 For testing purposes, the default admin credentials are:
 - Username: gosho
 - Password: 111
+
+## Technologies used
+
+- **GitHub** - Used for version control on project's codebase.
+- **Java** - programming language used for backend development.
+- **JavaScript** - used to program the behavior of Web pages.
+- **HTML5** - standard markup langugage for creating Web pages.
+- **CSS** - used to style the appearance of HTML elements on web pages.
+- **Spring** - Java-based framework used for building web applications, following the model-view-controller (MVC) architectural pattern.
+- **MySQL** - Database management system used for storing and managing data in application.
+  
