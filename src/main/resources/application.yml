@@ -6,7 +6,7 @@ spring:
 #    url: jdbc:mysql://mystore-db.mysql.database.azure.com:3306/mystore-db?allowPublicKeyRetrieval=true&sslMode=REQUIRED&createDatabaseIfNotExist=true&serverTimezone=UTC
 
     # for spring app
-    url: "jdbc:mysql://${MYSQL_HOST:localhost}:3306/onlineStore?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC"
+    url: "jdbc:mysql://${MYSQL_HOST:localhost}:3307/onlineStore?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC"
 
     username: ${SQL_USERNAME}
     password: ${SQL_PASSWORD}
